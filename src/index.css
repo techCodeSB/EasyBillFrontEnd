@@ -1,0 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*{
+  box-sizing: border-box;
+}
+
+#main{
+  min-width: 100%;
+  height: calc(100vh - 60px);
+  display: flex;
+  justify-content: space-between;
+  
+}
+.content__body{
+  width: 100%;
+  background-color: #F6F7FB;
+}
+
+h1, h2, h3, h4, h5, h6{
+  line-height: 0% !important;
+}
+
+.nav__logo{
+  box-shadow: 4px 3px #888888;
+}
+
+.menu-link{
+  @apply hover:no-underline hover:text-gray-600 hover:bg-gray-200 focus-within:no-underline; 
+  @apply text-[15px] flex items-center gap-2 py-2 text-gray-600 p-4;
+}
+
+/* Sidenav */
+.side__nav{
+  transition: 0.3s all;
+  overflow-y: auto;
+}
+
+.side__nav::-webkit-scrollbar {
+  width: 7px;
+}
+.side__nav::-webkit-scrollbar-thumb {
+  background-color: #3f3d3d;
+  border-radius: 7px;
+}
+.side__nav::-webkit-scrollbar-track {
+  background-color: #2C323C;
+}
+.side__nav::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+}
+
+.side__nav__links a{
+ color: white;
+
+}
+.side__nav__links a:hover, .side__nav__links a:focus-within{
+  text-decoration: none;
+  color: white;
+}
+.side__nav__links li{
+  padding: 8px;
+  font-size: 12px;
+  padding-left: 15px;
+  transition: 1s all;
+  border-radius: 20px;
+}
+.side__nav__links li:hover{
+  background-color: rgb(80, 80, 202);
+}
+.side__nav__links li svg{
+  color: rgb(167, 167, 247);
+  font-size: 14px;
+}
+.side__nav__link__group  h3{
+  margin-left: 10px;
+  font-size: 12px;
+  color: rgb(218, 208, 208)
+}
+
+
+/* Breacrumb */
+.rs-breadcrumb-item a{
+  color: blueviolet;
+  font-size: 14px;
+}
+.rs-breadcrumb-item a:hover, .rs-breadcrumb-item a:focus-within{
+  text-decoration: none;
+}
