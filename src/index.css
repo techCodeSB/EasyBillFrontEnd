@@ -10,14 +10,23 @@
   min-width: 100%;
   height: calc(100vh - 60px);
   display: flex;
-  justify-content: space-between;
-  
+  justify-content: space-between;  
 }
 .content__body{
   width: 100%;
   background-color: #F6F7FB;
   padding: 20px;
   overflow-y: auto;
+<<<<<<< HEAD
+=======
+}
+
+.content__body__main{
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0px 0px 5px lightgrey;
+  font-size: 13px !important;
+>>>>>>> 7ddfa17983f7c725c0460b673553ac35a1c981b0
 }
 
 h1, h2, h3, h4, h5, h6{
@@ -90,3 +99,96 @@ h1, h2, h3, h4, h5, h6{
 .rs-breadcrumb-item a:hover, .rs-breadcrumb-item a:focus-within{
   text-decoration: none;
 }
+
+.add__table{
+  @apply w-full bg-white rounded my-6 border border-gray-200;
+}
+
+.add__table thead tr th, .add__table thead tr td{
+  @apply text-sm;
+  padding: 10px;
+}
+
+input{
+  @apply w-full p-1 border border-gray-200 outline-none hover:border-blue-500;
+  @apply focus:border-blue-500;
+  line-height: 16px !important;
+  border-radius: 3px
+}
+select{
+  @apply w-full p-[4px] border border-gray-200 rounded outline-none;
+}
+
+
+.table-style {
+  text-align: center;
+  border: 1px solid #E5E7EB;
+}
+
+.table-style td, .table-style th{
+  border-right: 1px solid #E5E7EB;
+  padding: 4px 5px;
+  font-size: 12px !important;
+  line-height: 5px;
+}
+.table-style thead tr th{
+  padding: 2px;
+}
+
+#taxAmountTable .table-style td, #addtionalChargeTable .table-style td{
+  padding-top: 8px !important;
+}
+
+.add__table thead{
+  background-color: #F6F7FB;
+}
+
+.list__icons{
+  @apply flex gap-2;
+  margin-top: 19px;
+}
+.list__icon{
+  @apply bg-blue-700 rounded-full w-[30px] h-[30px] flex justify-center items-center cursor-pointer;
+  @apply hover:bg-blue-800;
+}
+.list_buttons{
+  @apply w-full lg:w-[40%] flex gap-2 items-center justify-around text-nowrap mt-4;
+}
+.list_buttons select{
+  width: 90px;
+  height: 35px;
+  border: 1px solid #E5E7EB;
+  border-radius: 4px;
+}
+.list_buttons button{
+  /* box-shadow: 1px 3px rgb(80, 80, 253); */
+  width: 80px;
+  padding: 5px;
+  color: white;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.add-table-discount-input{
+  position: relative;
+}
+.add-table-discount-input input{
+  padding-left: 33px;
+}
+.add-table-discount-input div{
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-color: rgba(211, 211, 211, 0.336);
+  padding: 10px;
+  height: 100%;
+  border-start-start-radius: 2px;
+  border-end-start-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+

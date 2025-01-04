@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { HiOutlineHome } from "react-icons/hi2";
-import { FaEarthAmericas } from "react-icons/fa6";
+// import { FaEarthAmericas } from "react-icons/fa6";
 import { CiImageOn } from "react-icons/ci";
 import { IoSettingsOutline } from "react-icons/io5";
 import { TbUsersGroup } from "react-icons/tb";
@@ -23,18 +23,18 @@ const SideNav = () => {
         link: '/admin/dashboard',
         submenu: null
       },
-      {
-        name: 'Visit Main Site',
-        icon: <FaEarthAmericas />,
-        link: '/admin/dashboard',
-        submenu: null
-      }
+      // {
+      //   name: 'Visit Main Site',
+      //   icon: <FaEarthAmericas />,
+      //   link: '/admin/dashboard',
+      //   submenu: null
+      // }
     ],
     "sales": [
       {
         name: 'Quotation / Estimate',
         icon: <CiImageOn />,
-        link: '/admin/dashboard',
+        link: '/admin/quotation-estimate/',
         submenu: null
       },
       {
@@ -182,15 +182,15 @@ const SideNav = () => {
   };
 
   return (
-    <aside className='side__nav min-w-[175px] h-[calc(100vh-60px)] bg-[#2C323C] text-white' id='sideBar'>
+    <aside className='side__nav min-w-[175px] h-[calc(100vh-60px)] bg-[#0D1726] text-white' id='sideBar'>
       <div className="side__nav__logo flex justify-center items-center">
       </div>
       <div className="side__nav__links">
         <div className="side__nav__link__group">
           <ul>
             {links.main.map((link, index) => (
-              <Link to={link.link} data-tooltip-id="sideBarItemToolTip">
-                <li key={index} className='flex items-center'>
+              <Link key={index} to={link.link} data-tooltip-id="sideBarItemToolTip">
+                <li className='flex items-center'>
                   <span className='mr-3'>{link.icon}</span>
                   <span>{link.name}</span>
                 </li>
@@ -202,8 +202,8 @@ const SideNav = () => {
           <h3 className='text-[16px] my-5'>Sales</h3>
           <ul className=''>
             {links.sales.map((link, index) => (
-              <Link to={link.link} data-tooltip-id="sideBarItemToolTip">
-                <li key={index} className='flex items-center'>
+              <Link key={index} to={link.link} data-tooltip-id="sideBarItemToolTip">
+                <li className='flex items-center'>
                   <span className='mr-3'>{link.icon}</span>
                   <span>{link.name}</span>
                 </li>
@@ -215,8 +215,8 @@ const SideNav = () => {
           <h3 className='text-[16px] my-5'>Purshase</h3>
           <ul className=''>
             {links.Purshase.map((link, index) => (
-              <Link to={link.link} data-tooltip-id="sideBarItemToolTip">
-                <li key={index} className='flex items-center'>
+              <Link key={index} to={link.link} data-tooltip-id="sideBarItemToolTip">
+                <li className='flex items-center'>
                   <span className='mr-3'>{link.icon}</span>
                   <span >{link.name}</span>
                 </li>
@@ -228,8 +228,8 @@ const SideNav = () => {
           <h3 className='text-[16px] my-5'>Accounting Solution</h3>
           <ul className=''>
             {links.Accounting.map((link, index) => (
-              <Link to={link.link} data-tooltip-id="sideBarItemToolTip">
-                <li key={index} className='flex items-center'>
+              <Link key={index} to={link.link} data-tooltip-id="sideBarItemToolTip">
+                <li className='flex items-center'>
                   <span className='mr-3'>{link.icon}</span>
                   <span >{link.name}</span>
                 </li>
@@ -242,12 +242,12 @@ const SideNav = () => {
           <h3 className='text-[16px] my-5'>Setup</h3>
           <ul className=''>
             {links.Setup.map((link, index) => (
-              <Whisper enterable trigger={'hover'} speaker={
+              <Whisper key={index} enterable trigger={'hover'} speaker={
                 index === 4 ? <Popover className='p-0'>
                   <ul>
                     {links.Setup[4].submenu.map((sublink, subIndex) => (
                       <Link to={sublink.link} className='focus-within:no-underline hover:no-underline text-blue-900'>
-                        <li key={subIndex} className='flex items-center'>
+                        <li  className='flex items-center'>
                           <span className='mr-2 text-[15px]'>{sublink.icon}</span>
                           <Link className='focus-within:no-underline hover:no-underline text-blue-900 text-[13px]'>
                             {sublink.name}
@@ -271,8 +271,8 @@ const SideNav = () => {
                   {link.submenu && openSubmenus[link.name] && (
                     <ul className='ml-2 mt-2'>
                       {link.submenu.map((sublink, subIndex) => (
-                        <Link to={sublink.link}>
-                          <li key={subIndex} className='flex items-center'>
+                        <Link key={subIndex} to={sublink.link}>
+                          <li className='flex items-center'>
                             <span className='mr-3'>{sublink.icon}</span>
                             <Link >{sublink.name}</Link>
                           </li>
