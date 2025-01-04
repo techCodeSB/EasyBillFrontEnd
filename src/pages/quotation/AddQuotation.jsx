@@ -10,10 +10,11 @@ import { FaRegCheckCircle } from "react-icons/fa";
 import { BiReset } from "react-icons/bi";
 
 
-
 const Quotation = () => {
   const [ItemRows, setItemRows] = useState([{ QuotaionItem: 1 }]);
   const [additionalRows, setAdditionalRow] = useState([]); //{ additionalRowsItem: 1 }
+  // Hello world
+
 
   const addItem = (which) => {
     which === 1 ?
@@ -35,7 +36,6 @@ const Quotation = () => {
 
 
 
-
   return (
     <>
       <Nav />
@@ -52,9 +52,9 @@ const Quotation = () => {
             <div className='flex flex-col lg:flex-row items-center justify-around gap-4'>
               <div className='flex flex-col gap-2 w-full'>
                 <p className='text-xs'>Select Party</p>
-                <SelectPicker onChange={(data)=>{
+                <SelectPicker onChange={(data) => {
                   console.log(data)
-                }} data={data}/>
+                }} data={data} />
               </div>
 
 
@@ -64,7 +64,7 @@ const Quotation = () => {
               </div>
               <div className='flex flex-col gap-2 w-1/3'>
                 <p className='text-xs'>Quotation / Estimate Date</p>
-                <DatePicker className='text-xs'/>
+                <DatePicker className='text-xs' />
               </div>
               <div className='flex flex-col gap-2 w-1/3'>
                 <p className='text-xs'>Valid To</p>
