@@ -11,15 +11,31 @@ import { BiReset } from "react-icons/bi";
 
 
 const Quotation = () => {
-  const [ItemRows, setItemRows] = useState([{ QuotaionItem: 1 }]);
-  const [additionalRows, setAdditionalRow] = useState([]); //{ additionalRowsItem: 1 }
-  // Hello world
+  const itemRowSet = {
+    QuotaionItem: 1, itemName: '', description: '', hsn: '', qun: '',
+    unit: '', price: '', discountPerAmount: '', discountPerPercentage: '',
+    taxType: '', taxAmount: '', amount: ''
+  }
+  const additionalRowSet = {
+    additionalRowsItem: 1, particular: '', amount: ''
+  }
+  const [ItemRows, setItemRows] = useState([itemRowSet]);
+  const [additionalRows, setAdditionalRow] = useState([additionalRowSet]); //{ additionalRowsItem: 1 }
+  const [formData, setFormData] = useState({
+    partyName: '', quotationNumber: '', estimateData: '',
+    items: ItemRows, totalTaxableamount: '', totalTaxAmount: '',
+    allProductDiscount: '', allProductDiscountPercentage: '',
+    totalAmount: '', additionalCharge: additionalRows,
+    finalAmount: '', note: '', terms: ''
+  })
+
 
 
   const addItem = (which) => {
     which === 1 ?
-      setItemRows([...ItemRows, { QuotaionItem: ItemRows.length > 0 ? ItemRows[ItemRows.length - 1].QuotaionItem + 1 : 1 }])
-      : setAdditionalRow([...additionalRows, { additionalRowsItem: additionalRows.length > 0 ? additionalRows[additionalRows.length - 1].additionalRowsItem + 1 : 1 }]);
+      setItemRows([...ItemRows, { ...itemRowSet, QuotaionItem: ItemRows.length > 0 ? ItemRows[ItemRows.length - 1].QuotaionItem + 1 : itemRowSet }])
+      : setAdditionalRow([...additionalRows, {...additionalRowSet, additionalRowsItem: additionalRows.length > 0 ? additionalRows[additionalRows.length - 1].additionalRowsItem + 1 : additionalRowSet }]);
+
   };
 
   const deleteItem = (which, ItemId) => {
@@ -28,10 +44,9 @@ const Quotation = () => {
       : setAdditionalRow(additionalRows.filter((i, _) => i.additionalRowsItem !== ItemId))
   }
 
-
   const data = [
     { label: 'Party 1', value: 'Party 1' },
-    { label: 'Party 2', value: 'Party 1' },
+    { label: 'Party 2', value: 'Party 2' },
   ];
 
 
@@ -54,7 +69,9 @@ const Quotation = () => {
                 <p className='text-xs'>Select Party</p>
                 <SelectPicker onChange={(data) => {
                   console.log(data)
-                }} data={data} />
+                }}
+                  data={data}
+                />
               </div>
 
 
