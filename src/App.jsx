@@ -4,6 +4,8 @@ import { Routes, Route } from "react-router-dom";
 
 const Login = React.lazy(() => import("./pages/Login"));
 const Dashboard = React.lazy(() => import("./pages/Dashboard"));
+const AddQutation = React.lazy(() => import("./pages/quotation/AddQuotation"));
+const Quotation = React.lazy(() => import("./pages/quotation/Quotation"));
 
 const App = () => {
   return (
@@ -18,6 +20,8 @@ const App = () => {
       <Routes>
         <Route path="/admin" element={<Login />} />
         <Route path="admin/dashboard" element={<Dashboard />} />
+        <Route path="/admin/quotation-estimate" element={<Quotation />} />
+        <Route path="/admin/quotation-estimate/add" element={<AddQutation/>}/>
       </Routes>
     </Suspense>
 

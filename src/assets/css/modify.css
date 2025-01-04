@@ -1,0 +1,49 @@
+ #addQuotationTable .rs-picker-default .rs-picker-toggle.rs-btn .rs-picker-toggle-indicator .rs-picker-caret-icon{
+  top: 3px;
+ }
+ #addQuotationTable .rs-picker-toggle{
+  line-height: 16px; 
+  border-radius: 4px; 
+  padding: 5px !important;
+}
+#addQuotationTable .rs-picker-default .rs-picker-toggle.rs-btn{
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#addQuotationTable .rs-input-group {
+  border-radius: 4px;
+}
+#addQuotationTable .rs-input-group.rs-input-group-inside .rs-input-group-addon {
+  padding: 5px 12px;
+}
+
+#addQuotationTable .rs-input {
+  padding: 5px 11px;
+}
+
+#addQuotationTable .rs-btn{
+  border-radius: 3px;
+  line-height: 15px;
+  padding: 7px 12px;
+}
+
+.rs-picker-input:focus-within, .rs-input-group:focus-within ,  .rs-input-number:focus-within, .rs-picker-toggle-active,
+.rs-picker.rs-picker-focused {
+  box-shadow: none !important;
+}
+.rs-picker-input{
+  padding: 0px !important;
+}
+.rs-input-group:not(.rs-input-group-disabled).rs-input-group-focus,
+.rs-input-group:focus-within {
+  outline: 0px !important;
+}
+.rs-picker-input{
+  padding: 0px !important;
+}
+
+.rs-breadcrumb-item a{
+  font-size: 13px;
+  color: #222;
+}

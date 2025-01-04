@@ -6,8 +6,8 @@ import { IoIosArrowForward } from "react-icons/io";
 
 const MyBreadCrumb = ({ title, links }) => {
   return (
-    <div className='flex justify-between w-[100%] p-4 h-[50px]'>
-      <h4 className='pt-2'>{title}</h4>
+    <div className='flex justify-between w-[100%] h-[40px]'>
+      <h5 className='pt-2'>{title}</h5>
       <div className='text-gray-400'>
         <Breadcrumb separator={<IoIosArrowForward />}>
           {
