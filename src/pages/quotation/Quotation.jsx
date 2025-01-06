@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Nav from '../../components/Nav';
 import SideNav from '../../components/SideNav';
-import MyBreadCrumb from '../../components/BreadCrumb';
+// import MyBreadCrumb from '../../components/BreadCrumb';
 import { Pagination } from 'rsuite';
 
 import { BiPrinter } from "react-icons/bi";
@@ -69,11 +69,11 @@ const Quotation = () => {
       <main id='main'>
         <SideNav />
         <div className='content__body'>
-          <MyBreadCrumb title={"Quotation"} links={[
+          {/* <MyBreadCrumb title={"Quotation"} links={[
             { name: "Quotation ", link: "/admin/quatation" },
             { name: "Estimate", link: "/admin/quatation" },
             { name: "All list", link: null }
-          ]} />
+          ]} /> */}
 
           <div className='content__body__main bg-white'>
             {/* First Row */}

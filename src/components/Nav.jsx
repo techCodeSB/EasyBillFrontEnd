@@ -8,7 +8,7 @@ import { IoIosLogOut } from "react-icons/io";
 import { Avatar, Popover, Whisper } from 'rsuite';
 import { Link } from 'react-router-dom';
 
-const Nav = () => {
+const Nav = ({ title }) => {
   const [sideBar, setSideBar] = useState(true);
 
   const toggleSideBar = () => {
@@ -38,33 +38,36 @@ const Nav = () => {
 
 
   return (
-    <nav className='w-full text-white h-[60px] bg-white shadow-lg flex justify-between'>
+    <nav className='w-full text-white h-[50px] bg-white shadow-lg flex justify-between'>
       <div className="logo__area w-[175px] h-[100%] bg-[#252A34] px-3 py-2 flex justify-between items-center">
         <div className='nav__logo p-2 bg-[#DDDDDD] w-[60px] rounded-md'>
           <img src={Logo} alt="" width={80} className='shadow-lg' />
         </div>
         <TbMenuDeep className='text-white text-xl cursor-pointer' onClick={toggleSideBar} />
       </div>
-      <div className="admin__area px-4 py-2 flex items-center cursor-pointer">
-        <Whisper trigger={'click'} placement='bottomEnd' speaker={<Popover full>
-          <Link className='menu-link'>
-            <CiSettings size={"24px"} />
-            <span>Site/Buisness Setup</span>
-          </Link>
-          <Link className='menu-link'>
-            <FiUser size={"18px"} />
-            <span>Profile</span>
-          </Link>
-          <Link className='menu-link'>
-            <IoIosLogOut size={"18px"} />
-            <span>Logout</span>
-          </Link>
-        </Popover>}>
-          <Avatar circle children={<FaUser />} size='sm' />
-          <span className='ml-2 text-gray-800 text-[16px]'>
-            Bishai
-          </span>
-        </Whisper>
+      <div className='flex items-center justify-between w-[calc(100%-175px)]'>
+        <h6 className='text-black ml-5'>{title}</h6>
+        <div className="admin__area px-4 py-2 flex items-center cursor-pointer">
+          <Whisper trigger={'click'} placement='bottomEnd' speaker={<Popover full>
+            <Link className='menu-link'>
+              <CiSettings size={"24px"} />
+              <span>Site/Buisness Setup</span>
+            </Link>
+            <Link className='menu-link'>
+              <FiUser size={"18px"} />
+              <span>Profile</span>
+            </Link>
+            <Link className='menu-link'>
+              <IoIosLogOut size={"18px"} />
+              <span>Logout</span>
+            </Link>
+          </Popover>}>
+            <Avatar circle children={<FaUser />} size='sm' />
+            <span className='ml-2 text-gray-800 text-[13px]'>
+              Bishai
+            </span>
+          </Whisper>
+        </div>
       </div>
     </nav>
   )

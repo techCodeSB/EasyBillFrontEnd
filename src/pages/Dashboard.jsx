@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Nav from '../components/Nav'
 import SideNav from '../components/SideNav';
-import MyBreadCrumb from '../components/BreadCrumb';
+// import MyBreadCrumb from '../components/BreadCrumb';
 import { FaArrowDown } from "react-icons/fa";
 import { FaArrowTrendUp } from "react-icons/fa6";
 import { FaArrowUp } from "react-icons/fa";
@@ -23,10 +23,10 @@ const Dashboard = () => {
       <main id='main'>
         <SideNav />
         <div className='content__body'>
-          <MyBreadCrumb title={"Dashboard"} links={[
+          {/* <MyBreadCrumb title={"Dashboard"} links={[
             { name: "Dashboard", link: "/admin/dashboard" },
             { name: "Analytics", link: null }
-          ]} />
+          ]} /> */}
 
           <div className='flex justify-between gap-6 w-[100%]  flex-col lg:flex-row'>
             <div className='w-[100%] lg:w-[30%]'>
