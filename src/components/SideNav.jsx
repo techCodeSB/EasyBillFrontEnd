@@ -182,7 +182,7 @@ const SideNav = () => {
   };
 
   return (
-    <aside className='side__nav min-w-[175px] h-[calc(100vh-60px)] bg-[#0D1726] text-white' id='sideBar'>
+    <aside className='side__nav min-w-[175px] h-[calc(100vh-50px)] bg-[#0D1726] text-white' id='sideBar'>
       <div className="side__nav__logo flex justify-center items-center">
       </div>
       <div className="side__nav__links">

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { SelectPicker, DatePicker, Button } from 'rsuite';
-import MyBreadCrumb from '../../components/BreadCrumb';
+// import MyBreadCrumb from '../../components/BreadCrumb';
 import Nav from '../../components/Nav';
 import SideNav from '../../components/SideNav';
 import { RiDeleteBin6Line } from "react-icons/ri";
@@ -11,15 +11,31 @@ import { BiReset } from "react-icons/bi";
 
 
 const Quotation = () => {
-  const [ItemRows, setItemRows] = useState([{ QuotaionItem: 1 }]);
-  const [additionalRows, setAdditionalRow] = useState([]); //{ additionalRowsItem: 1 }
-  // Hello world
+  const itemRowSet = {
+    QuotaionItem: 1, itemName: '', description: '', hsn: '', qun: '',
+    unit: '', price: '', discountPerAmount: '', discountPerPercentage: '',
+    taxType: '', taxAmount: '', amount: ''
+  }
+  const additionalRowSet = {
+    additionalRowsItem: 1, particular: '', amount: ''
+  }
+  const [ItemRows, setItemRows] = useState([itemRowSet]);
+  const [additionalRows, setAdditionalRow] = useState([additionalRowSet]); //{ additionalRowsItem: 1 }
+  const [formData, setFormData] = useState({
+    partyName: '', quotationNumber: '', estimateData: '',
+    items: ItemRows, totalTaxableamount: '', totalTaxAmount: '',
+    allProductDiscount: '', allProductDiscountPercentage: '',
+    totalAmount: '', additionalCharge: additionalRows,
+    finalAmount: '', note: '', terms: ''
+  })
+
 
 
   const addItem = (which) => {
     which === 1 ?
-      setItemRows([...ItemRows, { QuotaionItem: ItemRows.length > 0 ? ItemRows[ItemRows.length - 1].QuotaionItem + 1 : 1 }])
-      : setAdditionalRow([...additionalRows, { additionalRowsItem: additionalRows.length > 0 ? additionalRows[additionalRows.length - 1].additionalRowsItem + 1 : 1 }]);
+      setItemRows([...ItemRows, { ...itemRowSet, QuotaionItem: ItemRows.length > 0 ? ItemRows[ItemRows.length - 1].QuotaionItem + 1 : itemRowSet }])
+      : setAdditionalRow([...additionalRows, {...additionalRowSet, additionalRowsItem: additionalRows.length > 0 ? additionalRows[additionalRows.length - 1].additionalRowsItem + 1 : additionalRowSet }]);
+
   };
 
   const deleteItem = (which, ItemId) => {
@@ -28,25 +44,24 @@ const Quotation = () => {
       : setAdditionalRow(additionalRows.filter((i, _) => i.additionalRowsItem !== ItemId))
   }
 
-
   const data = [
     { label: 'Party 1', value: 'Party 1' },
-    { label: 'Party 2', value: 'Party 1' },
+    { label: 'Party 2', value: 'Party 2' },
   ];
 
 
 
   return (
     <>
-      <Nav />
+      <Nav title={"Quotation / Estimate"}/>
       <main id='main'>
         <SideNav />
         <div className='content__body'>
-          <MyBreadCrumb title={"Quotation"} links={[
+          {/* <MyBreadCrumb title={"Quotation"} links={[
             { name: "Quotation ", link: "/admin/quatation" },
             { name: "Estimate", link: "/admin/quatation" },
             { name: "Add", link: null }
-          ]} />
+          ]} /> */}
 
           <div className='content__body__main bg-white' id='addQuotationTable'>
             <div className='flex flex-col lg:flex-row items-center justify-around gap-4'>
@@ -54,7 +69,9 @@ const Quotation = () => {
                 <p className='text-xs'>Select Party</p>
                 <SelectPicker onChange={(data) => {
                   console.log(data)
-                }} data={data} />
+                }}
+                  data={data}
+                />
               </div>
 
 
@@ -285,11 +302,11 @@ const Quotation = () => {
             </div>
 
             <div className='w-full flex justify-center gap-3 my-3'>
-              <button className='bg-green-500 hover:bg-green-400 text-md text-white rounded w-[60px] flex items-center justify-center gap-1 py-2'>
+              <button className='bg-green-500 hover:bg-green-400 text-md text-white rounded w-[60px] flex items-center justify-center gap-1 py-[6px]'>
                 <FaRegCheckCircle />
                 Save
               </button>
-              <button className='bg-blue-800 hover:bg-blue-700 text-md text-white rounded w-[60px] flex items-center justify-center gap-1 py-2'>
+              <button className='bg-blue-800 hover:bg-blue-700 text-md text-white rounded w-[60px] flex items-center justify-center gap-1 py-[6px]'>
                 <BiReset />
                 Reset
               </button>
