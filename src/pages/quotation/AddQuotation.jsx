@@ -73,17 +73,15 @@ const Quotation = () => {
                   data={data}
                 />
               </div>
-
-
-              <div className='flex flex-col gap-2 w-1/3'>
+              <div className='flex flex-col gap-2 w-full lg:w-1/3'>
                 <p className='text-xs'>Quotation / Estimate Number</p>
                 <input type="text" name="" id="" />
               </div>
-              <div className='flex flex-col gap-2 w-1/3'>
+              <div className='flex flex-col gap-2 w-full lg:w-1/3'>
                 <p className='text-xs'>Quotation / Estimate Date</p>
                 <DatePicker className='text-xs' />
               </div>
-              <div className='flex flex-col gap-2 w-1/3'>
+              <div className='flex flex-col gap-2 w-full lg:w-1/3'>
                 <p className='text-xs'>Valid To</p>
                 <DatePicker placement='bottomEnd' className='text-xs' />
               </div>
@@ -156,7 +154,7 @@ const Quotation = () => {
                       </td>
                       <td align='center' className='w-[20px]'>
                         <RiDeleteBin6Line
-                          className='cursor-pointer text-lg'
+                          className='cursor-pointer text-[16px]'
                           onClick={() => deleteItem(1, i.QuotaionItem)}
                         />
                       </td>
@@ -207,32 +205,32 @@ const Quotation = () => {
                 </thead>
                 <tbody>
                   <tr>
-                    <td>
+                    <td className='min-w-[150px]'>
                       <input type="text" name="total_taxable_amount" id="" />
                     </td>
-                    <td>
+                    <td className='min-w-[150px]'>
                       <input type="text" name='total_tax_amount' />
                     </td>
-                    <td>
+                    <td className='min-w-[180px]'>
                       <select name="discount_type" id="">
                         <option value="before">Before Tax</option>
                         <option value="after">After Tax</option>
                         <option value="no">No Discount</option>
                       </select>
                     </td>
-                    <td>
+                    <td className='min-w-[180px]'>
                       <div className='add-table-discount-input' >
                         <input type="number" />
                         <div><MdCurrencyRupee /></div>
                       </div>
                     </td>
-                    <td>
+                    <td className='min-w-[200px]'>
                       <div className='add-table-discount-input' >
                         <input type="number" />
                         <div>%</div>
                       </div>
                     </td>
-                    <td>
+                    <td className='min-w-[150px]'>
                       <input type="text" name="total_amount" id="" />
                     </td>
                   </tr>
@@ -240,7 +238,7 @@ const Quotation = () => {
               </table>
             </div>
             {/* ------- Note and Additional charges ------- */}
-            <div className='w-full flex justify-between gap-4 mt-3'>
+            <div className='w-full flex flex-col lg:flex-row justify-between gap-4 mt-3'>
               <div className='flex flex-col w-full gap-3'>
                 <div>
                   <p>Note: </p>
