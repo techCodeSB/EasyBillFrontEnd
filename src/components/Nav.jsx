@@ -50,10 +50,10 @@ const Nav = ({ title }) => {
         <div className="admin__area px-4 py-2 flex items-center cursor-pointer">
           <Whisper trigger={'click'} placement='bottomEnd' speaker={<Popover full>
             <Link className='menu-link'>
-              <CiSettings size={"24px"} />
+              <CiSettings  size={"24px"} />
               <span>Site/Buisness Setup</span>
             </Link>
-            <Link className='menu-link'>
+            <Link className='menu-link ' to="/admin/profile">
               <FiUser size={"18px"} />
               <span>Profile</span>
             </Link>
