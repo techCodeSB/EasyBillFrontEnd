@@ -107,7 +107,7 @@ h1, h2, h3, h4, h5, h6{
   padding: 10px;
 }
 
-input{
+input, textarea{
   @apply w-full p-1 border border-gray-200 outline-none hover:border-blue-500;
   @apply focus:border-blue-500;
   line-height: 16px !important;
@@ -188,4 +188,27 @@ select{
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+#Settings .forms p{
+  margin-bottom: 5px;
+}
+
+
+.file__uploader__div{
+  @apply w-full border rounded;
+  @apply flex justify-end items-center gap-1 p-1;
+
+}
+.file__upload{
+  @apply bg-blue-600 text-[18px];
+}
+.remove__upload{
+ @apply bg-red-500;
+ font-size: 12px !important; 
+}
+.file__upload, .remove__upload{
+  @apply text-white w-[25px] h-[25px] rounded-full p-1 cursor-pointer;
+  display: grid;
+  place-items: center;
 }

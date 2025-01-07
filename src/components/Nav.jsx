@@ -49,9 +49,9 @@ const Nav = ({ title }) => {
         <h6 className='text-black ml-5'>{title}</h6>
         <div className="admin__area px-4 py-2 flex items-center cursor-pointer">
           <Whisper trigger={'click'} placement='bottomEnd' speaker={<Popover full>
-            <Link className='menu-link'>
+            <Link className='menu-link' to={"/admin/site"}>
               <CiSettings size={"24px"} />
-              <span>Site/Buisness Setup</span>
+              <span>Site/Company Creation</span>
             </Link>
             <Link className='menu-link'>
               <FiUser size={"18px"} />

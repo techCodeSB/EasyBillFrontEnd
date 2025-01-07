@@ -1,5 +1,6 @@
 import React, { Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
+import Setting from "./pages/Setting";
 
 
 const Login = React.lazy(() => import("./pages/Login"));
@@ -21,7 +22,8 @@ const App = () => {
         <Route path="/admin" element={<Login />} />
         <Route path="admin/dashboard" element={<Dashboard />} />
         <Route path="/admin/quotation-estimate" element={<Quotation />} />
-        <Route path="/admin/quotation-estimate/add" element={<AddQutation/>}/>
+        <Route path="/admin/quotation-estimate/add" element={<AddQutation />} />
+        <Route path="/admin/site" element={<Setting />} />
       </Routes>
     </Suspense>
 
