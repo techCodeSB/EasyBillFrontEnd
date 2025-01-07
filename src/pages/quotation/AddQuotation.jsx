@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { SelectPicker, DatePicker, Button } from 'rsuite';
-// import MyBreadCrumb from '../../components/BreadCrumb';
+import MyBreadCrumb from '../../components/BreadCrumb';
 import Nav from '../../components/Nav';
 import SideNav from '../../components/SideNav';
 import { RiDeleteBin6Line } from "react-icons/ri";
@@ -53,15 +53,15 @@ const Quotation = () => {
 
   return (
     <>
-      <Nav title={"Quotation / Estimate"}/>
+      <Nav />
       <main id='main'>
         <SideNav />
         <div className='content__body'>
-          {/* <MyBreadCrumb title={"Quotation"} links={[
+          <MyBreadCrumb title={"Quotation"} links={[
             { name: "Quotation ", link: "/admin/quatation" },
             { name: "Estimate", link: "/admin/quatation" },
             { name: "Add", link: null }
-          ]} /> */}
+          ]} />
 
           <div className='content__body__main bg-white' id='addQuotationTable'>
             <div className='flex flex-col lg:flex-row items-center justify-around gap-4'>
@@ -300,11 +300,11 @@ const Quotation = () => {
             </div>
 
             <div className='w-full flex justify-center gap-3 my-3'>
-              <button className='bg-green-500 hover:bg-green-400 text-md text-white rounded w-[60px] flex items-center justify-center gap-1 py-[6px]'>
+              <button className='bg-green-500 hover:bg-green-400 text-md text-white rounded w-[60px] flex items-center justify-center gap-1 py-2'>
                 <FaRegCheckCircle />
                 Save
               </button>
-              <button className='bg-blue-800 hover:bg-blue-700 text-md text-white rounded w-[60px] flex items-center justify-center gap-1 py-[6px]'>
+              <button className='bg-blue-800 hover:bg-blue-700 text-md text-white rounded w-[60px] flex items-center justify-center gap-1 py-2'>
                 <BiReset />
                 Reset
               </button>
