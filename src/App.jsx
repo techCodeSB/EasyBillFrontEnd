@@ -1,12 +1,8 @@
 import React, { Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
-<<<<<<< HEAD
 import AddAccount from "./pages/accounts/AddAccount";
-=======
 import Setting from "./pages/Setting";
 
-
->>>>>>> 71d734c726edab73f2adde1391d1ace704a1646b
 const Login = React.lazy(() => import("./pages/Login"));
 const Dashboard = React.lazy(() => import("./pages/Dashboard"));
 const AddQutation = React.lazy(() => import("./pages/quotation/AddQuotation"));
