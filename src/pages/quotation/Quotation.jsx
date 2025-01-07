@@ -15,11 +15,13 @@ import { MdOutlineCancel } from "react-icons/md";
 import { MdOutlineRestorePage } from "react-icons/md";
 import { MdDeleteOutline } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
+import useExportTable from '../../hooks/useExportTable';
 
 
 
 // QuotationList page
 const Quotation = () => {
+  const copyTable = useExportTable()
   const [activePage, setActivePage] = useState(1);
   const [selected, setSelected] = useState([]);
   const navigate = useNavigate();
@@ -65,7 +67,7 @@ const Quotation = () => {
 
   return (
     <>
-      <Nav />
+      <Nav title={"Quotation"} />
       <main id='main'>
         <SideNav />
         <div className='content__body'>
@@ -93,7 +95,9 @@ const Quotation = () => {
                     <BiPrinter className='text-white text-[16px]' />
                   </div>
                   <div className='list__icon' title='Copy'>
-                    <FaRegCopy className='text-white text-[16px]' />
+                    <FaRegCopy className='text-white text-[16px]' onClick={() => {
+                      copyTable("listQuotation");
+                    }} />
                   </div>
                   <div className='list__icon' title='PDF'>
                     <FaRegFilePdf className='text-white text-[16px]' />
@@ -105,7 +109,7 @@ const Quotation = () => {
               </div>
               <div className='flex w-full flex-col lg:w-[300px]'>
                 <p>Search</p>
-                <input type='text' onChange={searchTable}/>
+                <input type='text' onChange={searchTable} />
               </div>
             </div>
 
@@ -136,7 +140,7 @@ const Quotation = () => {
 
             {/* Table start */}
             <div className='overflow-x-auto mt-5 list__table'>
-              <table className='min-w-full bg-white'>
+              <table className='min-w-full bg-white' id='listQuotation'>
                 <thead className='bg-gray-100'>
                   <tr>
                     <th className='py-2 px-4 border-b'>
@@ -167,10 +171,10 @@ const Quotation = () => {
                         <td className='px-4 border-b max-w-[70px]'>
                           <div className='flex flex-col md:flex-row gap-2 mr-2'>
                             <button className='bg-blue-400 text-white px-2 py-1 rounded w-full text-[16px]'>
-                              <MdEditSquare/>
+                              <MdEditSquare />
                             </button>
                             <button className='bg-red-500 text-white px-2 py-1 rounded w-full text-lg'>
-                              <IoInformationCircle/>
+                              <IoInformationCircle />
                             </button>
                           </div>
                         </td>
