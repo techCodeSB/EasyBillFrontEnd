@@ -19,7 +19,7 @@ const Dashboard = () => {
   const [activePage, setActivePage] = useState(1);
   return (
     <>
-      <Nav />
+      <Nav title={"Dashboard"}/>
       <main id='main'>
         <SideNav />
         <div className='content__body'>
