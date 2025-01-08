@@ -8,7 +8,12 @@ const Dashboard = React.lazy(() => import("./pages/Dashboard"));
 const AddQutation = React.lazy(() => import("./pages/quotation/AddQuotation"));
 const Quotation = React.lazy(() => import("./pages/quotation/Quotation"));
 const Profile = React.lazy(() => import("./pages/Profile"));
+<<<<<<< HEAD
 const Signup = React.lazy(() => import("./pages/Signup"));
+=======
+const Accounts = React.lazy(() => import("./pages/accounts/Accounts"));
+// const AddAccount = React.lazy(() => import("./pages/accounts/AddAccount"));
+>>>>>>> 432cf1e05722416443da0c03765b03e0cd65ef60
 
 const App = () => {
   return (
@@ -30,6 +35,7 @@ const App = () => {
         <Route path="/admin/quotation-estimate/add" element={<AddQutation />} />
         <Route path="/admin/profile" element={<Profile />} />
         <Route path="/admin/account/add" element={<AddAccount />} />
+        <Route path="admin/account" element={<Accounts />}/>
       </Routes>
     </Suspense>
 

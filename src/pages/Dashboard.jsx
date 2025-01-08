@@ -11,6 +11,8 @@ import { FaFilePdf } from "react-icons/fa";
 import { FaFileExcel } from "react-icons/fa";
 import { LuArrowUpDown } from "react-icons/lu";
 import { Pagination } from 'rsuite';
+import { MdEditSquare } from "react-icons/md";
+import { IoInformationCircle } from "react-icons/io5";
 
 
 document.title = 'Dashboard';
@@ -165,9 +167,15 @@ const Dashboard = () => {
                       <td>INV3</td>
                       <td>Das Computer</td>
                       <td>28 Dec 2024</td>
-                      <td className='pt-2 pb-2'>
-                        <button className='bg-blue-500 text-white p-2 rounded-md text-sm ml-3'>Edit</button>
-                        <button className='bg-green-600 text-white p-2 ml-2 rounded-md text-sm'>Details</button>
+                      <td>
+                          <div className='flex justify-between gap-2 pr-2'>
+                            <button className='bg-blue-400 text-white px-2 py-1 rounded w-full text-[16px]'>
+                                <MdEditSquare />
+                            </button>
+                            <button className='bg-red-500 text-white px-2 py-1 rounded w-full text-lg'>
+                              <IoInformationCircle />
+                            </button>
+                          </div>
                       </td>
                     </tr >
                   </tbody>
@@ -233,10 +241,16 @@ const Dashboard = () => {
                       <td>001</td>
                       <td>Bishai Computer Shop</td>
                       <td>28 Dec 2024</td>
-                      <td className='pt-2 pb-2'>
-                        <button className='bg-blue-500 text-white p-2 rounded-md text-sm ml-3'>Edit</button>
-                        <button className='bg-green-600 text-white p-2 ml-2 rounded-md text-sm'>Details</button>
-                      </td>
+                      <td >
+                      <div className='flex justify-between gap-2 pr-2'>
+                        <button className='bg-blue-400 text-white px-2 py-1 rounded w-full text-[16px]'>
+                           <MdEditSquare />
+                         </button>
+                        <button className='bg-red-500 text-white px-2 py-1 rounded w-full text-lg'>
+                          <IoInformationCircle />
+                           </button>
+                         </div>
+                        </td>   
                     </tr>
                   </tbody>
                 </table>

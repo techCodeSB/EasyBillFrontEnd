@@ -6,7 +6,7 @@ import SideNav from '../../components/SideNav';
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { MdCurrencyRupee } from "react-icons/md";
 import { MdOutlinePlaylistAdd } from "react-icons/md";
-import { FaRegCheckCircle } from "react-icons/fa";
+import { FaRegCheckCircle} from "react-icons/fa";
 import { BiReset } from "react-icons/bi";
 
 
