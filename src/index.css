@@ -209,7 +209,7 @@ select{
 
 
 .file__uploader__div{
-  @apply w-full border rounded;
+  @apply w-full border rounded hover:border-blue-500;
   @apply flex justify-between items-center gap-1 p-1;
 
 }
