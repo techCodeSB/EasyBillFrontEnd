@@ -210,7 +210,7 @@ select{
 
 .file__uploader__div{
   @apply w-full border rounded;
-  @apply flex justify-end items-center gap-1 p-1;
+  @apply flex justify-between items-center gap-1 p-1;
 
 }
 .file__upload{

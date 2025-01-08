@@ -2,6 +2,7 @@ import React, { Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 import AddAccount from "./pages/accounts/AddAccount";
 import Setting from "./pages/Setting";
+
 const Login = React.lazy(() => import("./pages/Login"));
 const Dashboard = React.lazy(() => import("./pages/Dashboard"));
 const AddQutation = React.lazy(() => import("./pages/quotation/AddQuotation"));

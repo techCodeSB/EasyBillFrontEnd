@@ -53,15 +53,15 @@ const Quotation = () => {
 
   return (
     <>
-      <Nav />
+      <Nav title={"Quotation"}/>
       <main id='main'>
         <SideNav />
         <div className='content__body'>
-          <MyBreadCrumb title={"Quotation"} links={[
+          {/* <MyBreadCrumb title={"Quotation"} links={[
             { name: "Quotation ", link: "/admin/quatation" },
             { name: "Estimate", link: "/admin/quatation" },
             { name: "Add", link: null }
-          ]} />
+          ]} /> */}
 
           <div className='content__body__main bg-white' id='addQuotationTable'>
             <div className='flex flex-col lg:flex-row items-center justify-around gap-4'>
