@@ -8,7 +8,7 @@ const Dashboard = React.lazy(() => import("./pages/Dashboard"));
 const AddQutation = React.lazy(() => import("./pages/quotation/AddQuotation"));
 const Quotation = React.lazy(() => import("./pages/quotation/Quotation"));
 const Profile = React.lazy(() => import("./pages/Profile"));
-// const AddAccount = React.lazy(() => import("./pages/accounts/AddAccount"));
+const Signup = React.lazy(() => import("./pages/Signup"));
 
 const App = () => {
   return (
@@ -22,11 +22,12 @@ const App = () => {
     </div>}>
       <Routes>
         <Route path="/admin" element={<Login />} />
+        <Route path="/admin/signup" element={<Signup />} />
         <Route path="admin/dashboard" element={<Dashboard />} />
         <Route path="/admin/quotation-estimate" element={<Quotation />} />
         <Route path="/admin/quotation-estimate/add" element={<AddQutation />} />
         <Route path="/admin/site" element={<Setting />} />
-        <Route path="/admin/quotation-estimate/add" element={<AddQutation/>}/>
+        <Route path="/admin/quotation-estimate/add" element={<AddQutation />} />
         <Route path="/admin/profile" element={<Profile />} />
         <Route path="/admin/account/add" element={<AddAccount />} />
       </Routes>

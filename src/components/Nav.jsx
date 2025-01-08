@@ -49,13 +49,13 @@ const Nav = ({ title }) => {
         <h6 className='text-black ml-5'>{title}</h6>
         <div className="admin__area px-4 py-2 flex items-center cursor-pointer gap-3">
           <div>
-            <select name="" className='text-black text-[12px]'>
-              <option value="1">Company 1</option>
-              <option value="2">Company 2</option>
-              <option value="" className='bg-blue-800 text-white text-center'>
-                {/* <button >Create Company</button> */}
-              </option>
-            </select>
+            <Whisper trigger={'click'} placement='bottom' speaker={
+              <div className='bg-black rounded p-2 text-black w-[250px] h-[150px]'>
+                hello world
+              </div>
+            }>
+              <span className='text-black'>Company 1</span>
+            </Whisper>
           </div>
           <Whisper className='' trigger={'click'} placement='bottomEnd' speaker={<Popover full>
             <Link className='menu-link' to={"/admin/site"}>

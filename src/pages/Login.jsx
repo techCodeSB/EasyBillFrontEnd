@@ -1,14 +1,12 @@
 import "../assets/css/login.css"
 import Logo from '../assets/images/logo.png';
 import { useState } from "react";
-// import useToast from "../hooks/useToast";
 import useLoginShake from "../hooks/useLoginShake";
 
 
 
 const Login = () => {
   const [loginData, setLoginData] = useState({ email: '', pass: '' });
-  // const toast = useToast();
   const shakeIt = useLoginShake();
 
 
@@ -18,7 +16,6 @@ const Login = () => {
 
     for (let field of Object.keys(fields)) {
       if (fields[field] === '' || fields[field] === undefined || fields[field] === null) {
-        // toast('error', 'Please fill all fields');
         shakeIt('loginBox');
         return;
       }

@@ -7,7 +7,6 @@ import { LuRefreshCcw } from "react-icons/lu";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import checkfile from '../helper/checkfile';
-import {  useToaster,  Button } from 'rsuite';
 
 const Profile = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -28,25 +27,25 @@ const Profile = () => {
   }
 
 
-  const updateProfile=()=>{
+  const updateProfile = () => {
     console.log(data);
   }
 
-    const update = (e) => {
-      if(data.name === ""){
-         alert("User name is empty") ;
-      }
-       if(data.email === ""){
-        alert("Email is empty");
-       }
-        if(data.image === ""){
-          alert("Image is empty");
-        }
-        if(data.passWord === ""){
-          alert("Password is empty");
-        }
+  const update = (e) => {
+    if (data.name === "") {
+      alert("User name is empty");
+    }
+    if (data.email === "") {
+      alert("Email is empty");
+    }
+    if (data.image === "") {
+      alert("Image is empty");
+    }
+    if (data.passWord === "") {
+      alert("Password is empty");
+    }
 
-   }
+  }
 
 
   return (
@@ -85,7 +84,7 @@ const Profile = () => {
             <div className='flex justify-center pt-9'>
               <div className='flex rounded-sm bg-green-500 text-white'>
                 <FaRegCheckCircle className='mt-3 ml-2' />
-                <button className='p-2'  onClick={update}>Update</button>
+                <button className='p-2' onClick={update}>Update</button>
               </div>
               <div className='flex rounded-sm ml-4 bg-blue-500 text-white'>
                 <LuRefreshCcw className='mt-3 ml-2' />
