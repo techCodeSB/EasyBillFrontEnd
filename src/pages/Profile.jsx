@@ -8,8 +8,10 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import checkfile from '../helper/checkfile';
 import {  useToaster,  Button } from 'rsuite';
+import useMyToaster from '../hooks/useMyToaster';
 
 const Profile = () => {
+  const inputvalidation = useMyToaster();
   const [showPassword, setShowPassword] = useState(false);
   const [data, setData] = useState({
     name: '', email: '', image: '', passWord: ''
@@ -28,15 +30,20 @@ const Profile = () => {
   }
 
 
-  const updateProfile=()=>{
-    console.log(data);
-  }
+  //const updateProfile=()=>{
+    //console.log(data);
+  //}
 
     const update = (e) => {
       if(data.name === "" || data.email === "" || data.image === "" || data.passWord === ""){
-         alert("User name is empty") ;
+        return inputvalidation("fill the blank", "warning") 
       }
+   }
 
+   const clear = (e) => {
+      setData({
+        name: '', email: '', image: '', passWord: ''
+      })
    }
 
 
@@ -80,7 +87,7 @@ const Profile = () => {
               </div>
               <div className='flex rounded-sm ml-4 bg-blue-500 text-white'>
                 <LuRefreshCcw className='mt-3 ml-2' />
-                <button className='p-2'>Reset</button>
+                <button className='p-2' onClick={clear}>Reset</button>
               </div>
               <div className="flex rounded-sm ml-4 bg-gray-500 text-white">
                 <IoMdArrowRoundBack className='mt-3 ml-2' />
@@ -88,6 +95,32 @@ const Profile = () => {
               </div>
             </div>
           </div>
+          <div className='bg-white mt-5 p-4'>
+            <p className='ml-1 mb-3'> Current Password</p>
+              <div className='relative  '>
+                <input type={showPassword ? "text" : "password"} onChange={(e) => setData({ ...data, passWord: e.target.value })} value={data.passWord} />
+                  <div className='absolute top-2 right-3   ' onClick={() => setShowPassword(!showPassword)} >
+                    {showPassword ? <MdOutlineRemoveRedEye /> : <FaRegEyeSlash />}
+                  </div>
+                </div>   
+                <p className='ml-1 mb-3 mt-2'> New Password</p>
+              <div className='relative  '>
+                <input type={showPassword ? "text" : "password"} onChange={(e) => setData({ ...data, passWord: e.target.value })} value={data.passWord} />
+                  <div className='absolute top-2 right-3   ' onClick={() => setShowPassword(!showPassword)} >
+                    {showPassword ? <MdOutlineRemoveRedEye /> : <FaRegEyeSlash />}
+                  </div>
+                </div>   
+                <div className='flex justify-center pt-9'>
+              <div className='flex rounded-sm bg-green-500 text-white'>
+                <FaRegCheckCircle className='mt-3 ml-2' />
+                <button className='p-2'  onClick={update}>Update</button>
+              </div>
+              <div className='flex rounded-sm ml-4 bg-blue-500 text-white'>
+                <LuRefreshCcw className='mt-3 ml-2' />
+                <button className='p-2'>Reset</button>
+              </div>
+            </div>
+            </div>
         </div>
       </main>
     </>
