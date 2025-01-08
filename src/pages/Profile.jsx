@@ -33,18 +33,9 @@ const Profile = () => {
   }
 
     const update = (e) => {
-      if(data.name === ""){
+      if(data.name === "" || data.email === "" || data.image === "" || data.passWord === ""){
          alert("User name is empty") ;
       }
-       if(data.email === ""){
-        alert("Email is empty");
-       }
-        if(data.image === ""){
-          alert("Image is empty");
-        }
-        if(data.passWord === ""){
-          alert("Password is empty");
-        }
 
    }
 
