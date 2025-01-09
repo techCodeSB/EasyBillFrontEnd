@@ -56,11 +56,15 @@ const Profile = () => {
               <div className='w-full'>
                 <div>
                   <p className='ml-1'>Name</p>
-                  <input type="Text" className='mt-2 mb-2' onChange={(e) => setData({ ...data, name: e.target.value })} value={data.name} />
+                  <input type="Text" className='mt-2 mb-2'
+                    onChange={(e) => setData({ ...data, name: e.target.value })}
+                    value={data.name} />
                 </div>
                 <div>
                   <p className='ml-1'>Email</p>
-                  <input type="email" className='mt-2 mb-2' onChange={(e) => setData({ ...data, email: e.target.value })} value={data.email} />
+                  <input type="email" className='mt-2 mb-2'
+                    onChange={(e) => setData({ ...data, email: e.target.value })}
+                    value={data.email} />
                 </div>
               </div>
               <div className='w-full'>
@@ -113,7 +117,7 @@ const Profile = () => {
               <input type={currentPasswordField ? "text" : "password"}
                 onChange={(e) => setCPassword({ ...cPassword, currentPassword: e.target.value })}
                 value={cPassword.currentPassword} />
-              <div className='absolute top-2 right-3   ' onClick={() => setCurrentPasswordField(!currentPasswordField)} >
+              <div className='absolute top-2 right-3' onClick={() => setCurrentPasswordField(!currentPasswordField)} >
                 {currentPasswordField ? <MdOutlineRemoveRedEye /> : <FaRegEyeSlash />}
               </div>
             </div>
@@ -122,7 +126,7 @@ const Profile = () => {
               <input type={newPasswordField ? "text" : "password"}
                 onChange={(e) => setCPassword({ ...cPassword, newPassword: e.target.value })}
                 value={cPassword.newPassword} />
-              <div className='absolute top-2 right-3   ' onClick={() => setNewPasswordField(!newPasswordField)} >
+              <div className='absolute top-2 right-3' onClick={() => setNewPasswordField(!newPasswordField)} >
                 {newPasswordField ? <MdOutlineRemoveRedEye /> : <FaRegEyeSlash />}
               </div>
             </div>

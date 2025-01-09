@@ -10,6 +10,8 @@ const Signup = React.lazy(() => import("./pages/Signup"));
 const Accounts = React.lazy(() => import("./pages/accounts/Accounts"));
 const AddAccount = React.lazy(() => import("./pages/accounts/AddAccount"));
 const Setting = React.lazy(() => import("./pages/Setting"));
+const Party = React.lazy(() => import("./pages/party/Party"));
+const AddParty = React.lazy(()=>import('./pages/party/AddParty'));
 
 
 const App = () => {
@@ -33,6 +35,8 @@ const App = () => {
         <Route path="/admin/profile" element={<Profile />} />
         <Route path="/admin/account/add" element={<AddAccount />} />
         <Route path="admin/account" element={<Accounts />} />
+        <Route path="/admin/party" element={<Party />} />
+        <Route path="/admin/party/add" element={<AddParty />} />
       </Routes>
     </Suspense>
 

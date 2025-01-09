@@ -7,9 +7,15 @@ import { FiUser } from "react-icons/fi";
 import { IoIosLogOut } from "react-icons/io";
 import { Avatar, Popover, Whisper } from 'rsuite';
 import { Link } from 'react-router-dom';
+import { RiArrowDropDownLine } from "react-icons/ri";
+import CompanyList from './CompanyList';
+import { useDispatch } from 'react-redux';
+import { toggleModal } from '../store/copanyListSlice';
+
 
 const Nav = ({ title }) => {
   const [sideBar, setSideBar] = useState(true);
+  const dispatch = useDispatch();
 
   const toggleSideBar = () => {
     // setSideBar((prev) => {
@@ -38,47 +44,49 @@ const Nav = ({ title }) => {
 
 
   return (
-    <nav className='w-full text-white h-[50px] bg-white shadow-lg flex justify-between'>
-      <div className="logo__area w-[175px] h-[100%] bg-[#252A34] px-3 py-2 flex justify-between items-center">
-        <div className='nav__logo p-2 bg-[#DDDDDD] w-[60px] rounded-md'>
-          <img src={Logo} alt="" width={80} className='shadow-lg' />
+    <>
+      <nav className='w-full text-white h-[50px] bg-white shadow-lg flex justify-between'>
+        <div className="logo__area w-[175px] h-[100%] bg-[#252A34] px-3 py-2 flex justify-between items-center">
+          <div className='nav__logo p-2 bg-[#DDDDDD] w-[60px] rounded-md'>
+            <img src={Logo} alt="" width={80} className='shadow-lg' />
+          </div>
+          <TbMenuDeep className='text-white text-xl cursor-pointer' onClick={toggleSideBar} />
         </div>
-        <TbMenuDeep className='text-white text-xl cursor-pointer' onClick={toggleSideBar} />
-      </div>
-      <div className='flex items-center justify-between w-[calc(100%-175px)]'>
-        <h6 className='text-black ml-5'>{title}</h6>
-        <div className="admin__area px-4 py-2 flex items-center cursor-pointer gap-3">
-          <div>
-            <Whisper trigger={'click'} placement='bottom' speaker={
-              <div className='bg-black rounded p-2 text-black w-[250px] h-[150px]'>
-                hello world
-              </div>
-            }>
-              <span className='text-black'>Company 1</span>
+        <div className='flex items-center justify-between w-[calc(100%-175px)]'>
+          <h6 className='text-black ml-5'>{title}</h6>
+          <div className="admin__area px-4 py-2 flex items-center cursor-pointer gap-3">
+            <div
+              className='flex items-center justify-between bg-gray-100 text-black p-1 rounded'
+              onClick={() => {
+                dispatch(toggleModal(true))
+              }}>
+              <span className='text-[12px]'>Company 1</span>
+              <RiArrowDropDownLine className='text-[20px]' />
+            </div>
+            <Whisper className='' trigger={'click'} placement='bottomEnd' speaker={<Popover full>
+              <Link className='menu-link' to={"/admin/site"}>
+                <CiSettings size={"24px"} />
+                <span>Site/Company Creation</span>
+              </Link>
+              <Link className='menu-link ' to="/admin/profile">
+                <FiUser size={"18px"} />
+                <span>Profile</span>
+              </Link>
+              <Link className='menu-link'>
+                <IoIosLogOut size={"18px"} />
+                <span>Logout</span>
+              </Link>
+            </Popover>}>
+              <Avatar circle children={<FaUser />} size='sm' />
+              <span className='ml-2 text-gray-800 text-[13px]'>
+                Bishai
+              </span>
             </Whisper>
           </div>
-          <Whisper className='' trigger={'click'} placement='bottomEnd' speaker={<Popover full>
-            <Link className='menu-link' to={"/admin/site"}>
-              <CiSettings size={"24px"} />
-              <span>Site/Company Creation</span>
-            </Link>
-            <Link className='menu-link ' to="/admin/profile">
-              <FiUser size={"18px"} />
-              <span>Profile</span>
-            </Link>
-            <Link className='menu-link'>
-              <IoIosLogOut size={"18px"} />
-              <span>Logout</span>
-            </Link>
-          </Popover>}>
-            <Avatar circle children={<FaUser />} size='sm' />
-            <span className='ml-2 text-gray-800 text-[13px]'>
-              Bishai
-            </span>
-          </Whisper>
         </div>
-      </div>
-    </nav>
+      </nav>
+      <CompanyList/>
+    </>
   )
 }
 
