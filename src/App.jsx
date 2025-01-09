@@ -10,7 +10,9 @@ const Signup = React.lazy(() => import("./pages/Signup"));
 const Accounts = React.lazy(() => import("./pages/accounts/Accounts"));
 const AddAccount = React.lazy(() => import("./pages/accounts/AddAccount"));
 const Setting = React.lazy(() => import("./pages/Setting"));
-
+const TransactionAdd = React.lazy(() => import("./pages/Transactions/TransactionAdd"));
+const Transaction = React.lazy(() => import("./pages/Transactions/Transaction"));
+const UnitAdd = React.lazy(() => import("./pages/Unit/UnitAdd"));
 
 const App = () => {
   return (
@@ -33,6 +35,9 @@ const App = () => {
         <Route path="/admin/profile" element={<Profile />} />
         <Route path="/admin/account/add" element={<AddAccount />} />
         <Route path="admin/account" element={<Accounts />} />
+        <Route path="admin/other-transaction/add" element={<TransactionAdd />} />
+        <Route path="admin/other-transaction" element={<Transaction />} />
+        <Route path="admin/unit/add" element={< UnitAdd/>} />
       </Routes>
     </Suspense>
 

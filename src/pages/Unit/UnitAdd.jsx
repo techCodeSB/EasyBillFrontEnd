@@ -8,76 +8,39 @@ import { LuRefreshCcw } from "react-icons/lu";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import useMyToaster from '../../hooks/useMyToaster';
 
-const AddAccount = () => {
+const UnitAdd = () => {
     const accountvalidation = useMyToaster();
     const editorRef = useRef(null);
 
      const [from, setFrom] = useState({
-        title:'', accountName:'', accountNumber:'', ifscCode:'', bankName:'', openingBalance:'', type:''
+        title:''
      })
 
      const savebutton = (e) => {
-       if(from.title === "" || from.accountName === "" || from.accountNumber === "" || 
-       from.ifscCode === "" || from.bankName === "" || from.openingBalance === "" || from.type === ""){
+       if(from.title === "" ){
          return accountvalidation("fill the blank", "warning")                                                                                                               
        }
      }
        
         const fromvalueclear = (e) => {
             setFrom({
-                title:'', accountName:'', accountNumber:'', ifscCode:'', bankName:'', openingBalance:'', type:''
+                title:'', 
              })
         }
 
     return (
         <>
-            <Nav title={"Account"} />
+            <Nav title={"Unit"} />
             <main id='main'>
                 <SideNav />
                 <div className='content__body'>
                     <div className='content__body__main bg-white '>
-                        <div className='flex justify-between gap-6  flex-col lg:flex-row'>
+                        <div className=' flex-col lg:flex-row'>
                             <div className='w-full'>
                                 <div className='p-2'>
                                     <p className='pb-1'>Title</p>
                                     <input type='text' onChange={(e) => setFrom({...from, title: e.target.value})} value={from.title} />
-                                </div>
-                                <div className='p-2'>
-                                    <p className='pb-1'>Account Holder Name (If Bank)</p>
-                                    <input type='text' onChange={(e) => setFrom({...from, accountName: e.target.value})} value={from.accountName} />
-                                </div>
-                                <div className='p-2'>
-                                    <p className='pb-1'>Account Number (If Bank)</p>
-                                    <input type="number" onChange={(e) => setFrom({...from, accountNumber: e.target.value})} value={from.accountNumber} />
-                                </div>
-                            </div>
-                            <div className='w-full'>
-                                <div className='p-2'>
-                                    <p className='pb-1'>IFSC Code (If Bank)</p>
-                                    <input type='text' onChange={(e) => setFrom({...from, ifscCode: e.target.value })} value={from.ifscCode}/>
-                                </div>
-                                <div className='p-2'>
-                                    <p className='pb-1'>Bank Name (If Bank)</p>
-                                    <input type='text' onChange={(e) => setFrom({...from, bankName: e.target.value})} value={from.bankName} />
-                                </div>
-                                <div className='p-2'>
-                                    <p className='pb-1'>Opening Balance</p>
-                                    <input type="number" onChange={(e) => setFrom({...from, openingBalance: e.target.value})} value={from.openingBalance} />
-                                </div>
-                                <div className='ml-2 pt-2 '>
-                                    <p className='pb-2'>Type</p>
-                                    <select onChange={(e) => setFrom({...from, type: e.target.value})} value={from.type} >
-                                        <option value={""}>
-                                            --Select--
-                                        </option>
-                                        <option value={"Cash"}>
-                                            Cash
-                                        </option>
-                                        <option value={"Bank"}>
-                                            Bank
-                                        </option>
-                                    </select>
-                                </div>
+                                </div>  
                             </div>
                         </div>
                         <div className='mt-3 '>
@@ -113,7 +76,7 @@ const AddAccount = () => {
                              {/* <div className="flex rounded-sm ml-4 bg-gray-500 text-white">
                                  <IoMdArrowRoundBack className='mt-3 ml-2' />
                                  <button className='p-2'>Back</button>
-                             </div>*/}
+                                 </div>*/}
                         </div>  
                     </div>
                 </div>
@@ -122,4 +85,4 @@ const AddAccount = () => {
   )
 }
 
-export default AddAccount
+export default UnitAdd

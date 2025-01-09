@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 import Nav from '../../components/Nav';
 import SideNav from '../../components/SideNav';
-// import MyBreadCrumb from '../../components/BreadCrumb';
 import { Pagination } from 'rsuite';
-
 import { BiPrinter } from "react-icons/bi";
 import { FaRegCopy } from "react-icons/fa";
 import { MdEditSquare } from "react-icons/md";
@@ -17,11 +15,9 @@ import { MdDeleteOutline } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import useExportTable from '../../hooks/useExportTable';
 
+const Transaction = () => {
 
-
-// QuotationList page
-const Accounts = () => {
-  const copyTable = useExportTable()
+    const copyTable = useExportTable()
   const [activePage, setActivePage] = useState(1);
   const [selected, setSelected] = useState([]);
   const navigate = useNavigate();
@@ -67,7 +63,7 @@ const Accounts = () => {
 
   return (
     <>
-      <Nav title={"Account"} />
+     <Nav title={"Other Transaction"} />
       <main id='main'>
         <SideNav />
         <div className='content__body'>
@@ -115,7 +111,7 @@ const Accounts = () => {
 
             {/* Second Row */}
             <div className='list_buttons'>
-              <button className='bg-teal-500 hover:bg-teal-400' onClick={() => navigate('/admin/account/add')}>
+              <button className='bg-teal-500 hover:bg-teal-400' onClick={() => navigate('/admin/other-transaction/add')}>
                 <MdAdd className='text-lg' />
                 Add New
               </button>
@@ -146,9 +142,11 @@ const Accounts = () => {
                     <th className='py-2 px-4 border-b'>
                       <input type='checkbox' onChange={selectAll} checked={selected.length === 10} />
                     </th>
-                    <th className='py-2 px-4 border-b '>Title</th>
+                    <th className='py-2 px-4 border-b '>Date</th>
+                    <th className='py-2 px-4 border-b'>Purpose</th>
+                    <th className='py-2 px-4 border-b'>Transaction Number</th>
                     <th className='py-2 px-4 border-b'>Type</th>
-                    <th className='py-2 px-4 border-b'>Balance</th>
+                    <th className='py-2 px-4 border-b'>Amount</th>
                     <th className='py-2 px-4 border-b '>Action</th>
                   </tr>
                 </thead>
@@ -159,9 +157,11 @@ const Accounts = () => {
                         <td className='py-2 px-4 border-b max-w-[10px]'>
                           <input type='checkbox' checked={selected.includes(i)} onChange={() => handleCheckboxChange(i)} />
                         </td>
-                        <td className='px-4 border-b flex '>Cash</td>
-                        <td className='px-4 border-b'>Cash</td>
-                        <td className='px-4 border-b '>0</td>
+                        <td className='px-4 border-b '>27 Sep 2024</td>
+                        <td className='px-4 border-b'>tttttttttt9</td>
+                        <td className='px-4 border-b '>bbbb</td>
+                        <td className='p-4 border-b'>Income</td>
+                        <td className='p-4 border-b'>90.00</td>
                       
                         <td className='px-4 border-b min-w-[70px]'>
                           <div className='flex flex-col md:flex-row gap-2 mr-2'>
@@ -192,9 +192,8 @@ const Accounts = () => {
           </div>
         </div>
       </main>
-
     </>
   )
 }
 
-export default Accounts;
+export default Transaction
