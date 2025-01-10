@@ -14,7 +14,6 @@ import { Popover, Whisper } from 'rsuite';
 
 const SideNav = () => {
   const isSideBarOpen = localStorage.getItem("sideBarOpenStatus");
-  console.log(isSideBarOpen)
   const links = {
     "main": [
       {

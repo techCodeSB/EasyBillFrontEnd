@@ -19,6 +19,8 @@ document.title = 'Dashboard';
 
 const Dashboard = () => {
   const [activePage, setActivePage] = useState(1);
+
+  
   return (
     <>
       <Nav title={"Dashboard"}/>

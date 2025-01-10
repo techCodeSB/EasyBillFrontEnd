@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Nav from '../components/Nav';
 import SideNav from '../components/SideNav';
 import { FaRegEyeSlash } from "react-icons/fa";
@@ -8,39 +8,83 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 import { MdOutlineRemoveRedEye, MdUploadFile } from "react-icons/md";
 import checkfile from '../helper/checkfile';
 import useMyToaster from '../hooks/useMyToaster';
+import Cookies from 'js-cookie';
+import { useSelector } from 'react-redux';
 
 
 const Profile = () => {
   const toast = useMyToaster();
-  const inputvalidation = useMyToaster();
   const [profilePasswordField, setProfilePasswordField] = useState(false);
   const [currentPasswordField, setCurrentPasswordField] = useState(false);
   const [newPasswordField, setNewPasswordField] = useState(false);
   const [data, setData] = useState({
-    name: '', email: '', image: '', passWord: ''
+    name: '', email: '', profile: '', password: ''
   });
   const [cPassword, setCPassword] = useState({ currentPassword: '', newPassword: '' });
+
+
+  useEffect(() => {
+    const getProfile = async () => {
+      const url = process.env.REACT_APP_API_URL + "/user/get-user";
+      const cookie = Cookies.get("token");
+
+      const req = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": 'application/json'
+        },
+        body: JSON.stringify({ token: cookie })
+      })
+      const res = await req.json();
+      const image = res.profile.split('\\')[res.profile.split("\\").length - 1];
+      setData({ name: res.name, email: res.email, profile: image, password: '' });
+    }
+    getProfile();
+  }, [])
 
 
   const setFile = async (e) => {
     let validfile = await checkfile(e.target.files[0]);
 
     if (typeof (validfile) !== 'boolean') return toast(validfile, "error");
-    setData({ ...data, image: e.target.files[0] });
+    setData({ ...data, profile: e.target.files[0] });
   }
 
-  const updateProfile = () => {
-    console.log(data);
-  }
 
-  const update = (e) => {
-    if (data.name === "" || data.email === "" || data.image === "" || data.passWord === "") {
-      return inputvalidation("fill the blank", "warning")
+  const updateProfile = async (e) => {
+    if (data.name === "" || data.email === "" || data.password === "") {
+      return toast("fill the blank", "warning");
     }
+
+    try {
+      const url = process.env.REACT_APP_API_URL + "/user/create";
+      const updateData = { ...data, update: true, token: Cookies.get("token") }
+
+      const formData = new FormData();
+      Object.keys(updateData).forEach((k, _) => {
+        formData.append(k, updateData[k]);
+      })
+
+      const req = await fetch(url, {
+        method: "POST",
+        body: formData
+      })
+      const res = await req.json();
+      if (req.status === 500 || res.err) {
+        return toast(res.err, 'error');
+      }
+
+      return toast(res.msg, "success")
+
+    } catch (err) {
+      console.log(err)
+      return toast("Something went wrong", "error");
+    }
+
   }
 
   const clear = (e) => {
-    setData({ name: '', email: '', image: '', passWord: '' })
+    setData({ name: '', email: '', profile: '', password: '' })
   }
 
   const cpasswordClear = (e) => {
@@ -61,13 +105,9 @@ const Profile = () => {
               <div className='w-full'>
                 <div>
                   <p className='ml-1'>Name</p>
-
                   <input type="Text" className='mt-2 mb-2'
                     onChange={(e) => setData({ ...data, name: e.target.value })}
                     value={data.name} />
-
-                  <input type="Text" className='mt-2 mb-2 ' onChange={(e) => setData({ ...data, name: e.target.value })} value={data.name} />
-
                 </div>
                 <div>
                   <p className='ml-1'>Email</p>
@@ -80,21 +120,21 @@ const Profile = () => {
                 <div>
                   <p className='ml-1'>Image</p>
                   <div className='file__uploader__div'>
-                    <span className='file__name'>{data.image.name}</span>
+                    <span className='file__name'>{typeof (data.profile) == 'object' ? data.profile.name : data.profile}</span>
                     <div className="flex gap-2">
                       <input type="file" id="invoiceLogo" className='hidden' onChange={(e) => setFile(e)} />
                       <label htmlFor="invoiceLogo" className='file__upload' title='Upload'>
                         <MdUploadFile />
                       </label>
                       <LuFileX2 className='remove__upload ' title='Remove upload' onClick={() => {
-                        setData({ ...data, image: "" });
+                        setData({ ...data, profile: "" });
                       }} />
                     </div>
                   </div>
                 </div>
                 <p className='ml-1 mb-2 mt-2'>Password</p>
                 <div className='relative  '>
-                  <input type={profilePasswordField ? "text" : "password"} onChange={(e) => setData({ ...data, passWord: e.target.value })} value={data.passWord} />
+                  <input type={profilePasswordField ? "text" : "password"} onChange={(e) => setData({ ...data, password: e.target.value })} value={data.password} />
                   <div className='absolute top-2 right-3 cursor-pointer' onClick={() => setProfilePasswordField(!profilePasswordField)} >
                     {profilePasswordField ? <MdOutlineRemoveRedEye /> : <FaRegEyeSlash />}
                   </div>
@@ -104,7 +144,7 @@ const Profile = () => {
             <div className='flex justify-center pt-9'>
               <div className='flex rounded-sm bg-green-500 text-white'>
                 <FaRegCheckCircle className='mt-3 ml-2' />
-                <button className='p-2' onClick={update}>Update</button>
+                <button className='p-2' onClick={updateProfile}>Update</button>
               </div>
               <div className='flex rounded-sm ml-4 bg-blue-500 text-white'>
                 <LuRefreshCcw className='mt-3 ml-2' />
@@ -128,8 +168,7 @@ const Profile = () => {
                 value={cPassword.currentPassword} />
               <div className='absolute top-2 right-3' onClick={() => setCurrentPasswordField(!currentPasswordField)} >
 
-                <div className='absolute top-2 right-3 cursor-pointer  ' onClick={() => setCurrentPasswordField(!currentPasswordField)} >
-
+                <div className='absolute right-3 cursor-pointer  ' onClick={() => setCurrentPasswordField(!currentPasswordField)} >
                   {currentPasswordField ? <MdOutlineRemoveRedEye /> : <FaRegEyeSlash />}
                 </div>
               </div>
@@ -149,7 +188,7 @@ const Profile = () => {
                 <div className='flex justify-center pt-9'>
                   <div className='flex rounded-sm bg-green-500 text-white'>
                     <FaRegCheckCircle className='mt-3 ml-2' />
-                    <button className='p-2' onClick={update}>Update</button>
+                    <button className='p-2' >Update</button>
                   </div>
                   <div className='flex rounded-sm ml-4 bg-blue-500 text-white'>
                     <LuRefreshCcw className='mt-3 ml-2' />

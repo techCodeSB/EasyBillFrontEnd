@@ -4,7 +4,8 @@ import { useState } from "react";
 import useLoginShake from "../hooks/useLoginShake";
 import { useNavigate } from 'react-router-dom';
 import useMyToaster from '../hooks/useMyToaster';
-
+import Cookies from 'js-cookie';
+import useGetUserData from "../hooks/useGetUserData";
 
 
 const Login = () => {
@@ -12,6 +13,7 @@ const Login = () => {
   const shakeIt = useLoginShake();
   const navigate = useNavigate();
   const toast = useMyToaster();
+  const getUserData = useGetUserData();
 
 
   const formAction = async (e) => {
@@ -25,7 +27,6 @@ const Login = () => {
       }
     }
 
-
     try {
       const url = process.env.REACT_APP_API_URL + "/user/login";
       const req = await fetch(url, {
@@ -38,11 +39,11 @@ const Login = () => {
 
       const res = await req.json();
       if (req.status !== 200 || !res.login) {
-        return toast(res.err, "warning")
+        return toast(res.err, "error")
       }
 
-      document.cookie = `token=${res.token}; path=/;`;
-
+      Cookies.set("token", res.token, {secure:true});
+      getUserData();
       navigate("/admin/dashboard")
 
     } catch (error) {
