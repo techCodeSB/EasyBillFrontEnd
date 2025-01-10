@@ -110,13 +110,13 @@ const SideNav = () => {
       {
         name: 'Accounts',
         icon: <CiImageOn />,
-        link: '/admin/dashboard',
+        link: '/admin/account',
         submenu: null
       },
       {
         name: 'Other Transactions',
         icon: <CiImageOn />,
-        link: '/admin/dashboard',
+        link: '/admin/other-transaction',
         submenu: null
       },
     ],

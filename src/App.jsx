@@ -10,8 +10,13 @@ const Signup = React.lazy(() => import("./pages/Signup"));
 const Accounts = React.lazy(() => import("./pages/accounts/Accounts"));
 const AddAccount = React.lazy(() => import("./pages/accounts/AddAccount"));
 const Setting = React.lazy(() => import("./pages/Setting"));
+
 const Party = React.lazy(() => import("./pages/party/Party"));
 const AddParty = React.lazy(()=>import('./pages/party/AddParty'));
+
+const TransactionAdd = React.lazy(() => import("./pages/Transactions/TransactionAdd"));
+const Transaction = React.lazy(() => import("./pages/Transactions/Transaction"));
+const UnitAdd = React.lazy(() => import("./pages/Unit/UnitAdd"));
 
 
 const App = () => {
@@ -37,6 +42,10 @@ const App = () => {
         <Route path="admin/account" element={<Accounts />} />
         <Route path="/admin/party" element={<Party />} />
         <Route path="/admin/party/add" element={<AddParty />} />
+        <Route path="admin/other-transaction/add" element={<TransactionAdd />} />
+        <Route path="admin/other-transaction" element={<Transaction />} />
+        <Route path="admin/unit/add" element={< UnitAdd/>} />
+
       </Routes>
     </Suspense>
 

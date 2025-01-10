@@ -2,7 +2,7 @@ import "../assets/css/login.css"
 import Logo from '../assets/images/logo.png';
 import { useState } from "react";
 import useLoginShake from "../hooks/useLoginShake";
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import useMyToaster from '../hooks/useMyToaster';
 
 
@@ -12,7 +12,7 @@ const Signup = () => {
   const navigate = useNavigate();
   const shakeIt = useLoginShake();
   const [signupData, setsignupData] = useState({ name: '', email: '', password: '' });
-  const toast = useMyToaster()
+  const toast = useMyToaster();
 
 
   const formAction = async (e) => {
@@ -27,18 +27,18 @@ const Signup = () => {
     }
 
     try {
-      const url = "http://localhost:8080/api/v1/user/create";
+      const url = process.env.REACT_APP_API_URL + "/user/create";
       const req = await fetch(url, {
         method: "POST",
-        headers:{
-          "Content-Type":"application/json"
+        headers: {
+          "Content-Type": "application/json"
         },
         body: JSON.stringify(signupData)
       });
 
       const res = await req.json();
-      console.log(res)
-      if(req.status !== 200 || !res.register){
+
+      if (req.status !== 200 || !res.register) {
         return toast(res.err, "error")
       }
 
