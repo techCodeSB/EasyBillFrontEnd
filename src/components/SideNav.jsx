@@ -135,13 +135,13 @@ const SideNav = () => {
       {
         name: 'Unit',
         icon: <CiImageOn />,
-        link: '/admin/dashboard',
+        link: '/admin/unit',
         submenu: null
       },
       {
         name: 'Tax',
         icon: <CiImageOn />,
-        link: '/admin/dashboard',
+        link: '/admin/tax',
         submenu: null
       },
       {
@@ -152,13 +152,13 @@ const SideNav = () => {
           {
             name: 'Category',
             icon: <CiImageOn />,
-            link: '/admin/dashboard',
+            link: '/admin/item-category',
             submenu: null
           },
           {
             name: 'Items',
             icon: <CiImageOn />,
-            link: '/admin/dashboard',
+            link: '/admin/item',
             submenu: null
           },
         ]

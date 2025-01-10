@@ -17,6 +17,16 @@ const AddParty = React.lazy(()=>import('./pages/party/AddParty'));
 const TransactionAdd = React.lazy(() => import("./pages/Transactions/TransactionAdd"));
 const Transaction = React.lazy(() => import("./pages/Transactions/Transaction"));
 const UnitAdd = React.lazy(() => import("./pages/Unit/UnitAdd"));
+const Unit = React.lazy(() => import("./pages/Unit/Unit"));
+const Tax = React.lazy(() => import("./pages/Tax/Tax"));
+const TaxAdd = React.lazy(() => import("./pages/Tax/TaxAdd"));
+const CategoryAdd = React.lazy(() => import("./pages/Item/CategoryAdd"));
+const Category = React.lazy(() => import("./pages/Item/Category")); 
+const ItemAdd = React.lazy(() => import("./pages/Items/ItemAdd")); 
+const Item = React.lazy(() => import("./pages/Items/Item")); 
+const RoleAdd = React.lazy(() => import("./pages/Role/RoleAdd"));
+const Role = React.lazy(() => import("./pages/Role/Role"));
+
 
 
 const App = () => {
@@ -39,6 +49,7 @@ const App = () => {
         <Route path="/admin/quotation-estimate/add" element={<AddQutation />} />
         <Route path="/admin/profile" element={<Profile />} />
         <Route path="/admin/account/add" element={<AddAccount />} />
+<<<<<<< HEAD
         <Route path="admin/account" element={<Accounts />} />
         <Route path="/admin/party" element={<Party />} />
         <Route path="/admin/party/add" element={<AddParty />} />
@@ -46,6 +57,21 @@ const App = () => {
         <Route path="admin/other-transaction" element={<Transaction />} />
         <Route path="admin/unit/add" element={< UnitAdd/>} />
 
+=======
+        <Route path="/admin/account" element={<Accounts />} />
+        <Route path="/admin/other-transaction/add" element={<TransactionAdd />} />
+        <Route path="/admin/other-transaction" element={<Transaction />} />
+        <Route path="/admin/unit/add" element={< UnitAdd/>} />
+        <Route path="/admin/unit" element={< Unit />} />
+        <Route path="/admin/tax/add" element={< TaxAdd />} />
+        <Route path="/admin/tax"  element={< Tax />} />
+        <Route path="/admin/item-category/add" element={< CategoryAdd />} />
+        <Route path="/admin/item-category" element={<Category />} />
+        <Route path="/admin/item/add" element={< ItemAdd />} />
+        <Route path="/admin/item" element={< Item/>} />
+        <Route path="/admin/role/add" element={< RoleAdd/>} />
+        <Route path="/admin/role" element={< Role/>} />
+>>>>>>> 41b4482914352aa583d75528c2995bcae0dba926
       </Routes>
     </Suspense>
 

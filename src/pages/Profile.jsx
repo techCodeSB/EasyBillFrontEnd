@@ -91,6 +91,12 @@ const Profile = () => {
     setCPassword({ currentPassword: '', newPassword: '' })
   }
 
+  const Cpasswordupdata = (e) => {
+    if (cPassword.currentPassword === "" || cPassword.newPassword === "") {
+      return inputvalidation("fill the blank", "warning")
+    }
+  }
+
 
   return (
     <>
@@ -172,6 +178,7 @@ const Profile = () => {
                   {currentPasswordField ? <MdOutlineRemoveRedEye /> : <FaRegEyeSlash />}
                 </div>
               </div>
+
               <p className='ml-1 mb-3 mt-2'>New password</p>
               <div className='relative  '>
                 <input type={newPasswordField ? "text" : "password"}
@@ -197,7 +204,28 @@ const Profile = () => {
                 </div>
               </div >
             </div >
+
           </div>
+          <p className='ml-1 mb-3 mt-2'>New password</p>
+          <div className='relative  '>
+            <input type={newPasswordField ? "text" : "password"}
+              onChange={(e) => setCPassword({ ...cPassword, newPassword: e.target.value })}
+              value={cPassword.newPassword} />
+            <div className='absolute top-2 right-3  cursor-pointer ' onClick={() => setNewPasswordField(!newPasswordField)} >
+              {newPasswordField ? <MdOutlineRemoveRedEye /> : <FaRegEyeSlash />}
+            </div>
+          </div>
+          <div className='flex justify-center pt-9'>
+            <div className='flex rounded-sm bg-green-500 text-white'>
+              <FaRegCheckCircle className='mt-3 ml-2' />
+              <button className='p-2' onClick={Cpasswordupdata}>Update</button>
+            </div>
+            <div className='flex rounded-sm ml-4 bg-blue-500 text-white'>
+              <LuRefreshCcw className='mt-3 ml-2' />
+              <button className='p-2' onClick={cpasswordClear}>Reset</button>
+            </div>
+          </div>
+
         </div>
       </main >
     </>
