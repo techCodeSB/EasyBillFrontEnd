@@ -46,6 +46,12 @@ const Profile = () => {
     setCPassword({ currentPassword: '', newPassword: '' })
   }
 
+  const Cpasswordupdata = (e) => {
+    if(cPassword.currentPassword === "" || cPassword.newPassword === ""){
+      return inputvalidation("fill the blank", "warning")
+    }
+  }
+
 
   return (
     <>
@@ -133,7 +139,7 @@ const Profile = () => {
             <div className='flex justify-center pt-9'>
               <div className='flex rounded-sm bg-green-500 text-white'>
                 <FaRegCheckCircle className='mt-3 ml-2' />
-                <button className='p-2' onClick={update}>Update</button>
+                <button className='p-2' onClick={Cpasswordupdata}>Update</button>
               </div>
               <div className='flex rounded-sm ml-4 bg-blue-500 text-white'>
                 <LuRefreshCcw className='mt-3 ml-2' />

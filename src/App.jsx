@@ -13,6 +13,9 @@ const Setting = React.lazy(() => import("./pages/Setting"));
 const TransactionAdd = React.lazy(() => import("./pages/Transactions/TransactionAdd"));
 const Transaction = React.lazy(() => import("./pages/Transactions/Transaction"));
 const UnitAdd = React.lazy(() => import("./pages/Unit/UnitAdd"));
+const Unit = React.lazy(() => import("./pages/Unit/Unit"));
+const Tax = React.lazy(() => import("./pages/Tax/Tax"));
+const TaxAdd = React.lazy(() => import("./pages/Tax/TaxAdd"));
 
 const App = () => {
   return (
@@ -34,10 +37,13 @@ const App = () => {
         <Route path="/admin/quotation-estimate/add" element={<AddQutation />} />
         <Route path="/admin/profile" element={<Profile />} />
         <Route path="/admin/account/add" element={<AddAccount />} />
-        <Route path="admin/account" element={<Accounts />} />
-        <Route path="admin/other-transaction/add" element={<TransactionAdd />} />
-        <Route path="admin/other-transaction" element={<Transaction />} />
-        <Route path="admin/unit/add" element={< UnitAdd/>} />
+        <Route path="/admin/account" element={<Accounts />} />
+        <Route path="/admin/other-transaction/add" element={<TransactionAdd />} />
+        <Route path="/admin/other-transaction" element={<Transaction />} />
+        <Route path="/admin/unit/add" element={< UnitAdd/>} />
+        <Route path="/admin/unit" element={< Unit />} />
+        <Route path="/admin/tax/add" element={< TaxAdd />} />
+        <Route path="/admin/tax"  element={< Tax />} />
       </Routes>
     </Suspense>
 
