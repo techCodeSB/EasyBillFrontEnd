@@ -153,13 +153,13 @@ const SideNav = () => {
           {
             name: 'Category',
             icon: <CiImageOn />,
-            link: '/admin/dashboard',
+            link: '/admin/item-category',
             submenu: null
           },
           {
             name: 'Items',
             icon: <CiImageOn />,
-            link: '/admin/dashboard',
+            link: '/admin/item',
             submenu: null
           },
         ]
