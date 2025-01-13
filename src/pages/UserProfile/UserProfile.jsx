@@ -15,7 +15,7 @@ import { MdDeleteOutline } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import useExportTable from '../../hooks/useExportTable';
 
-const Unit = () => {
+const UserProfile = () => {
 
     const copyTable = useExportTable()
   const [activePage, setActivePage] = useState(1);
@@ -63,7 +63,7 @@ const Unit = () => {
 
   return (
     <>
-     <Nav title={"Unit"} />
+     <Nav title={"User Profile"} />
       <main id='main'>
         <SideNav />
         <div className='content__body'>
@@ -111,7 +111,7 @@ const Unit = () => {
 
             {/* Second Row */}
             <div className='list_buttons'>
-              <button className='bg-teal-500 hover:bg-teal-400' onClick={() => navigate('/admin/unit/add')}>
+              <button className='bg-teal-500 hover:bg-teal-400' onClick={() => navigate('/admin/user-profile/add')}>
                 <MdAdd className='text-lg' />
                 Add New
               </button>
@@ -142,8 +142,12 @@ const Unit = () => {
                     <th className='py-2 px-4 border-b w-[50px]'>
                       <input type='checkbox' onChange={selectAll} checked={selected.length === 10} />
                     </th>
-                    <th className='py-2 px-4 border-b '>Title</th>
+                    <th className='py-2 px-4 border-b '>Name</th>
+                    <th className='py-2 px-4 border-b '>Email</th>
+                    <th className='py-2 px-4 border-b '>Role</th>
+                    <th className='py-2 px-4 border-b '>Status</th>
                     <th className='py-2 px-4 border-b '>Action</th>
+                  
                   </tr>
                 </thead>
                 <tbody>
@@ -153,16 +157,18 @@ const Unit = () => {
                         <td className='py-2 px-4 border-b max-w-[10px]'>
                           <input type='checkbox' checked={selected.includes(i)} onChange={() => handleCheckboxChange(i)} />
                         </td>
-                        <td className='px-4 border-b '>Bag</td>
-                       
+                        <td className='px-4 border-b'>Admin</td>
+                        <td className='px-4 border-b'>info@test.com</td>
+                        <td className='px-4 border-b'>Admin</td>
+                        <td className='px-4 border-b'>Ative</td>
                       
                         <td className='px-4 border-b min-w-[70px]'>
-                          <div className='flex justify-end flex-col md:flex-row gap-2 mr-2'>
-                            <button className='bg-blue-400 text-white px-2 py-1 rounded w-[50px] text-[16px]'>
-                              <MdEditSquare className='ml-2'/>
+                          <div className='flex flex-col md:flex-row gap-2 mr-2'>
+                            <button className='bg-blue-400 text-white px-2 py-1 rounded w-[50px] text-[16px] '>
+                              <MdEditSquare  className=' flex justify-between items-center ml-2'/>
                             </button>
                             <button className='bg-red-500 text-white px-2 py-1 rounded w-[50px] text-lg'>
-                              <IoInformationCircle className='ml-2'/>
+                              <IoInformationCircle className='flex justify-between items-center ml-2' />
                             </button>
                           </div>
                         </td>
@@ -189,4 +195,4 @@ const Unit = () => {
   )
 }
 
-export default Unit
+export default UserProfile

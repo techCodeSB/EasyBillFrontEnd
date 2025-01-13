@@ -19,9 +19,9 @@ const Nav = ({ title }) => {
   const dispatch = useDispatch();
   const getUserData = useGetUserData(); // Get user info api call
 
-  useEffect(() => {
-    getUserData();
-  }, [])
+  // useEffect(() => {
+  //   getUserData();
+  // }, [])
 
 
   const toggleSideBar = () => {

@@ -25,6 +25,8 @@ const Item = React.lazy(() => import("./pages/Items/Item"));
 const RoleAdd = React.lazy(() => import("./pages/Role/RoleAdd"));
 const Role = React.lazy(() => import("./pages/Role/Role"));
 const AddCompany = React.lazy(() => import("./pages/company/AddCompany"));
+const UserProfileAdd = React.lazy(() => import("./pages/UserProfile/UserProfileAdd"));
+const UserProfile = React.lazy(() => import("./pages/UserProfile/UserProfile"));
 
 
 const App = () => {
@@ -46,7 +48,7 @@ const App = () => {
         <Route path="/admin/site" element={<Setting />} />
         <Route path="/admin/company" element={<AddCompany />} />
         <Route path="/admin/quotation-estimate/add" element={<AddQutation />} />
-        <Route path="/admin/profile" element={<Profile />} />
+        {/* <Route path="/admin/profile" element={<Profile />} /> */}
         <Route path="/admin/account/add" element={<AddAccount />} />
         <Route path="admin/account" element={<Accounts />} />
         <Route path="/admin/party" element={<Party />} />
@@ -67,6 +69,8 @@ const App = () => {
         <Route path="/admin/item" element={< Item />} />
         <Route path="/admin/role/add" element={< RoleAdd />} />
         <Route path="/admin/role" element={< Role />} />
+        <Route path="/admin/user-profile/add" element={< UserProfileAdd />} />
+        <Route path="/admin/user-profile" element={< UserProfile />} />
       </Routes>
     </Suspense>
 
