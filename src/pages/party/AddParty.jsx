@@ -6,7 +6,8 @@ import { countryList, statesAndUTs } from '../../helper/data';
 import { Editor } from '@tinymce/tinymce-react';
 import { BiReset } from 'react-icons/bi';
 import { FaRegCheckCircle } from 'react-icons/fa';
-import useMyToaster from '../../hooks/useMyToaster'
+import useMyToaster from '../../hooks/useMyToaster';
+import Cookies from 'js-cookie'
 
 const AddParty = () => {
   const editorRef = useRef(null);
@@ -17,13 +18,50 @@ const AddParty = () => {
     details: ''
   })
 
-  const saveParty = () => {
+  const saveParty = async () => {
     if ([partyData.name, partyData.type, partyData.contactNumber, partyData.address, partyData.gst, partyData.pan, partyData.country, partyData.state].some((field) => field === "")) {
       return toast("fill the require", "error")
     }
 
-    
+    try {
+      const url = process.env.REACT_APP_API_URL + "/party/add";
+      const token = Cookies.get("token");
+      const req = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ ...partyData, token })
+      })
+      const res = await req.json();
+      if (req.status !== 200 || res.err) {
+        return toast(res.err, 'error');
+      }
+
+      setPartyData({
+        name: "", type: "", contactNumber: "", address: "",
+        pan: "", gst: "", country: "", state: "", openingBalance: "0",
+        details: ''
+      });
+
+      return toast("Party create successfully", 'success');
+
+
+    } catch (error) {
+      return toast("Something went wrong", "error")
+    }
+
   }
+
+  const clear = () => {
+    setPartyData({
+      name: "", type: "", contactNumber: "", address: "",
+      pan: "", gst: "", country: "", state: "", openingBalance: "0",
+      details: ''
+    })
+  }
+
+
 
 
 
@@ -61,8 +99,10 @@ const AddParty = () => {
                 </div>
                 <div>
                   <p className='mb-1'>Address</p>
-                  <textarea rows={1} onChange={(e) => setPartyData({ ...partyData, address: e.target.value })}
-                  >{partyData.address}</textarea>
+                  <textarea rows={1}
+                    value={partyData.address}
+                    onChange={(e) => setPartyData({ ...partyData, address: e.target.value })}
+                  ></textarea>
                 </div>
               </div>
 
@@ -106,6 +146,7 @@ const AddParty = () => {
               onEditorChange={(v, editor) => {
                 setPartyData({ ...partyData, details: editor.getContent() })
               }}
+              value={partyData.details}
               apiKey='765rof3c4qgyk8u59xk0o3vvhvji0y156uwtbjgezhnbcct7'
               onInit={(_evt, editor) => editorRef.current = editor}
               init={{
@@ -131,7 +172,9 @@ const AddParty = () => {
                 <FaRegCheckCircle />
                 Save
               </button>
-              <button className='bg-blue-800 hover:bg-blue-700 text-md text-white rounded w-[60px] flex items-center justify-center gap-1 py-2'>
+              <button
+                onClick={clear}
+                className='bg-blue-800 hover:bg-blue-700 text-md text-white rounded w-[60px] flex items-center justify-center gap-1 py-2'>
                 <BiReset />
                 Reset
               </button>

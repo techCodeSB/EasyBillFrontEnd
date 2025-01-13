@@ -36,16 +36,16 @@ const Setting = () => {
       try {
         const url = process.env.REACT_APP_API_URL + "/company/get";
         const req = await fetch(url, {
-          method:"POST",
-          headers:{
+          method: "POST",
+          headers: {
             "Content-Type": 'application/json'
           },
-          body:JSON.stringify({token: Cookies.get("token")})
+          body: JSON.stringify({ token: Cookies.get("token") })
         });
         const res = await req.json();
 
-        console.log(res)
-        setCompanyData({...res})
+        console.log(res.address)
+        setCompanyData({ ...res })
 
       } catch (error) {
         console.log(error)
@@ -90,11 +90,47 @@ const Setting = () => {
 
   const saveSiteData = () => {
     if (Object.keys(siteData).some((field) => siteData[field] === "")) {
-      return toast("fill the blank", "warning")
+      return toast("fill the blank", "error")
     }
 
 
   }
+
+  const updateCompany = async () => {
+    console.log(companyData)
+    if (Object.values(companyData).some((field) => field === "")) {
+      return toast("fill the blank.", "error")
+    }
+
+    try {
+      const updateCompanyData = { ...companyData };
+      const formData = new FormData();
+      formData.append("update", true);
+      formData.append("token", Cookies.get("token"))
+      Object.keys(updateCompanyData).forEach((el, _) => {
+        formData.append(el, updateCompanyData[el])
+      })
+      const url = process.env.REACT_APP_API_URL + "/company/add";
+      const req = await fetch(url, {
+        method: "POST",
+        body: formData
+      });
+      const res = await req.json();
+      if (req.status !== 200 || res.update === false) {
+        return toast(res.err, 'error')
+      }
+
+      document.location.reload();
+      return toast(res.msg, 'success')
+
+
+    } catch (error) {
+      return toast("Something went wrong", "warning")
+    }
+
+  }
+
+
 
 
   return (
@@ -387,7 +423,7 @@ const Setting = () => {
                   <div>
                     <p>Bill/Invoice Logo</p>
                     <div className='file__uploader__div'>
-                      <span className='file__name'>{companyData.invoiceLogo.name}</span>
+                      <span className='file__name'>{typeof (companyData.invoiceLogo) === "object" ? companyData.invoiceLogo.name : companyData.invoiceLogo}</span>
                       <div className="flex gap-2">
                         <input type="file" id="invoiceLogo" className='hidden' onChange={(e) => fileUpload(e, 'invoiceLogo')} />
                         <label htmlFor="invoiceLogo" className='file__upload' title='Upload'>
@@ -400,7 +436,7 @@ const Setting = () => {
                   <div>
                     <p>Authority Signature</p>
                     <div className='file__uploader__div'>
-                      <span className='file__name'>{companyData.signature.name}</span>
+                      <span className='file__name'>{typeof (companyData.signature) === "object" ? companyData.signature.name : companyData.signature}</span>
                       <div className="flex gap-2">
                         <input type="file" id="signutre" className='hidden' onChange={(e) => fileUpload(e, 'signutre')} />
                         <label htmlFor="signutre" className='file__upload' title='Upload'>
@@ -412,15 +448,20 @@ const Setting = () => {
                   </div>
                   <div>
                     <p>Company Address</p>
-                    <textarea name="" id="" rows={1}></textarea>
+                    <textarea rows={1}
+                      value={companyData.address}
+                      onChange={(e) => setCompanyData({ ...companyData, address: e.target.value })}
+                    ></textarea>
                   </div>
                   <div>
                     <p>Select Country</p>
-                    <SelectPicker className='w-full' data={countryList} />
+                    <SelectPicker className='w-full' data={countryList}
+                      value={companyData.country} onChange={(v) => setCompanyData({ ...companyData, country: v })} />
                   </div>
                   <div>
                     <p>Select State</p>
-                    <SelectPicker className='w-full' data={statesAndUTs} />
+                    <SelectPicker className='w-full' data={statesAndUTs}
+                      value={companyData.state} onChange={(v) => setCompanyData({ ...companyData, state: v })} />
                   </div>
                 </div>
               </div>
@@ -436,9 +477,18 @@ const Setting = () => {
                   </thead>
                   <tbody>
                     <tr>
-                      <td className='min-w-[150px]'><input type="text" id="" /></td>
-                      <td className='min-w-[150px]'><input type="text" id="" /></td>
-                      <td className='min-w-[150px]'><input type="text" id="" /></td>
+                      <td className='min-w-[150px]'>
+                        <input type="text" onChange={(e) => setCompanyData({ ...companyData, poInitial: e.target.value })}
+                          value={companyData.poInitial} />
+                      </td>
+                      <td className='min-w-[150px]'>
+                        <input type="text" onChange={(e) => setCompanyData({ ...companyData, invoiceInitial: e.target.value })}
+                          value={companyData.invoiceInitial} />
+                      </td>
+                      <td className='min-w-[150px]'>
+                        <input type="text" onChange={(e) => setCompanyData({ ...companyData, proformaInitial: e.target.value })}
+                          value={companyData.proformaInitial} />
+                      </td>
                     </tr>
                   </tbody>
                   <tfoot>
@@ -448,9 +498,18 @@ const Setting = () => {
                       <th>Next Count</th>
                     </tr>
                     <tr>
-                      <td className='min-w-[150px]'><input type="text" id="" /></td>
-                      <td className='min-w-[150px]'><input type="text" id="" /></td>
-                      <td className='min-w-[150px]'><input type="text" id="" /></td>
+                      <td className='min-w-[150px]'>
+                        <input type="text" onChange={(e) => setCompanyData({ ...companyData, poNextCount: e.target.value })}
+                          value={companyData.poNextCount} />
+                      </td>
+                      <td className='min-w-[150px]'>
+                        <input type="text" onChange={(e) => setCompanyData({ ...companyData, invoiceNextCount: e.target.value })}
+                          value={companyData.invoiceNextCount} />
+                      </td>
+                      <td className='min-w-[150px]'>
+                        <input type="text" onChange={(e) => setCompanyData({ ...companyData, proformaNextCount: e.target.value })}
+                          value={companyData.proformaNextCount} />
+                      </td>
                     </tr>
                   </tfoot>
                 </table>
@@ -458,17 +517,21 @@ const Setting = () => {
               <div className="w-full flex flex-col lg:flex-row gap-2 lg:gap-5">
                 <div className='w-full'>
                   <p>Sales Invoice Reminder (Days Before)</p>
-                  <input type="text" name="" id="" />
+                  <input type="text" onChange={(e) => setCompanyData({ ...companyData, salesReminder: e.target.value })}
+                    value={companyData.salesReminder} />
                 </div>
                 <div className='w-full'>
                   <p>Purchase Invoice Reminder (Days Before)</p>
-                  <input type="text" name="" id="" />
+                  <input type="text" onChange={(e) => setCompanyData({ ...companyData, purchaseReminder: e.target.value })}
+                    value={companyData.purchaseReminder} />
                 </div>
               </div>
               <div className='w-full flex justify-center gap-3 my-3'>
-                <button className='bg-green-500 hover:bg-green-400 text-md text-white rounded w-[60px] flex items-center justify-center gap-1 py-2'>
+                <button
+                  onClick={updateCompany}
+                  className='bg-green-500 hover:bg-green-400 text-md text-white rounded w-[70px] flex items-center justify-center gap-1 py-2'>
                   <FaRegCheckCircle />
-                  Save
+                  Update
                 </button>
                 <button className='bg-blue-800 hover:bg-blue-700 text-md text-white rounded w-[60px] flex items-center justify-center gap-1 py-2'>
                   <BiReset />

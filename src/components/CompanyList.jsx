@@ -6,9 +6,10 @@ import { IoIosAddCircle } from "react-icons/io";
 import Cookies from 'js-cookie';
 import useMyToaster from '../hooks/useMyToaster';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 
-const CompanyList = ({ isOpen }) => {
+const CompanyList = ({ isOpen, getCompanyName }) => {
   const toast = useMyToaster();
   const dispatch = useDispatch();
   const storeVal = useSelector((state) => state.companyListModal.show);
@@ -16,6 +17,14 @@ const CompanyList = ({ isOpen }) => {
   const companies = Object.keys(userData).length === 0 ? [] : userData.companies;
   const navigate = useNavigate()
 
+
+  useEffect(() => {
+    companies.forEach((c, _) => {
+      if (c._id === userData.activeCompany) {
+        getCompanyName(c.name)
+      }
+    });
+  }, [companies])
 
   const switchCompan = async (id) => {
     try {

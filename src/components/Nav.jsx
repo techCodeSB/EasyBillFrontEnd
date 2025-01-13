@@ -7,7 +7,6 @@ import { FiUser } from "react-icons/fi";
 import { IoIosLogOut } from "react-icons/io";
 import { Avatar, Popover, Whisper } from 'rsuite';
 import { Link } from 'react-router-dom';
-import { RiArrowDropDownLine } from "react-icons/ri";
 import CompanyList from './CompanyList';
 import { useDispatch } from 'react-redux';
 import { toggleModal } from '../store/copanyListSlice';
@@ -20,6 +19,7 @@ const Nav = ({ title }) => {
   const [sideBar, setSideBar] = useState(true);
   const dispatch = useDispatch();
   const getUserData = useGetUserData(); // Get user info api call
+  const [companyName, setCompanyName] = useState("");
 
   useEffect(() => {
     getUserData();
@@ -69,7 +69,7 @@ const Nav = ({ title }) => {
               onClick={() => {
                 dispatch(toggleModal(true))
               }}>
-              <span className='text-[12px]'>Company 1</span>
+              <span className='text-[12px]'>{companyName}</span>
               <HiOutlineSwitchHorizontal className='text-[16px] ml-2 text-blue-700' />
             </div>
             <Whisper className='' trigger={'click'} placement='bottomEnd' speaker={<Popover full>
@@ -94,7 +94,7 @@ const Nav = ({ title }) => {
           </div>
         </div>
       </nav>
-      <CompanyList />
+      <CompanyList getCompanyName={(n) => setCompanyName(n)} />
     </>
   )
 }

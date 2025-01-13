@@ -1,8 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Nav from '../../components/Nav';
 import SideNav from '../../components/SideNav';
 import { Pagination } from 'rsuite';
-
 import { BiPrinter } from "react-icons/bi";
 import { FaRegCopy } from "react-icons/fa";
 import { MdEditSquare } from "react-icons/md";
@@ -15,15 +14,41 @@ import { MdOutlineRestorePage } from "react-icons/md";
 import { MdDeleteOutline } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import useExportTable from '../../hooks/useExportTable';
+import Cookies from 'js-cookie';
 
 const Party = () => {
-  const copyTable = useExportTable()
+  const copyTable = useExportTable();
   const [activePage, setActivePage] = useState(1);
   const [selected, setSelected] = useState([]);
   const navigate = useNavigate();
+  const [partyData, setPartyData] = useState([]);
+
+
+  // Get partys;
+  useEffect(() => {
+    const getParty = async () => {
+      try {
+        const url = process.env.REACT_APP_API_URL + "/party/get";
+        const req = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": 'application/json'
+          },
+          body: JSON.stringify({ token: Cookies.get("token") })
+        });
+        const res = await req.json();
+
+        setPartyData([...res])
+
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    getParty();
+  }, [])
 
   const searchTable = (e) => {
-
     const value = e.target.value.toLowerCase();
     const rows = document.querySelectorAll('.list__table tbody tr');
 
@@ -136,7 +161,7 @@ const Party = () => {
                     <th className='py-2 px-4 border-b w-[50px]'>
                       <input type='checkbox' onChange={selectAll} checked={selected.length === 10} />
                     </th>
-                    <th className='py-2 px-4 border-b '>Name</th>
+                    <th className='py-2 px-4 border-b'>Name</th>
                     <th className='py-2 px-4 border-b'>Type</th>
                     <th className='py-2 px-4 border-b'>Balance</th>
                     <th className='py-2 px-4 border-b w-[100px]'>Action</th>
@@ -144,14 +169,14 @@ const Party = () => {
                 </thead>
                 <tbody>
                   {
-                    Array.from({ length: 10 }).map((_, i) => {
+                    partyData.map((data, i) => {
                       return <tr key={i}>
                         <td className='py-2 px-4 border-b'>
                           <input type='checkbox' checked={selected.includes(i)} onChange={() => handleCheckboxChange(i)} />
                         </td>
-                        <td className='px-4 border-b'>Party Name</td>
-                        <td className='px-4 border-b'>INV/PI/1</td>
-                        <td className='px-4 border-b'>07 Jan 2025</td>
+                        <td className='px-4 border-b'>{data.name}</td>
+                        <td className='px-4 border-b'>{data.type}</td>
+                        <td className='px-4 border-b'>{data.openingBalance}</td>
                         <td className='px-4 border-b'>
                           <div className='flex flex-col md:flex-row gap-2 mr-2'>
                             <button className='bg-blue-400 text-white px-2 py-1 rounded w-full text-[16px]'>
