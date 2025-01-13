@@ -18,8 +18,10 @@ import { IoInformationCircle } from "react-icons/io5";
 document.title = 'Dashboard';
 
 const Dashboard = () => {
-  const [activePage, setActivePage] = useState(1);
-
+  const [accountpaginationPage, setAccountpaginationPage] = useState(1);
+  const [recentsalepagination, setRecentsalepagination] = useState(1);
+  const [recentpurchasepagination, setRecentpurchasepagination] = useState(1);
+  const [stockalertpagination, setStockalertpagination] = useState(1);
   
   return (
     <>
@@ -111,7 +113,7 @@ const Dashboard = () => {
                 <p className='mt-3'>Showing 1 to 1 of 1 entries</p>
               </div>
               <div className='flex justify-end'>
-                <Pagination total={100} maxButtons={4} activePage={activePage} onChangePage={setActivePage} />
+                <Pagination total={100} maxButtons={4} activePage={accountpaginationPage} onChangePage={setAccountpaginationPage} />
               </div>
             </div>
           </div>
@@ -187,12 +189,12 @@ const Dashboard = () => {
                 <p className='mt-3 pl-3'>Showing 1 to 1 of 1 entries</p>
               </div>
               <div className='flex justify-end pb-3'>
-                <Pagination total={100} maxButtons={4} activePage={activePage} onChangePage={setActivePage} />
+                 <Pagination total={100} maxButtons={4} activePage={recentsalepagination} onChangePage={setRecentsalepagination} /> 
               </div>
             </div>
             <div className='w-full bg-white' >
               <div className='pt-2'>
-                <p className='font-bold text-lg pl-2'>Recent Due Dates(Sales)</p>
+                <p className='font-bold text-lg pl-2'>Recent Due Dates(Purchase)</p>
               </div>
               <div className='flex  justify-between w-full'>
                 <div className='flex gap-2 ml-2 pt-2 w-full '>
@@ -261,7 +263,7 @@ const Dashboard = () => {
                 <p className='mt-3 pl-3 '>Showing 1 to 1 of 1 entries</p>
               </div>
               <div className='flex justify-end pb-3'>
-                <Pagination total={100} maxButtons={4} activePage={activePage} onChangePage={setActivePage} />
+                 <Pagination total={100} maxButtons={4} activePage={recentpurchasepagination} onChangePage={setRecentpurchasepagination} /> 
               </div>
               </div>
           </div>
@@ -311,7 +313,7 @@ const Dashboard = () => {
                   <p className='mt-3 pl-2 '>Showing 1 to 2 of 2 entries</p>
                   </div>
                 <div className='flex justify-end pb-3'>
-                  <Pagination total={100} maxButtons={4} activePage={activePage} onChangePage={setActivePage} />
+                   <Pagination total={100} maxButtons={4} activePage={stockalertpagination} onChangePage={setStockalertpagination} /> 
                 </div>
                </div>
            </div>
