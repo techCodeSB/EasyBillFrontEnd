@@ -166,7 +166,7 @@ const SideNav = () => {
       {
         name: 'Party',
         icon: <CiImageOn />,
-        link: '/admin/dashboard',
+        link: '/admin/party',
         submenu: null
       },
     ]

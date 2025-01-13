@@ -6,9 +6,10 @@ import { LuFileX2 } from "react-icons/lu";
 import { countryList, statesAndUTs } from '../helper/data';
 import { FaRegCheckCircle } from 'react-icons/fa';
 import { BiReset } from 'react-icons/bi';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import checkfile from '../helper/checkfile'
 import useMyToaster from '../hooks/useMyToaster';
+import Cookies from 'js-cookie'
 
 
 
@@ -29,6 +30,30 @@ const Setting = () => {
     proformaInitial: '', poNextCount: '', invoiceNextCount: '', proformaNextCount: '',
     salesReminder: '', purchaseReminder: ''
   })
+
+  useEffect(() => {
+    const getCompany = async () => {
+      try {
+        const url = process.env.REACT_APP_API_URL + "/company/get";
+        const req = await fetch(url, {
+          method:"POST",
+          headers:{
+            "Content-Type": 'application/json'
+          },
+          body:JSON.stringify({token: Cookies.get("token")})
+        });
+        const res = await req.json();
+
+        console.log(res)
+        setCompanyData({...res})
+
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    getCompany();
+  }, [])
 
   const fileUpload = async (e, field) => {
     const validatefile = await checkfile(e.target.files[0]);

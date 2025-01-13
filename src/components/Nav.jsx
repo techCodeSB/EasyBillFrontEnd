@@ -12,6 +12,8 @@ import CompanyList from './CompanyList';
 import { useDispatch } from 'react-redux';
 import { toggleModal } from '../store/copanyListSlice';
 import useGetUserData from "../hooks/useGetUserData";
+import { HiOutlineSwitchHorizontal } from "react-icons/hi";
+
 
 
 const Nav = ({ title }) => {
@@ -68,7 +70,7 @@ const Nav = ({ title }) => {
                 dispatch(toggleModal(true))
               }}>
               <span className='text-[12px]'>Company 1</span>
-              <RiArrowDropDownLine className='text-[20px]' />
+              <HiOutlineSwitchHorizontal className='text-[16px] ml-2 text-blue-700' />
             </div>
             <Whisper className='' trigger={'click'} placement='bottomEnd' speaker={<Popover full>
               <Link className='menu-link' to={"/admin/site"}>
