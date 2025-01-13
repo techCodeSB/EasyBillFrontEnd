@@ -7,10 +7,16 @@ const userDetailSlice = createSlice({
   reducers: {
     add: (state, action) => {
       Object.assign(state, action.payload)
+    },
+
+    addCompany: (state, action) => {
+      state.companies.push(action.payload);
+
+      console.log(state);
     }
   }
 })
 
 
-export const {add} = userDetailSlice.actions;
+export const { add, addCompany } = userDetailSlice.actions;
 export default userDetailSlice.reducer;

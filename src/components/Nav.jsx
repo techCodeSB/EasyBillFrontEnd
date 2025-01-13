@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Logo from '../assets/images/logo.png'
 import { TbMenuDeep } from "react-icons/tb";
 import { FaUser } from "react-icons/fa";
@@ -11,11 +11,18 @@ import { RiArrowDropDownLine } from "react-icons/ri";
 import CompanyList from './CompanyList';
 import { useDispatch } from 'react-redux';
 import { toggleModal } from '../store/copanyListSlice';
+import useGetUserData from "../hooks/useGetUserData";
 
 
 const Nav = ({ title }) => {
   const [sideBar, setSideBar] = useState(true);
   const dispatch = useDispatch();
+  const getUserData = useGetUserData(); // Get user info api call
+
+  useEffect(() => {
+    getUserData();
+  }, [])
+
 
   const toggleSideBar = () => {
     // setSideBar((prev) => {
@@ -85,9 +92,10 @@ const Nav = ({ title }) => {
           </div>
         </div>
       </nav>
-      <CompanyList/>
+      <CompanyList />
     </>
   )
 }
 
-export default Nav
+export default Nav;
+

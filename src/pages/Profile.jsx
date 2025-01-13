@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 import Nav from '../components/Nav';
 import SideNav from '../components/SideNav';
 import { FaRegEyeSlash } from "react-icons/fa";
@@ -21,26 +21,13 @@ const Profile = () => {
     name: '', email: '', profile: '', password: ''
   });
   const [cPassword, setCPassword] = useState({ currentPassword: '', newPassword: '' });
-
+  const userData = useSelector((state) => state.userDetail)
+  console.log(userData)
 
   useEffect(() => {
-    const getProfile = async () => {
-      const url = process.env.REACT_APP_API_URL + "/user/get-user";
-      const cookie = Cookies.get("token");
-
-      const req = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": 'application/json'
-        },
-        body: JSON.stringify({ token: cookie })
-      })
-      const res = await req.json();
-      const image = res.profile.split('\\')[res.profile.split("\\").length - 1];
-      setData({ name: res.name, email: res.email, profile: image, password: '' });
-    }
-    getProfile();
-  }, [])
+    const image = Object.keys(userData).length > 0 ? userData.profile.split('\\')[userData.profile.split("\\").length - 1] : "";
+    setData({ name: userData.name, email: userData.email, profile: image })
+  }, [userData])
 
 
   const setFile = async (e) => {
@@ -83,17 +70,41 @@ const Profile = () => {
 
   }
 
-  const clear = (e) => {
-    setData({ name: '', email: '', profile: '', password: '' })
-  }
-
-  const cpasswordClear = (e) => {
-    setCPassword({ currentPassword: '', newPassword: '' })
-  }
-
-  const Cpasswordupdata = (e) => {
+  const updatePassword = async () => {
     if (cPassword.currentPassword === "" || cPassword.newPassword === "") {
-      return inputvalidation("fill the blank", "warning")
+      return toast("fill the blank", "error")
+    }
+
+    try {
+      const url = process.env.REACT_APP_API_URL + "/user/change-pass";
+      const req = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...cPassword, token: Cookies.get("token") })
+      })
+      const res = await req.json();
+      if (req.status === 500 || res.err) {
+        return toast(res.err, 'error');
+      }
+
+      setCPassword({ currentPassword: '', newPassword: '' })
+      return toast(res.msg, "success")
+
+    } catch (err) {
+      console.log(err)
+      return toast("Something went wrong", "error");
+    }
+
+
+  }
+
+  const clear = (which) => {
+    if (which === 1) {
+      setData({ name: '', email: '', profile: '', password: '' })
+    } else {
+      setCPassword({ currentPassword: '', newPassword: '' })
     }
   }
 
@@ -154,7 +165,7 @@ const Profile = () => {
               </div>
               <div className='flex rounded-sm ml-4 bg-blue-500 text-white'>
                 <LuRefreshCcw className='mt-3 ml-2' />
-                <button className='p-2' onClick={clear}>Reset</button>
+                <button className='p-2' onClick={() => clear(1)}>Reset</button>
               </div>
               {/* <div className="flex rounded-sm ml-4 bg-gray-500 text-white">
                  <IoMdArrowRoundBack className='mt-3 ml-2' />
@@ -186,44 +197,22 @@ const Profile = () => {
                   value={cPassword.newPassword} />
 
                 <div className='absolute top-2 right-3' onClick={() => setNewPasswordField(!newPasswordField)} >
-
                   <div className='absolute top-2 right-3  cursor-pointer ' onClick={() => setNewPasswordField(!newPasswordField)} >
-
                     {newPasswordField ? <MdOutlineRemoveRedEye /> : <FaRegEyeSlash />}
                   </div>
                 </div>
                 <div className='flex justify-center pt-9'>
                   <div className='flex rounded-sm bg-green-500 text-white'>
                     <FaRegCheckCircle className='mt-3 ml-2' />
-                    <button className='p-2' >Update</button>
+                    <button className='p-2' onClick={updatePassword}>Update</button>
                   </div>
                   <div className='flex rounded-sm ml-4 bg-blue-500 text-white'>
                     <LuRefreshCcw className='mt-3 ml-2' />
-                    <button className='p-2' onClick={cpasswordClear}>Reset</button>
+                    <button className='p-2' onClick={() => clear(2)}>Reset</button>
                   </div>
                 </div>
               </div >
             </div >
-
-          </div>
-          <p className='ml-1 mb-3 mt-2'>New password</p>
-          <div className='relative  '>
-            <input type={newPasswordField ? "text" : "password"}
-              onChange={(e) => setCPassword({ ...cPassword, newPassword: e.target.value })}
-              value={cPassword.newPassword} />
-            <div className='absolute top-2 right-3  cursor-pointer ' onClick={() => setNewPasswordField(!newPasswordField)} >
-              {newPasswordField ? <MdOutlineRemoveRedEye /> : <FaRegEyeSlash />}
-            </div>
-          </div>
-          <div className='flex justify-center pt-9'>
-            <div className='flex rounded-sm bg-green-500 text-white'>
-              <FaRegCheckCircle className='mt-3 ml-2' />
-              <button className='p-2' onClick={Cpasswordupdata}>Update</button>
-            </div>
-            <div className='flex rounded-sm ml-4 bg-blue-500 text-white'>
-              <LuRefreshCcw className='mt-3 ml-2' />
-              <button className='p-2' onClick={cpasswordClear}>Reset</button>
-            </div>
           </div>
 
         </div>

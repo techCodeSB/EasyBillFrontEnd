@@ -10,6 +10,9 @@ import { IoIosAddCircle } from "react-icons/io";
 const CompanyList = ({ isOpen }) => {
   const dispatch = useDispatch();
   const storeVal = useSelector((state) => state.companyListModal.show);
+  const userData = useSelector((state) => state.userDetail);
+  const companies = Object.keys(userData).length === 0 ? []: userData.companies;
+  console.log(companies)
 
   return (
     <div id='companyList' >
@@ -19,9 +22,10 @@ const CompanyList = ({ isOpen }) => {
         </Modal.Header>
         <Modal.Body>
           {
-            Array.from({ length: 5 }).map((v, _) => (
-              <div className='flex items-center justify-between w-full hover:bg-gray-100 p-1 rounded cursor-pointer'>
-                <p className='text-[12px]'>Company {v}</p>
+            companies.map((v, index) => (
+              <div key={index}
+                className='flex items-center justify-between w-full hover:bg-gray-100 p-1 rounded cursor-pointer'>
+                <p className='text-[12px]'>{v.name}</p>
                 <FaCheck className='text-orange-400' />
               </div>
             ))

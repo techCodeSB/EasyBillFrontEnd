@@ -5,16 +5,12 @@ import useLoginShake from "../hooks/useLoginShake";
 import { useNavigate } from 'react-router-dom';
 import useMyToaster from '../hooks/useMyToaster';
 import Cookies from 'js-cookie';
-import useGetUserData from "../hooks/useGetUserData";
-
 
 const Login = () => {
   const [loginData, setLoginData] = useState({ email: '', password: '' });
   const shakeIt = useLoginShake();
   const navigate = useNavigate();
   const toast = useMyToaster();
-  const getUserData = useGetUserData();
-
 
   const formAction = async (e) => {
     e.preventDefault();
@@ -43,7 +39,6 @@ const Login = () => {
       }
 
       Cookies.set("token", res.token, {secure:true});
-      getUserData();
       navigate("/admin/dashboard")
 
     } catch (error) {
