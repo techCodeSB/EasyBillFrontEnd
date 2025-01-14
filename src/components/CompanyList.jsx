@@ -18,6 +18,8 @@ const CompanyList = ({ isOpen, getCompanyName }) => {
   const navigate = useNavigate()
 
 
+
+
   useEffect(() => {
     companies.forEach((c, _) => {
       if (c._id === userData.activeCompany) {

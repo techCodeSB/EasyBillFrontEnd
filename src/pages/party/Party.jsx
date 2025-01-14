@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Nav from '../../components/Nav';
 import SideNav from '../../components/SideNav';
 import { Pagination } from 'rsuite';
@@ -15,14 +15,24 @@ import { MdDeleteOutline } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import useExportTable from '../../hooks/useExportTable';
 import Cookies from 'js-cookie';
+import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
+import useMyToaster from '../../hooks/useMyToaster';
 
+
+document.title = "Party"
 const Party = () => {
-  const copyTable = useExportTable();
+  const toast = useMyToaster();
+  const { copyTable, downloadExcel, printTable, exportPdf } = useExportTable();
   const [activePage, setActivePage] = useState(1);
   const [selected, setSelected] = useState([]);
   const navigate = useNavigate();
   const [partyData, setPartyData] = useState([]);
+  const tableRef = useRef(null);
+  const exportData = partyData.map(({ name, type, openingBalance }) => ({
+    Name: name, Type: type, OpeningBalance: openingBalance
+  }));
 
+  console.log('run party----')
 
   // Get partys;
   useEffect(() => {
@@ -51,7 +61,6 @@ const Party = () => {
   const searchTable = (e) => {
     const value = e.target.value.toLowerCase();
     const rows = document.querySelectorAll('.list__table tbody tr');
-
     rows.forEach(row => {
       const cols = row.querySelectorAll('td');
       let found = false;
@@ -70,27 +79,81 @@ const Party = () => {
 
   const selectAll = (e) => {
     if (e.target.checked) {
-      setSelected(Array.from({ length: 10 }, (_, i) => i));
+      setSelected(partyData.map(party => party._id));
     } else {
       setSelected([]);
     }
   };
 
-  const handleCheckboxChange = (index) => {
+  const handleCheckboxChange = (id) => {
     setSelected((prevSelected) => {
-      if (prevSelected.includes(index)) {
-        return prevSelected.filter((i) => i !== index);
+      if (prevSelected.includes(id)) {
+        return prevSelected.filter((previd, _) => previd !== id);
       } else {
-        return [...prevSelected, index];
+        return [...prevSelected, id];
       }
     });
   };
+
+
+
+  const exportTable = (whichType) => {
+    if (whichType === "copy") {
+      copyTable("listOfPartys"); // Pass tableid
+    }
+    else if (whichType === "excel") {
+      downloadExcel(exportData, 'party-list.xlsx') // pass data and filename
+    }
+    else if (whichType === "print") {
+      printTable(tableRef, "Party List"); // pass table ref and title
+    }
+  }
+
+  const removeData = async (trash) => {
+    if (selected.length === 0) {
+      return;
+    }
+    const url = process.env.REACT_APP_API_URL + "/party/delete";
+    try {
+      const req = await fetch(url, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ ids: selected, trash: trash })
+      });
+      const res = await req.json();
+
+      if (req.status !== 200 || res.err) {
+        return toast(res.err, 'error');
+      }
+
+      selected.forEach((id, _) => {
+        setPartyData((prevData) => {
+          return prevData.filter((data, _) => data._id !== id)
+        })
+      });
+      setSelected([]);
+
+      return toast(res.msg, 'success');
+
+    } catch (error) {
+      console.log(error)
+      toast("Something went wrong", "error")
+    }
+  }
+
+
+
 
   return (
     <>
       <Nav title={"Party"} />
       <main id='main' >
         <SideNav />
+        {/* <PDFViewer width={'100%'}>
+          {exportPdf("Party List", exportData)}
+        </PDFViewer> */}
         <div className="content__body">
           <div className='content__body__main bg-white'>
             {/* First Row */}
@@ -107,18 +170,20 @@ const Party = () => {
                 </div>
                 <div className='list__icons'>
                   <div className='list__icon' title='Print'>
-                    <BiPrinter className='text-white text-[16px]' />
+                    <BiPrinter className='text-white text-[16px]' onClick={() => exportTable('print')} />
                   </div>
                   <div className='list__icon' title='Copy'>
-                    <FaRegCopy className='text-white text-[16px]' onClick={() => {
-                      // copyTable("listQuotation");
-                    }} />
+                    <FaRegCopy className='text-white text-[16px]' onClick={() => exportTable('copy')} />
                   </div>
-                  <div className='list__icon' title='PDF'>
-                    <FaRegFilePdf className='text-white text-[16px]' />
-                  </div>
+                  <PDFDownloadLink
+                    document={exportPdf('Party List', exportData)}
+                    fileName="party">
+                    <div className='list__icon' title='PDF'>
+                      <FaRegFilePdf className="text-white text-[16px]" />
+                    </div>
+                  </PDFDownloadLink>
                   <div className='list__icon' title='Excel'>
-                    <FaRegFileExcel className='text-white text-[16px]' />
+                    <FaRegFileExcel className='text-white text-[16px]' onClick={() => exportTable('excel')} />
                   </div>
                 </div>
               </div>
@@ -134,7 +199,7 @@ const Party = () => {
                 <MdAdd className='text-lg' />
                 Add New
               </button>
-              <button className='bg-orange-400 hover:bg-orange-300'>
+              <button className='bg-orange-400 hover:bg-orange-300' onClick={() => removeData(true)}>
                 <MdOutlineCancel className='text-lg' />
                 Trash
               </button>
@@ -155,11 +220,11 @@ const Party = () => {
 
             {/* Table start */}
             <div className='overflow-x-auto mt-5 list__table'>
-              <table className='min-w-full bg-white' id='listQuotation'>
+              <table className='min-w-full bg-white' id='listOfPartys' ref={tableRef}>
                 <thead className='bg-gray-100'>
                   <tr>
                     <th className='py-2 px-4 border-b w-[50px]'>
-                      <input type='checkbox' onChange={selectAll} checked={selected.length === 10} />
+                      <input type='checkbox' onChange={selectAll} checked={selected.length === partyData.length} />
                     </th>
                     <th className='py-2 px-4 border-b'>Name</th>
                     <th className='py-2 px-4 border-b'>Type</th>
@@ -172,7 +237,7 @@ const Party = () => {
                     partyData.map((data, i) => {
                       return <tr key={i}>
                         <td className='py-2 px-4 border-b'>
-                          <input type='checkbox' checked={selected.includes(i)} onChange={() => handleCheckboxChange(i)} />
+                          <input type='checkbox' checked={selected.includes(data._id)} onChange={() => handleCheckboxChange(data._id)} />
                         </td>
                         <td className='px-4 border-b'>{data.name}</td>
                         <td className='px-4 border-b'>{data.type}</td>
@@ -205,7 +270,7 @@ const Party = () => {
             </div>
           </div>
         </div>
-      </main>
+      </main >
     </>
   )
 }
