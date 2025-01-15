@@ -18,9 +18,15 @@ import downloadPdf from '../../helper/downloadPdf';
 import Cookies from 'js-cookie';
 import useMyToaster from '../../hooks/useMyToaster';
 
+<<<<<<< HEAD
 const Tax = () => {
   const toast = useMyToaster();
   const { copyTable, downloadExcel, printTable, exportPdf } = useExportTable();
+=======
+const Tax = ({mode}) => {
+
+    const copyTable = useExportTable()
+>>>>>>> dec09c559e09af3dc21613d45c68d5430a68bff5
   const [activePage, setActivePage] = useState(1);
   const [selected, setSelected] = useState([]);
   const navigate = useNavigate();
@@ -283,8 +289,14 @@ const Tax = () => {
 
                         <td className='px-4 border-b min-w-[70px]'>
                           <div className='flex flex-col md:flex-row gap-2 mr-2'>
+<<<<<<< HEAD
                             <button className='bg-blue-400 text-white px-2 py-1 rounded w-[50px] text-[16px] '>
                               <MdEditSquare className=' flex justify-between items-center ml-2' />
+=======
+                            <button className='bg-blue-400 text-white px-2 py-1 rounded w-[50px] text-[16px] '
+                             onClick={() => navigate('/admin/tax/edit')} > {mode}
+                              <MdEditSquare  className=' flex justify-between items-center ml-2'/>
+>>>>>>> dec09c559e09af3dc21613d45c68d5430a68bff5
                             </button>
                             <button className='bg-red-500 text-white px-2 py-1 rounded w-[50px] text-lg'>
                               <IoInformationCircle className='flex justify-between items-center ml-2' />
