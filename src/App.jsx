@@ -51,8 +51,11 @@ const App = () => {
         <Route path="/admin/profile" element={<Profile />} />
         <Route path="/admin/account/add" element={<AddAccount />} />
         <Route path="admin/account" element={<Accounts />} />
+
         <Route path="/admin/party" element={<Party />} />
         <Route path="/admin/party/add" element={<AddParty />} />
+        <Route path="/admin/party/edit/:id" element={<AddParty mode={"edit"}/>} />
+
         <Route path="admin/other-transaction/add" element={<TransactionAdd />} />
         <Route path="admin/other-transaction" element={<Transaction />} />
         <Route path="admin/unit/add" element={< UnitAdd />} />

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import Nav from '../../components/Nav';
 import SideNav from '../../components/SideNav';
 import { Pagination } from 'rsuite';
@@ -15,8 +15,8 @@ import { MdDeleteOutline } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import useExportTable from '../../hooks/useExportTable';
 import Cookies from 'js-cookie';
-import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
 import useMyToaster from '../../hooks/useMyToaster';
+import downloadPdf from '../../helper/downloadPdf';
 
 
 document.title = "Party"
@@ -28,35 +28,44 @@ const Party = () => {
   const navigate = useNavigate();
   const [partyData, setPartyData] = useState([]);
   const tableRef = useRef(null);
-  const exportData = partyData.map(({ name, type, openingBalance }) => ({
-    Name: name, Type: type, OpeningBalance: openingBalance
-  }));
+  const [tableStatusData, setTableStatusData] = useState('active');
+  const exportData = useMemo(() => {
+    return partyData && partyData.map(({ name, type, openingBalance }) => ({
+      Name: name,
+      Type: type,
+      OpeningBalance: openingBalance,
+    }));
+  }, [partyData]);
 
-  console.log('run party----')
 
-  // Get partys;
+  // Get data;
   useEffect(() => {
     const getParty = async () => {
       try {
+        const data = {
+          token: Cookies.get("token"),
+          trash: tableStatusData === "trash" ? true : false,
+          all: tableStatusData === "all" ? true : false
+        }
         const url = process.env.REACT_APP_API_URL + "/party/get";
         const req = await fetch(url, {
           method: "POST",
           headers: {
             "Content-Type": 'application/json'
           },
-          body: JSON.stringify({ token: Cookies.get("token") })
+          body: JSON.stringify(data)
         });
         const res = await req.json();
-
         setPartyData([...res])
 
       } catch (error) {
         console.log(error)
       }
     }
-
     getParty();
-  }, [])
+  }, [tableStatusData])
+
+
 
   const searchTable = (e) => {
     const value = e.target.value.toLowerCase();
@@ -96,21 +105,25 @@ const Party = () => {
   };
 
 
-
-  const exportTable = (whichType) => {
+  const exportTable = async (whichType) => {
     if (whichType === "copy") {
       copyTable("listOfPartys"); // Pass tableid
     }
     else if (whichType === "excel") {
-      downloadExcel(exportData, 'party-list.xlsx') // pass data and filename
+      downloadExcel(exportData, 'party-list.xlsx') // Pass data and filename
     }
     else if (whichType === "print") {
-      printTable(tableRef, "Party List"); // pass table ref and title
+      printTable(tableRef, "Party List"); // Pass table ref and title
+    }
+    else if (whichType === "pdf") {
+      let document = exportPdf('Party List', exportData);
+      downloadPdf(document)
     }
   }
 
+
   const removeData = async (trash) => {
-    if (selected.length === 0) {
+    if (selected.length === 0 || tableStatusData !== 'active') {
       return;
     }
     const url = process.env.REACT_APP_API_URL + "/party/delete";
@@ -144,6 +157,40 @@ const Party = () => {
   }
 
 
+  const restoreData = async () => {
+    if (selected.length === 0 || tableStatusData !== "trash") {
+      return;
+    }
+
+    const url = process.env.REACT_APP_API_URL + "/party/restore";
+    try {
+      const req = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ ids: selected })
+      });
+      const res = await req.json();
+
+      if (req.status !== 200 || res.err) {
+        return toast(res.err, 'error');
+      }
+
+      selected.forEach((id, _) => {
+        setPartyData((prevData) => {
+          return prevData.filter((data, _) => data._id !== id)
+        })
+      });
+      setSelected([]);
+      return toast(res.msg, 'success');
+
+    } catch (error) {
+      console.log(error)
+      toast("Something went wrong", "error")
+    }
+  }
+
 
 
   return (
@@ -175,13 +222,9 @@ const Party = () => {
                   <div className='list__icon' title='Copy'>
                     <FaRegCopy className='text-white text-[16px]' onClick={() => exportTable('copy')} />
                   </div>
-                  <PDFDownloadLink
-                    document={exportPdf('Party List', exportData)}
-                    fileName="party">
-                    <div className='list__icon' title='PDF'>
-                      <FaRegFilePdf className="text-white text-[16px]" />
-                    </div>
-                  </PDFDownloadLink>
+                  <div className='list__icon' title='PDF' onClick={()=>exportTable('pdf')}>
+                    <FaRegFilePdf className="text-white text-[16px]" />
+                  </div>
                   <div className='list__icon' title='Excel'>
                     <FaRegFileExcel className='text-white text-[16px]' onClick={() => exportTable('excel')} />
                   </div>
@@ -203,18 +246,20 @@ const Party = () => {
                 <MdOutlineCancel className='text-lg' />
                 Trash
               </button>
-              <button className='bg-green-500 hover:bg-green-400'>
+              <button onClick={restoreData} className='bg-green-500 hover:bg-green-400'>
                 <MdOutlineRestorePage className='text-lg' />
                 Restore
               </button>
-              <button className='bg-red-600 hover:bg-red-500'>
+              <button onClick={() => removeData(false)} className='bg-red-600 hover:bg-red-500'>
                 <MdDeleteOutline className='text-lg' />
                 Delete
               </button>
-              <select name="" id="" className='bg-blue-500 text-white'>
-                <option value="">All</option>
-                <option value="">Active</option>
-                <option value="">Trash</option>
+              <select value={tableStatusData}
+                onChange={(e) => setTableStatusData(e.target.value)}
+                className='bg-blue-500 text-white'>
+                <option value="all">All</option>
+                <option value="active">Active</option>
+                <option value="trash">Trash</option>
               </select>
             </div>
 
@@ -244,7 +289,9 @@ const Party = () => {
                         <td className='px-4 border-b'>{data.openingBalance}</td>
                         <td className='px-4 border-b'>
                           <div className='flex flex-col md:flex-row gap-2 mr-2'>
-                            <button className='bg-blue-400 text-white px-2 py-1 rounded w-full text-[16px]'>
+                            <button
+                              onClick={() => navigate("/admin/party/edit/" + data._id)}
+                              className='bg-blue-400 text-white px-2 py-1 rounded w-full text-[16px]'>
                               <MdEditSquare />
                             </button>
                             <button className='bg-red-500 text-white px-2 py-1 rounded w-full text-lg'>

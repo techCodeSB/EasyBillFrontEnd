@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Nav from '../../components/Nav';
 import SideNav from '../../components/SideNav';
 import { SelectPicker } from 'rsuite';
@@ -7,16 +7,43 @@ import { Editor } from '@tinymce/tinymce-react';
 import { BiReset } from 'react-icons/bi';
 import { FaRegCheckCircle } from 'react-icons/fa';
 import useMyToaster from '../../hooks/useMyToaster';
-import Cookies from 'js-cookie'
+import Cookies from 'js-cookie';
+import { useParams } from 'react-router-dom';
 
-const AddParty = () => {
+
+
+const AddParty = ({mode}) => {
   const editorRef = useRef(null);
+  const { id } = useParams()
   const toast = useMyToaster()
   const [partyData, setPartyData] = useState({
     name: "", type: "", contactNumber: "", address: "",
     pan: "", gst: "", country: "", state: "", openingBalance: "0",
     details: ''
   })
+
+  useEffect(() => {
+    if (mode) {
+      const get = async () => {
+        const url = process.env.REACT_APP_API_URL + "/party/get";
+        const cookie = Cookies.get("token");
+
+        const req = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": 'application/json'
+          },
+          body: JSON.stringify({ token: cookie, id: id })
+        })
+        const res = await req.json();
+        setPartyData({ ...partyData, ...res });
+      }
+
+      get();
+    }
+  }, [mode])
+
+
 
   const saveParty = async () => {
     if ([partyData.name, partyData.type, partyData.contactNumber, partyData.address, partyData.gst, partyData.pan, partyData.country, partyData.state].some((field) => field === "")) {
@@ -31,20 +58,22 @@ const AddParty = () => {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ ...partyData, token })
+        body: JSON.stringify(!mode ? { ...partyData, token } : { ...partyData, token, update: true, id: id })
       })
       const res = await req.json();
       if (req.status !== 200 || res.err) {
         return toast(res.err, 'error');
       }
 
-      setPartyData({
-        name: "", type: "", contactNumber: "", address: "",
-        pan: "", gst: "", country: "", state: "", openingBalance: "0",
-        details: ''
-      });
+      if (!mode) {
+        setPartyData({
+          name: "", type: "", contactNumber: "", address: "",
+          pan: "", gst: "", country: "", state: "", openingBalance: "0",
+          details: ''
+        });
+      }
 
-      return toast("Party create successfully", 'success');
+      return toast(!mode ? "Party create success" : "Party update success", 'success');
 
 
     } catch (error) {
@@ -67,7 +96,7 @@ const AddParty = () => {
 
   return (
     <>
-      <Nav title={"Add Party"} />
+      <Nav title={mode ? "Update Party" : "Add Party"} />
       <main id='main'>
         <SideNav />
         <div className="content__body">
@@ -168,9 +197,9 @@ const AddParty = () => {
             <div className='w-full flex justify-center gap-3 mt-3'>
               <button
                 onClick={saveParty}
-                className='bg-green-500 hover:bg-green-400 text-md text-white rounded w-[60px] flex items-center justify-center gap-1 py-2'>
+                className='bg-green-500 hover:bg-green-400 text-md text-white rounded w-[70px] flex items-center justify-center gap-1 py-2'>
                 <FaRegCheckCircle />
-                Save
+                {!mode ? "Save" : "Update"}
               </button>
               <button
                 onClick={clear}
