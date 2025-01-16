@@ -19,9 +19,25 @@ import Cookies from 'js-cookie';
 import useMyToaster from '../../hooks/useMyToaster';
 import { GrFormNext, GrFormPrevious } from 'react-icons/gr';
 
+<<<<<<< HEAD
 const Tax = ({ mode }) => {
   const toast = useMyToaster();
   const { copyTable, downloadExcel, printTable, exportPdf } = useExportTable();
+=======
+<<<<<<< HEAD
+const Tax = () => {
+=======
+<<<<<<< HEAD
+const Tax = () => {
+  const toast = useMyToaster();
+  const { copyTable, downloadExcel, printTable, exportPdf } = useExportTable();
+=======
+const Tax = ({mode}) => {
+>>>>>>> 5f604d112beaa06884b004fc6bda3a5b4076d737
+
+    const copyTable = useExportTable()
+>>>>>>> dec09c559e09af3dc21613d45c68d5430a68bff5
+>>>>>>> a64051297b582e854a46d398afb53de903b47596
   const [activePage, setActivePage] = useState(1);
   const [dataLimit, setDataLimit] = useState(10);
   const [totalData, setTotalData] = useState()
@@ -286,11 +302,33 @@ const Tax = ({ mode }) => {
                         </td>
                         <td className='px-4 border-b' align='center'>{data.title}</td>
 
+<<<<<<< HEAD
                         <td className='px-4 border-b min-w-[70px]' align='center'>
                           <div className='flex flex-col md:flex-row gap-2 mr-2'>
                             <button className='bg-blue-400 text-white px-2 py-1 rounded text-[16px] '
                               onClick={() => navigate(`/admin/tax/edit/${data._id}`)} >
                               <MdEditSquare />
+=======
+                        <td className='px-4 border-b min-w-[70px]'>
+<<<<<<< HEAD
+                          <div className='flex  justify-center flex-col md:flex-row gap-2 mr-2'>
+                            <button className='bg-blue-400 text-white px-2 py-1 rounded  text-[16px] '
+                             onClick={() => navigate('/admin/tax/edit')} > 
+=======
+                          <div className='flex flex-col md:flex-row gap-2 mr-2'>
+<<<<<<< HEAD
+                            <button className='bg-blue-400 text-white px-2 py-1 rounded w-[50px] text-[16px] '>
+                              <MdEditSquare className=' flex justify-between items-center ml-2' />
+=======
+                            <button className='bg-blue-400 text-white px-2 py-1 rounded w-[50px] text-[16px] '
+                             onClick={() => navigate('/admin/tax/edit')} > {mode}
+>>>>>>> 5f604d112beaa06884b004fc6bda3a5b4076d737
+                              <MdEditSquare  className=' flex justify-between items-center ml-2'/>
+>>>>>>> dec09c559e09af3dc21613d45c68d5430a68bff5
+                            </button>
+                            <button className='bg-red-500 text-white px-2 py-1 rounded  text-lg'>
+                              <IoInformationCircle className='flex justify-between items-center ml-2' />
+>>>>>>> a64051297b582e854a46d398afb53de903b47596
                             </button>
                           </div>
                         </td >

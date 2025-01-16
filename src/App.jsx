@@ -51,6 +51,7 @@ const App = () => {
         <Route path="/admin/quotation-estimate/add" element={<AddQutation />} />
         <Route path="/admin/profile" element={<Profile />} />
         <Route path="/admin/account/add" element={<AddAccount />} />
+        <Route path="/admin/account/edit" element={<AddAccount mode="edit"/>} />
         <Route path="admin/account" element={<Accounts />} />
 
         <Route path="/admin/party" element={<Party />} />
@@ -59,26 +60,37 @@ const App = () => {
 
         <Route path="admin/other-transaction/add" element={<TransactionAdd />} />
         <Route path="admin/other-transaction" element={<Transaction />} />
+<<<<<<< HEAD
         
+=======
+>>>>>>> a64051297b582e854a46d398afb53de903b47596
         <Route path="/admin/unit" element={< Unit />} />
         <Route path="admin/unit/add" element={< UnitAdd />} />
         <Route path="admin/unit/edit/:id" element={< UnitAdd mode="edit"/>} />
 
         <Route path="/admin/account" element={<Accounts />} />
         <Route path="/admin/other-transaction/add" element={<TransactionAdd />} />
+        <Route path="/admin/other-transaction/edit" element={<TransactionAdd mode="edit"/>} />
         <Route path="/admin/other-transaction" element={<Transaction />} />
+<<<<<<< HEAD
         
+=======
+>>>>>>> a64051297b582e854a46d398afb53de903b47596
         <Route path="/admin/tax/add" element={< TaxAdd />} />
         <Route path="/admin/tax/edit/:id" element={< TaxAdd mode="edit" />} />
         <Route path="/admin/tax" element={< Tax />} />
 
         <Route path="/admin/item-category/add" element={< CategoryAdd />} />
+        <Route path="/admin/item-category/edit" element={< CategoryAdd mode="edit" />} />
         <Route path="/admin/item-category" element={<Category />} />
         <Route path="/admin/item/add" element={< ItemAdd />} />
+        <Route path="/admin/item/edit" element={< ItemAdd  mode="edit" />} />
         <Route path="/admin/item" element={< Item />} />
         <Route path="/admin/role/add" element={< RoleAdd />} />
+        <Route path="/admin/role/edit" element={< RoleAdd mode="edit" />} />
         <Route path="/admin/role" element={< Role />} />
         <Route path="/admin/user-profile/add" element={< UserProfileAdd />} />
+        <Route path="/admin/user-profile/edit" element={< UserProfileAdd mode="edit" />} />
         <Route path="/admin/user-profile" element={< UserProfile />} />
         <Route path="*" element={< NotFound />} />
       </Routes>
