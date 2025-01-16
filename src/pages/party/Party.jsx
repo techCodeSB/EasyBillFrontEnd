@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import Nav from '../../components/Nav';
 import SideNav from '../../components/SideNav';
-import { Pagination } from 'rsuite';
 import { BiPrinter } from "react-icons/bi";
 import { FaRegCopy } from "react-icons/fa";
 import { MdEditSquare } from "react-icons/md";
@@ -18,12 +17,19 @@ import Cookies from 'js-cookie';
 import useMyToaster from '../../hooks/useMyToaster';
 import downloadPdf from '../../helper/downloadPdf';
 
+import { GrFormNext } from "react-icons/gr";
+import { GrFormPrevious } from "react-icons/gr";
+
+
+
 
 document.title = "Party"
 const Party = () => {
   const toast = useMyToaster();
   const { copyTable, downloadExcel, printTable, exportPdf } = useExportTable();
   const [activePage, setActivePage] = useState(1);
+  const [dataLimit, setDataLimit] = useState(10);
+  const [totalData, setTotalData] = useState()
   const [selected, setSelected] = useState([]);
   const navigate = useNavigate();
   const [partyData, setPartyData] = useState([]);
@@ -47,7 +53,7 @@ const Party = () => {
           trash: tableStatusData === "trash" ? true : false,
           all: tableStatusData === "all" ? true : false
         }
-        const url = process.env.REACT_APP_API_URL + "/party/get";
+        const url = process.env.REACT_APP_API_URL + `/party/get?page=${activePage}&limit=${dataLimit}`;
         const req = await fetch(url, {
           method: "POST",
           headers: {
@@ -56,14 +62,15 @@ const Party = () => {
           body: JSON.stringify(data)
         });
         const res = await req.json();
-        setPartyData([...res])
+        setTotalData(res.totalData)
+        setPartyData([...res.data])
 
       } catch (error) {
         console.log(error)
       }
     }
     getParty();
-  }, [tableStatusData])
+  }, [tableStatusData, dataLimit, activePage])
 
 
 
@@ -208,11 +215,11 @@ const Party = () => {
               <div className='flex items-center gap-4 justify-between w-full lg:justify-start'>
                 <div className='flex flex-col'>
                   <p>Show</p>
-                  <select>
-                    <option>10</option>
-                    <option>25</option>
-                    <option>50</option>
-                    <option>100</option>
+                  <select value={dataLimit} onChange={(e) => setDataLimit(e.target.value)}>
+                    <option value={10}>10</option>
+                    <option value={25}>25</option>
+                    <option value={50}>50</option>
+                    <option value={100}>100</option>
                   </select>
                 </div>
                 <div className='list__icons'>
@@ -222,7 +229,7 @@ const Party = () => {
                   <div className='list__icon' title='Copy'>
                     <FaRegCopy className='text-white text-[16px]' onClick={() => exportTable('copy')} />
                   </div>
-                  <div className='list__icon' title='PDF' onClick={()=>exportTable('pdf')}>
+                  <div className='list__icon' title='PDF' onClick={() => exportTable('pdf')}>
                     <FaRegFilePdf className="text-white text-[16px]" />
                   </div>
                   <div className='list__icon' title='Excel'>
@@ -269,7 +276,7 @@ const Party = () => {
                 <thead className='bg-gray-100'>
                   <tr>
                     <th className='py-2 px-4 border-b w-[50px]'>
-                      <input type='checkbox' onChange={selectAll} checked={selected.length === partyData.length} />
+                      <input type='checkbox' onChange={selectAll} checked={partyData.length > 0 && selected.length === partyData.length} />
                     </th>
                     <th className='py-2 px-4 border-b'>Name</th>
                     <th className='py-2 px-4 border-b'>Type</th>
@@ -304,16 +311,36 @@ const Party = () => {
                   }
                 </tbody>
               </table>
-              <p className='py-4'>Showing 1 to 2 of 2 entries</p>
-              <div className='flex justify-end'>
-                <div className='bg-gray-200 p-1 rounded'>
-                  <Pagination total={100} limit={5}
-                    maxButtons={3}
-                    activePage={activePage}
-                    onChangePage={setActivePage}
-                  />
-                </div>
+              <p className='py-4'>Showing {partyData.length} of {totalData} entries</p>
+              {/* ----- Paginatin ----- */}
+              <div className='flex justify-end gap-2'>
+                {
+                  activePage > 1 ? <div
+                    onClick={() => setActivePage(activePage - 1)}
+                    className='border bg-blue-600 text-white w-[20px] h-[20px] grid place-items-center rounded cursor-pointer'>
+                    <GrFormPrevious />
+                  </div> : null
+                }
+                {
+                  Array.from({ length: Math.ceil((totalData / dataLimit)) }).map((_, i) => {
+                    return <div
+                      onClick={() => setActivePage(i + 1)}
+                      className='border-blue-400 border w-[20px] h-[20px] text-center rounded cursor-pointer'
+                      style={activePage === i + 1 ? { border: "1px solid blue" } : {}}
+                    >
+                      {i + 1}
+                    </div>
+                  })
+                }
+                {
+                  (totalData / dataLimit) > activePage ? <div
+                    onClick={() => setActivePage(activePage + 1)}
+                    className='border bg-blue-600 text-white w-[20px] h-[20px] flex items-center justify-center rounded cursor-pointer'>
+                    <GrFormNext />
+                  </div> : null
+                }
               </div>
+              {/* pagination end */}
             </div>
           </div>
         </div>

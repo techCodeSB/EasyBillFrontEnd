@@ -36,7 +36,7 @@ const AddParty = ({mode}) => {
           body: JSON.stringify({ token: cookie, id: id })
         })
         const res = await req.json();
-        setPartyData({ ...partyData, ...res });
+        setPartyData({ ...partyData, ...res.data });
       }
 
       get();

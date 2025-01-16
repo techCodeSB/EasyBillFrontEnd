@@ -59,16 +59,19 @@ const App = () => {
 
         <Route path="admin/other-transaction/add" element={<TransactionAdd />} />
         <Route path="admin/other-transaction" element={<Transaction />} />
+        
+        <Route path="/admin/unit" element={< Unit />} />
         <Route path="admin/unit/add" element={< UnitAdd />} />
-        <Route path="admin/unit/edit" element={< UnitAdd mode="edit"/>} />
+        <Route path="admin/unit/edit/:id" element={< UnitAdd mode="edit"/>} />
+
         <Route path="/admin/account" element={<Accounts />} />
         <Route path="/admin/other-transaction/add" element={<TransactionAdd />} />
         <Route path="/admin/other-transaction" element={<Transaction />} />
-        <Route path="/admin/unit/add" element={< UnitAdd />} />
-        <Route path="/admin/unit" element={< Unit />} />
+        
         <Route path="/admin/tax/add" element={< TaxAdd />} />
-        <Route path="/admin/tax/edit" element={< TaxAdd mode="edit" />} />
+        <Route path="/admin/tax/edit/:id" element={< TaxAdd mode="edit" />} />
         <Route path="/admin/tax" element={< Tax />} />
+
         <Route path="/admin/item-category/add" element={< CategoryAdd />} />
         <Route path="/admin/item-category" element={<Category />} />
         <Route path="/admin/item/add" element={< ItemAdd />} />
