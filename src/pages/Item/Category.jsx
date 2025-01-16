@@ -158,8 +158,9 @@ const Category = () => {
                         <td className='px-4 border-b '>57864</td>
                       
                         <td className='px-4 border-b min-w-[70px]'>
-                          <div className='flex justify-end flex-col md:flex-row gap-2 mr-2'>
-                            <button className='bg-blue-400 text-white px-2 py-1 rounded  text-[16px]'>
+                          <div className='flex justify-center flex-col md:flex-row gap-2 mr-2'>
+                            <button className='bg-blue-400 text-white px-2 py-1 rounded  text-[16px]'
+                              onClick={() => navigate('/admin/item-category/edit')}>
                               <MdEditSquare />
                             </button>
                             <button className='bg-red-500 text-white px-2 py-1 rounded  text-lg'>

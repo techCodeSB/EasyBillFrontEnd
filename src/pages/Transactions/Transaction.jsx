@@ -164,11 +164,12 @@ const Transaction = () => {
                         <td className='p-4 border-b'>90.00</td>
                       
                         <td className='px-4 border-b min-w-[70px]'>
-                          <div className='flex flex-col md:flex-row gap-2 mr-2'>
-                            <button className='bg-blue-400 text-white px-2 py-1 rounded w-full text-[16px]'>
+                          <div className='flex  justify-center flex-col md:flex-row gap-2 mr-2'>
+                            <button className='bg-blue-400 text-white px-2 py-1 rounded  text-[16px]'
+                             onClick={() => navigate('/admin/other-transaction/edit')}>
                               <MdEditSquare />
                             </button>
-                            <button className='bg-red-500 text-white px-2 py-1 rounded w-full text-lg'>
+                            <button className='bg-red-500 text-white px-2 py-1 rounded  text-lg'>
                               <IoInformationCircle />
                             </button>
                           </div>

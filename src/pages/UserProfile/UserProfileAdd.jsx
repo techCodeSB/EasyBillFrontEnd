@@ -12,7 +12,7 @@ import checkfile from '../../helper/checkfile';
 import { LuFileX2} from "react-icons/lu";
 import { MdOutlineRemoveRedEye, MdUploadFile } from "react-icons/md";
 
-const UserProfileAdd = () => {
+const UserProfileAdd = ({mode}) => {
     const toast = useMyToaster();
      const [profilePasswordField, setProfilePasswordField] = useState(false);
      const [data, setData] = useState({ name: '', email: '', profile: '', password: '', role:'', fileDirectory:'', shareRootDirectory:'', status:'' 
@@ -134,7 +134,7 @@ const UserProfileAdd = () => {
                        <div className='flex justify-center pt-9 mb-6'>
                              <div className='flex rounded-sm bg-green-500 text-white'>
                               <FaRegCheckCircle className='mt-3 ml-2' />
-                                <button className='p-2'onClick={savebtn}>Save</button>
+                                <button className='p-2'onClick={savebtn}>{mode? "Update" : "Save"}</button>
                             </div>
                               <div className='flex rounded-sm ml-4 bg-blue-500 text-white'>
                                 <LuRefreshCcw className='mt-3 ml-2' />
