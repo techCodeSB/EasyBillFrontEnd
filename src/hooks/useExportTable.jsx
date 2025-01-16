@@ -1,6 +1,5 @@
 import * as XLSX from 'xlsx';
-import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
-import { Table, TR, TH, TD } from '@ag-media/react-pdf-table';
+import { Page, Text, View, Document, StyleSheet, pdf } from '@react-pdf/renderer';
 import useMyToaster from './useMyToaster';
 
 const useExportTable = () => {
@@ -102,25 +101,44 @@ const useExportTable = () => {
 
   // Download PDF..........
   const exportPdf = (title, data) => {
+    console.log("exprot hook", data);
     const styles = StyleSheet.create({
       page: {
-        padding: 10
+        padding: 20,
+        backgroundColor: '#fff',
       },
       header: {
-        margin: 10,
-        padding: 10,
-        width: "100%",
-        textAlign: 'center'
+        marginBottom: 20,
+        textAlign: 'center',
       },
-      td: {
-        fontSize: 10,
-        padding: 5
+      table: {
+        display: 'flex',
+        flexDirection: 'column',
+        borderWidth: 1,
+        borderColor: '#ddd',
+        borderRadius: 4,
+        overflow: 'hidden',
       },
-      th: {
-        fontSize: 12,
+      row: {
+        flexDirection: 'row',
+        borderBottomWidth: 1,
+        borderBottomColor: '#ddd',
+      },
+      headerRow: {
+        backgroundColor: '#3B82F6',
+      },
+      cell: {
+        flex: 1,
         padding: 5,
-        fontWeight: 'bold'
-      }
+        textAlign: 'center',
+        borderRightWidth: 1,
+        borderRightColor: '#ddd',
+        fontSize: 10
+      },
+      headerCell: {
+        color: 'white',
+        fontWeight: 'bold',
+      },
     });
 
     try {
@@ -131,31 +149,31 @@ const useExportTable = () => {
             <View style={styles.header}>
               <Text>{title}</Text>
             </View>
-            <Table>
-              <TH style={{ backgroundColor: '#3B82F6', color: 'white' }}>
-                {
-                  obj && Object.keys(obj).map((el, _) => {
-                    return <TD style={styles.th} key={_}>{el}</TD>
-                  })
-                }
-              </TH>
-              {
-                data && data.map((d, _) => {
-                  console.log(d)
-                  return (
-                    <TR key={_}>
-                      {
-                        Object.keys(d).map((key, index) => (
-                          <TD key={index} style={styles.td}>{d[key]}</TD>
-                        ))
-                      }
-                    </TR>
-                  )
-                })
-              }
-            </Table>
+            <View style={styles.table}>
+              {/* Header Row */}
+              <View style={[styles.row, styles.headerRow]}>
+                {obj &&
+                  Object.keys(obj).map((el, index) => (
+                    <Text style={[styles.cell, styles.headerCell]} key={index}>
+                      {el}
+                    </Text>
+                  ))}
+              </View>
+              {/* Data Rows */}
+              {data &&
+                data.map((d, rowIndex) => (
+                  <View style={styles.row} key={rowIndex}>
+                    {Object.keys(d).map((key, cellIndex) => (
+                      <Text style={styles.cell} key={cellIndex}>
+                        {d[key]}
+                      </Text>
+                    ))}
+                  </View>
+                ))}
+            </View>
           </Page>
         </Document>
+
       );
 
       return MyDocument;
@@ -163,7 +181,6 @@ const useExportTable = () => {
       console.log(error)
     }
   }
-
 
   return { copyTable, downloadExcel, printTable, exportPdf };
 
