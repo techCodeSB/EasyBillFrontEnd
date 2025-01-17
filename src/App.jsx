@@ -60,10 +60,7 @@ const App = () => {
 
         <Route path="admin/other-transaction/add" element={<TransactionAdd />} />
         <Route path="admin/other-transaction" element={<Transaction />} />
-<<<<<<< HEAD
         
-=======
->>>>>>> a64051297b582e854a46d398afb53de903b47596
         <Route path="/admin/unit" element={< Unit />} />
         <Route path="admin/unit/add" element={< UnitAdd />} />
         <Route path="admin/unit/edit/:id" element={< UnitAdd mode="edit"/>} />
@@ -72,16 +69,13 @@ const App = () => {
         <Route path="/admin/other-transaction/add" element={<TransactionAdd />} />
         <Route path="/admin/other-transaction/edit" element={<TransactionAdd mode="edit"/>} />
         <Route path="/admin/other-transaction" element={<Transaction />} />
-<<<<<<< HEAD
         
-=======
->>>>>>> a64051297b582e854a46d398afb53de903b47596
         <Route path="/admin/tax/add" element={< TaxAdd />} />
         <Route path="/admin/tax/edit/:id" element={< TaxAdd mode="edit" />} />
         <Route path="/admin/tax" element={< Tax />} />
 
         <Route path="/admin/item-category/add" element={< CategoryAdd />} />
-        <Route path="/admin/item-category/edit" element={< CategoryAdd mode="edit" />} />
+        <Route path="/admin/item-category/edit/:id" element={< CategoryAdd mode="edit" />} />
         <Route path="/admin/item-category" element={<Category />} />
         <Route path="/admin/item/add" element={< ItemAdd />} />
         <Route path="/admin/item/edit" element={< ItemAdd  mode="edit" />} />

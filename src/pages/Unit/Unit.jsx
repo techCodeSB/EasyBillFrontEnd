@@ -20,13 +20,8 @@ import downloadPdf from '../../helper/downloadPdf';
 import { GrFormNext, GrFormPrevious } from 'react-icons/gr';
 
 const Unit = () => {
-<<<<<<< HEAD
   const toast = useMyToaster();
   const { copyTable, downloadExcel, printTable, exportPdf } = useExportTable();
-=======
-
-    const copyTable = useExportTable()
->>>>>>> a64051297b582e854a46d398afb53de903b47596
   const [activePage, setActivePage] = useState(1);
   const [dataLimit, setDataLimit] = useState(10);
   const [totalData, setTotalData] = useState()
@@ -286,7 +281,6 @@ const Unit = () => {
                         <td className='py-2 px-4 border-b max-w-[10px]'>
                           <input type='checkbox' checked={selected.includes(data._id)} onChange={() => handleCheckboxChange(data._id)} />
                         </td>
-<<<<<<< HEAD
                         <td className='px-4 border-b' align='center'>{data.title}</td>
 
 
@@ -295,19 +289,6 @@ const Unit = () => {
                             <button className='bg-blue-400 grid place-items-center text-white px-2 py-1 rounded w-full text-[16px]'
                               onClick={() => navigate(`/admin/unit/edit/${data._id}`)}>
                               <MdEditSquare />
-=======
-                        <td className='px-4 border-b '>Bag</td>
-                       
-                      
-                        <td className='px-4 border-b min-w-[70px]'>
-                          <div className='flex justify-center flex-col md:flex-row gap-2 mr-2'>
-                            <button className='bg-blue-400 text-white px-2 py-1 rounded  text-[16px]'
-                               onClick={() => navigate('/admin/unit/edit')}>
-                              <MdEditSquare className='ml-2'/>
-                            </button>
-                            <button className='bg-red-500 text-white px-2 py-1 rounded  text-lg'>
-                              <IoInformationCircle className='ml-2'/>
->>>>>>> a64051297b582e854a46d398afb53de903b47596
                             </button>
                           </div>
                         </td>

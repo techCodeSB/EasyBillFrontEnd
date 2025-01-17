@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import Nav from '../../components/Nav';
 import SideNav from '../../components/SideNav';
-import { Pagination } from 'rsuite';
 import { BiPrinter } from "react-icons/bi";
 import { FaRegCopy } from "react-icons/fa";
 import { MdEditSquare } from "react-icons/md";
@@ -241,109 +240,110 @@ const Tax = () => {
                 <input type='text' onChange={searchTable} />
               </div>
             </div>
-          </div>
-
-          {/* Second Row */}
-          <div className='list_buttons'>
-            <button className='bg-teal-500 hover:bg-teal-400' onClick={() => navigate('/admin/tax/add')}>
-              <MdAdd className='text-lg' />
-              Add New
-            </button>
-            <button className='bg-orange-400 hover:bg-orange-300' onClick={() => removeData(true)}>
-              <MdOutlineCancel className='text-lg' />
-              Trash
-            </button>
-            <button className='bg-green-500 hover:bg-green-400' onClick={restoreData}>
-              <MdOutlineRestorePage className='text-lg' />
-              Restore
-            </button>
-            <button className='bg-red-600 hover:bg-red-500' onClick={() => removeData(false)}>
-              <MdDeleteOutline className='text-lg' />
-              Delete
-            </button>
-            <select value={tableStatusData}
-              onChange={(e) => setTableStatusData(e.target.value)}
-              className='bg-blue-500 text-white'>
-              <option value="all">All</option>
-              <option value="active">Active</option>
-              <option value="trash">Trash</option>
-            </select>
-          </div>
 
 
-          {/* Table start */}
-          <div className='overflow-x-auto mt-5 list__table'>
-            <table className='min-w-full bg-white' id='listOfTax' ref={tableRef}>
-              <thead className='bg-gray-100'>
-                <tr>
-                  <th className='py-2 px-4 border-b w-[50px]'>
-                    <input type='checkbox' onChange={selectAll} checked={taxData.length > 0 && selected.length === taxData.length} />
-                  </th>
-                  <th className='py-2 px-4 border-b' >Title</th>
-                  <th className='py-2 px-4 border-b w-[70px]'>Action</th>
-                </tr>
-              </thead>
-              <tbody>
+            {/* Second Row */}
+            <div className='list_buttons'>
+              <button className='bg-teal-500 hover:bg-teal-400' onClick={() => navigate('/admin/tax/add')}>
+                <MdAdd className='text-lg' />
+                Add New
+              </button>
+              <button className='bg-orange-400 hover:bg-orange-300' onClick={() => removeData(true)}>
+                <MdOutlineCancel className='text-lg' />
+                Trash
+              </button>
+              <button className='bg-green-500 hover:bg-green-400' onClick={restoreData}>
+                <MdOutlineRestorePage className='text-lg' />
+                Restore
+              </button>
+              <button className='bg-red-600 hover:bg-red-500' onClick={() => removeData(false)}>
+                <MdDeleteOutline className='text-lg' />
+                Delete
+              </button>
+              <select value={tableStatusData}
+                onChange={(e) => setTableStatusData(e.target.value)}
+                className='bg-blue-500 text-white'>
+                <option value="all">All</option>
+                <option value="active">Active</option>
+                <option value="trash">Trash</option>
+              </select>
+            </div>
+
+
+            {/* Table start */}
+            <div className='overflow-x-auto mt-5 list__table'>
+              <table className='min-w-full bg-white' id='listOfTax' ref={tableRef}>
+                <thead className='bg-gray-100'>
+                  <tr>
+                    <th className='py-2 px-4 border-b w-[50px]'>
+                      <input type='checkbox' onChange={selectAll} checked={taxData.length > 0 && selected.length === taxData.length} />
+                    </th>
+                    <th className='py-2 px-4 border-b' >Title</th>
+                    <th className='py-2 px-4 border-b w-[70px]'>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {
+                    taxData.map((data, i) => {
+                      return <tr key={i}>
+                        <td className='py-2 px-4 border-b max-w-[10px]'>
+                          <input type='checkbox' checked={selected.includes(data._id)} onChange={() => handleCheckboxChange(data._id)} />
+                        </td>
+                        <td className='px-4 border-b' align='center'>{data.title}</td>
+
+                        <td className='px-4 border-b min-w-[70px]' align='center'>
+                          <div className='flex justify-center flex-col md:flex-row gap-2 mr-2'>
+                            <button className='bg-blue-400 text-white px-2 py-1 rounded  text-[16px]'
+                              onClick={() => navigate('/admin/item-category/edit')}>
+                              <MdEditSquare />
+                            </button>
+                            <button className='bg-red-500 text-white px-2 py-1 rounded  text-lg'>
+                              <IoInformationCircle />
+                            </button>
+                          </div>
+                        </td >
+                      </tr >
+                    })
+                  }
+                </tbody >
+              </table >
+              <p className='py-4'>Showing {taxData.length} of {totalData} entries</p>
+              {/* ----- Paginatin ----- */}
+              <div className='flex justify-end gap-2'>
                 {
-                  taxData.map((data, i) => {
-                    return <tr key={i}>
-                      <td className='py-2 px-4 border-b max-w-[10px]'>
-                        <input type='checkbox' checked={selected.includes(data._id)} onChange={() => handleCheckboxChange(data._id)} />
-                      </td>
-                      <td className='px-4 border-b' align='center'>{data.title}</td>
-
-                      <td className='px-4 border-b min-w-[70px]' align='center'>
-                        <div className='flex justify-center flex-col md:flex-row gap-2 mr-2'>
-                          <button className='bg-blue-400 text-white px-2 py-1 rounded  text-[16px]'
-                            onClick={() => navigate('/admin/item-category/edit')}>
-                            <MdEditSquare />
-                          </button>
-                          <button className='bg-red-500 text-white px-2 py-1 rounded  text-lg'>
-                            <IoInformationCircle />
-                          </button>
-                        </div>
-                      </td >
-                    </tr >
+                  activePage > 1 ? <div
+                    onClick={() => setActivePage(activePage - 1)}
+                    className='border bg-blue-600 text-white w-[20px] h-[20px] grid place-items-center rounded cursor-pointer'>
+                    <GrFormPrevious />
+                  </div> : null
+                }
+                {
+                  Array.from({ length: Math.ceil((totalData / dataLimit)) }).map((_, i) => {
+                    return <div
+                      onClick={() => setActivePage(i + 1)}
+                      className='border-blue-400 border w-[20px] h-[20px] text-center rounded cursor-pointer'
+                      style={activePage === i + 1 ? { border: "1px solid blue" } : {}}
+                    >
+                      {i + 1}
+                    </div>
                   })
                 }
-              </tbody >
-            </table >
-            <p className='py-4'>Showing {taxData.length} of {totalData} entries</p>
-            {/* ----- Paginatin ----- */}
-            <div className='flex justify-end gap-2'>
-              {
-                activePage > 1 ? <div
-                  onClick={() => setActivePage(activePage - 1)}
-                  className='border bg-blue-600 text-white w-[20px] h-[20px] grid place-items-center rounded cursor-pointer'>
-                  <GrFormPrevious />
-                </div> : null
-              }
-              {
-                Array.from({ length: Math.ceil((totalData / dataLimit)) }).map((_, i) => {
-                  return <div
-                    onClick={() => setActivePage(i + 1)}
-                    className='border-blue-400 border w-[20px] h-[20px] text-center rounded cursor-pointer'
-                    style={activePage === i + 1 ? { border: "1px solid blue" } : {}}
-                  >
-                    {i + 1}
-                  </div>
-                })
-              }
-              {
-                (totalData / dataLimit) > activePage ? <div
-                  onClick={() => setActivePage(activePage + 1)}
-                  className='border bg-blue-600 text-white w-[20px] h-[20px] flex items-center justify-center rounded cursor-pointer'>
-                  <GrFormNext />
-                </div> : null
-              }
-            </div>
-            {/* pagination end */}
-          </div >
+                {
+                  (totalData / dataLimit) > activePage ? <div
+                    onClick={() => setActivePage(activePage + 1)}
+                    className='border bg-blue-600 text-white w-[20px] h-[20px] flex items-center justify-center rounded cursor-pointer'>
+                    <GrFormNext />
+                  </div> : null
+                }
+              </div>
+              {/* pagination end */}
+            </div >
+          </div>
         </div >
-    </main >
+      </main >
     </>
   )
 }
 
 
-export default Tax
+export default Tax;
