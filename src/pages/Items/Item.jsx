@@ -17,7 +17,7 @@ import useExportTable from '../../hooks/useExportTable';
 
 const Item = () => {
 
-    const copyTable = useExportTable()
+  const copyTable = useExportTable()
   const [activePage, setActivePage] = useState(1);
   const [selected, setSelected] = useState([]);
   const navigate = useNavigate();
@@ -63,7 +63,7 @@ const Item = () => {
 
   return (
     <>
-     <Nav title={"Item"} />
+      <Nav title={"Item"} />
       <main id='main'>
         <SideNav />
         <div className='content__body'>
@@ -156,7 +156,7 @@ const Item = () => {
                         </td>
                         <td className='px-4 border-b '>Bag</td>
                         <td className='px-4 border-b '>57864</td>
-                      
+
                         <td className='px-4 border-b min-w-[70px]'>
                           <div className='flex justify-center flex-col md:flex-row gap-2 mr-2'>
                             <button className='bg-blue-400 text-white px-2 py-1 rounded  text-[16px]'

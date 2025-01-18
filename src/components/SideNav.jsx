@@ -147,7 +147,7 @@ const SideNav = () => {
       {
         name: 'Items',
         icon: <CiImageOn />,
-        link: '/admin/dashboard',
+        link: null,
         submenu: [
           {
             name: 'Category',
@@ -245,10 +245,10 @@ const SideNav = () => {
                 index === 4 ? <Popover className='p-0'>
                   <ul>
                     {links.Setup[4].submenu.map((sublink, subIndex) => (
-                      <Link to={sublink.link} className='focus-within:no-underline hover:no-underline text-blue-900'>
+                      <Link className='focus-within:no-underline hover:no-underline text-blue-900'>
                         <li  className='flex items-center'>
                           <span className='mr-2 text-[15px]'>{sublink.icon}</span>
-                          <Link className='focus-within:no-underline hover:no-underline text-blue-900 text-[13px]'>
+                          <Link to={sublink.link} className='focus-within:no-underline hover:no-underline text-blue-900 text-[13px]'>
                             {sublink.name}
                           </Link>
                         </li>

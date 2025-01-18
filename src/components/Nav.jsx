@@ -21,9 +21,9 @@ const Nav = ({ title }) => {
   const getUserData = useGetUserData(); // Get user info api call
   const [companyName, setCompanyName] = useState("");
 
-  // useEffect(() => {
-  //   getUserData();
-  // }, [])
+  useEffect(() => {
+    getUserData();
+  }, [])
 
 
   const toggleSideBar = () => {
