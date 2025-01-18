@@ -4,10 +4,9 @@ import { useState } from "react";
 import useLoginShake from "../hooks/useLoginShake";
 import { useNavigate } from 'react-router-dom';
 import useMyToaster from '../hooks/useMyToaster';
-import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
-const Login = () => {
+const ChangePassword = () => {
   const [loginData, setLoginData] = useState({ email: '', password: '' });
   const shakeIt = useLoginShake();
   const navigate = useNavigate();
@@ -56,27 +55,21 @@ const Login = () => {
       <div className="login__box flex flex-col" id="loginBox">
         <h1 className='text-center text-[25px] mb-8 mt-4'>Sign In</h1>
         <form onSubmit={formAction}>
-          <input type="emial" name="email"
+          <input type="text" name="text"
             value={loginData.email}
             onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
-            className='input_style' placeholder='Enter email'
+            className='input_style' placeholder='New password'
           />
-          <input type="password" name="pass"
-            value={loginData.password}
-            onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
-            className='input_style' placeholder='Enter password'
+          <input type="text" name="text"
+            value={loginData.email}
+            onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
+            className='input_style' placeholder='Current password'
           />
-          <button className='button_style'>Sign in</button>
+          <button className='button_style' onClick={() => navigate('/admin/dashboard')}>Save</button>
         </form>
-        <div className='flex justify-center'>
-           <Link to={'/admin/signup'}>New account</Link>
-        </div>
-        <div className='flex justify-center mt-4'>
-        <Link to={'/admin/forget'}>Forget password</Link>
-        </div>
       </div>
     </main>
   )
 }
 
-export default Login
+export default ChangePassword;

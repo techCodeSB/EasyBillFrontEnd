@@ -20,9 +20,17 @@ import { GrFormNext, GrFormPrevious } from 'react-icons/gr';
 
 
 
+<<<<<<< HEAD
+
+
+const Tax = () => {
+  const toast = useMyToaster();
+  const { copyTable, downloadExcel, printTable, exportPdf } = useExportTable()
+=======
 const Tax = () => {
   const toast = useMyToaster();
   const { copyTable, downloadExcel, printTable, exportPdf } = useExportTable();
+>>>>>>> 0e40a1d840f660fa258d1c71bc3a2d71a1073081
   const [activePage, setActivePage] = useState(1);
   const [dataLimit, setDataLimit] = useState(10);
   const [totalData, setTotalData] = useState()
@@ -283,6 +291,40 @@ const Tax = () => {
                   </tr>
                 </thead>
                 <tbody>
+<<<<<<< HEAD
+                 {
+                   taxData.map((data, i) => {
+                                  return <tr key={i}>
+                                   <td className='py-2 px-4 border-b max-w-[10px]'>
+                                   <input type='checkbox' checked={selected.includes(data, _id)} onChange={() => handleCheckboxChange(data, _id)} />
+                                   </td>
+                                   <td className='px-4 border-b '>{data.title}</td>
+                                   <td className='px-4 border-b min-w-[70px]'>
+                               <div className='flex justify-center flex-col md:flex-row gap-2 mr-2'>
+                             <button className='bg-blue-400 text-white px-2 py-1 rounded  text-[16px]'
+                                 onClick={() => navigate('/admit/accout/edit')}>
+                                  <MdEditSquare />
+                              </button>
+                              <button className='bg-red-500 text-white px-2 py-1 rounded  text-lg'>
+                                   <IoInformationCircle />
+                              </button>
+                          </div>
+                        </td>
+                     </tr>
+                    })
+                  }  
+                </tbody>
+              </table>
+              <p className='py-4'>Showing 1 to 2 of 2 entries</p>
+              <div className='flex justify-end'>
+                <div className='bg-gray-200 p-1 rounded'>
+                  <Pagination total={100} limit={5}
+                    maxButtons={3}
+                    activePage={activePage}
+                    onChangePage={setActivePage}
+                  />
+                </div>
+=======
                   {
                     taxData.map((data, i) => {
                       return <tr key={i}>
@@ -335,6 +377,7 @@ const Tax = () => {
                     <GrFormNext />
                   </div> : null
                 }
+>>>>>>> 0e40a1d840f660fa258d1c71bc3a2d71a1073081
               </div>
               {/* pagination end */}
             </div >
