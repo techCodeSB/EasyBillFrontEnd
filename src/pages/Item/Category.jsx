@@ -42,7 +42,7 @@ const Category = () => {
 
   // Get data;
   useEffect(() => {
-    const getParty = async () => {
+    const getCategory = async () => {
       try {
         const data = {
           token: Cookies.get("token"),
@@ -65,7 +65,7 @@ const Category = () => {
         console.log(error)
       }
     }
-    getParty();
+    getCategory();
   }, [tableStatusData, dataLimit, activePage])
 
   const searchTable = (e) => {

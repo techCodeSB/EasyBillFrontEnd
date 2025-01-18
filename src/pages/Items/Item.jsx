@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import Nav from '../../components/Nav';
 import SideNav from '../../components/SideNav';
 import { Pagination } from 'rsuite';
@@ -14,16 +14,61 @@ import { MdOutlineRestorePage } from "react-icons/md";
 import { MdDeleteOutline } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import useExportTable from '../../hooks/useExportTable';
+import useMyToaster from '../../hooks/useMyToaster';
+import Cookies from 'js-cookie';
+import downloadPdf from '../../helper/downloadPdf';
+
+
 
 const Item = () => {
-
-  const copyTable = useExportTable()
+  const toast = useMyToaster();
+  const { copyTable, downloadExcel, printTable, exportPdf } = useExportTable();
   const [activePage, setActivePage] = useState(1);
+  const [dataLimit, setDataLimit] = useState(10);
+  const [totalData, setTotalData] = useState()
   const [selected, setSelected] = useState([]);
   const navigate = useNavigate();
+  const [tableStatusData, setTableStatusData] = useState('active');
+  const [itemData, setItemData] = useState([]);
+  const tableRef = useRef(null);
+  const exportData = useMemo(() => {
+    return itemData && itemData.map(({ title, hsn }, _) => ({
+      Title: title,
+      HSN: hsn
+    }));
+  }, [itemData]);
+
+
+
+  // Get data;
+  useEffect(() => {
+    const getCategory = async () => {
+      try {
+        const data = {
+          token: Cookies.get("token"),
+          trash: tableStatusData === "trash" ? true : false,
+          all: tableStatusData === "all" ? true : false
+        }
+        const url = process.env.REACT_APP_API_URL + `/item/get?page=${activePage}&limit=${dataLimit}`;
+        const req = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
+        const res = await req.json();
+        setTotalData(res.totalData)
+        setItemData([...res.data])
+
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    getCategory();
+  }, [tableStatusData, dataLimit, activePage])
 
   const searchTable = (e) => {
-
     const value = e.target.value.toLowerCase();
     const rows = document.querySelectorAll('.list__table tbody tr');
 
@@ -45,21 +90,108 @@ const Item = () => {
 
   const selectAll = (e) => {
     if (e.target.checked) {
-      setSelected(Array.from({ length: 10 }, (_, i) => i));
+      setSelected(itemData.map((item, _) => item._id));
     } else {
       setSelected([]);
     }
   };
 
-  const handleCheckboxChange = (index) => {
+  const handleCheckboxChange = (id) => {
     setSelected((prevSelected) => {
-      if (prevSelected.includes(index)) {
-        return prevSelected.filter((i) => i !== index);
+      if (prevSelected.includes(id)) {
+        return prevSelected.filter((data, _) => data._id !== id);
       } else {
-        return [...prevSelected, index];
+        return [...prevSelected, id];
       }
     });
   };
+
+
+  const exportTable = async (whichType) => {
+    if (whichType === "copy") {
+      copyTable("itemTable"); // Pass tableid
+    }
+    else if (whichType === "excel") {
+      downloadExcel(exportData, 'item-list.xlsx') // Pass data and filename
+    }
+    else if (whichType === "print") {
+      printTable(tableRef, "Item List"); // Pass table ref and title
+    }
+    else if (whichType === "pdf") {
+      let document = exportPdf('Item List', exportData);
+      downloadPdf(document)
+    }
+  }
+
+
+  const removeData = async (trash) => {
+    if (selected.length === 0 || tableStatusData !== 'active') {
+      return;
+    }
+    const url = process.env.REACT_APP_API_URL + "/item/delete";
+    try {
+      const req = await fetch(url, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ ids: selected, trash: trash })
+      });
+      const res = await req.json();
+
+      if (req.status !== 200 || res.err) {
+        return toast(res.err, 'error');
+      }
+
+      selected.forEach((id, _) => {
+        setItemData((prevData) => {
+          return prevData.filter((data, _) => data._id !== id)
+        })
+      });
+      setSelected([]);
+
+      return toast(res.msg, 'success');
+
+    } catch (error) {
+      console.log(error)
+      toast("Something went wrong", "error")
+    }
+  }
+
+  const restoreData = async () => {
+    if (selected.length === 0 || tableStatusData !== "trash") {
+      return;
+    }
+
+    const url = process.env.REACT_APP_API_URL + "/item/restore";
+    try {
+      const req = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ ids: selected })
+      });
+      const res = await req.json();
+
+      if (req.status !== 200 || res.err) {
+        return toast(res.err, 'error');
+      }
+
+      selected.forEach((id, _) => {
+        itemData((prevData) => {
+          return prevData.filter((data, _) => data._id !== id)
+        })
+      });
+      setSelected([]);
+      return toast(res.msg, 'success');
+
+    } catch (error) {
+      console.log(error)
+      toast("Something went wrong", "error")
+    }
+  }
+
 
   return (
     <>
@@ -79,26 +211,24 @@ const Item = () => {
               <div className='flex items-center gap-4 justify-between w-full lg:justify-start'>
                 <div className='flex flex-col'>
                   <p>Show</p>
-                  <select>
-                    <option>10</option>
-                    <option>25</option>
-                    <option>50</option>
-                    <option>100</option>
+                  <select value={dataLimit} onChange={(e) => setDataLimit(e.target.value)}>
+                    <option value={10}>10</option>
+                    <option value={25}>25</option>
+                    <option value={50}>50</option>
+                    <option value={100}>100</option>
                   </select>
                 </div>
                 <div className='list__icons'>
-                  <div className='list__icon' title='Print'>
+                  <div className='list__icon' title='Print' onClick={() => exportTable('print')}>
                     <BiPrinter className='text-white text-[16px]' />
                   </div>
-                  <div className='list__icon' title='Copy'>
-                    <FaRegCopy className='text-white text-[16px]' onClick={() => {
-                      copyTable("listQuotation");
-                    }} />
+                  <div className='list__icon' title='Copy' onClick={() => exportTable('copy')}>
+                    <FaRegCopy className='text-white text-[16px]' />
                   </div>
-                  <div className='list__icon' title='PDF'>
+                  <div className='list__icon' title='PDF' onClick={() => exportTable('pdf')}>
                     <FaRegFilePdf className='text-white text-[16px]' />
                   </div>
-                  <div className='list__icon' title='Excel'>
+                  <div className='list__icon' title='Excel' onClick={() => exportTable('excel')}>
                     <FaRegFileExcel className='text-white text-[16px]' />
                   </div>
                 </div>
@@ -115,28 +245,30 @@ const Item = () => {
                 <MdAdd className='text-lg' />
                 Add New
               </button>
-              <button className='bg-orange-400 hover:bg-orange-300'>
+              <button className='bg-orange-400 hover:bg-orange-300' onClick={() => removeData(true)}>
                 <MdOutlineCancel className='text-lg' />
                 Trash
               </button>
-              <button className='bg-green-500 hover:bg-green-400'>
+              <button className='bg-green-500 hover:bg-green-400' onClick={restoreData}>
                 <MdOutlineRestorePage className='text-lg' />
                 Restore
               </button>
-              <button className='bg-red-600 hover:bg-red-500'>
+              <button className='bg-red-600 hover:bg-red-500' onClick={() => removeData(false)}>
                 <MdDeleteOutline className='text-lg' />
                 Delete
               </button>
-              <select name="" id="" className='bg-blue-500 text-white'>
-                <option value="">All</option>
-                <option value="">Active</option>
-                <option value="">Trash</option>
+              <select value={tableStatusData}
+                onChange={(e) => setTableStatusData(e.target.value)}
+                className='bg-blue-500 text-white'>
+                <option value="all">All</option>
+                <option value="active">Active</option>
+                <option value="trash">Trash</option>
               </select>
             </div>
 
             {/* Table start */}
             <div className='overflow-x-auto mt-5 list__table'>
-              <table className='min-w-full bg-white' id='listQuotation'>
+              <table className='min-w-full bg-white' id='itemTable'>
                 <thead className='bg-gray-100'>
                   <tr>
                     <th className='py-2 px-4 border-b w-[50px]'>
@@ -149,12 +281,12 @@ const Item = () => {
                 </thead>
                 <tbody>
                   {
-                    Array.from({ length: 10 }).map((_, i) => {
+                    itemData.map((data, i) => {
                       return <tr key={i}>
                         <td className='py-2 px-4 border-b max-w-[10px]'>
                           <input type='checkbox' checked={selected.includes(i)} onChange={() => handleCheckboxChange(i)} />
                         </td>
-                        <td className='px-4 border-b '>Bag</td>
+                        <td className='px-4 border-b '>{data.title}</td>
                         <td className='px-4 border-b '>57864</td>
 
                         <td className='px-4 border-b min-w-[70px]'>

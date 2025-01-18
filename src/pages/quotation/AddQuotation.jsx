@@ -6,7 +6,7 @@ import SideNav from '../../components/SideNav';
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { MdCurrencyRupee } from "react-icons/md";
 import { MdOutlinePlaylistAdd } from "react-icons/md";
-import { FaRegCheckCircle} from "react-icons/fa";
+import { FaRegCheckCircle } from "react-icons/fa";
 import { BiReset } from "react-icons/bi";
 
 
@@ -53,15 +53,15 @@ const Quotation = () => {
 
   return (
     <>
-      <Nav title={"Quotation"}/>
+      <Nav />
       <main id='main'>
         <SideNav />
         <div className='content__body'>
-          {/* <MyBreadCrumb title={"Quotation"} links={[
+          <MyBreadCrumb title={"Quotation"} links={[
             { name: "Quotation ", link: "/admin/quatation" },
             { name: "Estimate", link: "/admin/quatation" },
             { name: "Add", link: null }
-          ]} /> */}
+          ]} />
 
           <div className='content__body__main bg-white' id='addQuotationTable'>
             <div className='flex flex-col lg:flex-row items-center justify-around gap-4'>
