@@ -16,8 +16,8 @@ const TransactionAdd = React.lazy(() => import("./pages/Transactions/Transaction
 const Transaction = React.lazy(() => import("./pages/Transactions/Transaction"));
 const UnitAdd = React.lazy(() => import("./pages/Unit/UnitAdd"));
 const Unit = React.lazy(() => import("./pages/Unit/Unit"));
-const Tax = React.lazy(() => import("./pages/Tax/Tax"));
-const TaxAdd = React.lazy(() => import("./pages/Tax/TaxAdd"));
+// const Tax = React.lazy(() => import("./pages/Tax/Tax"));
+// const TaxAdd = React.lazy(() => import("./pages/Tax/TaxAdd"));
 const CategoryAdd = React.lazy(() => import("./pages/Item/CategoryAdd"));
 const Category = React.lazy(() => import("./pages/Item/Category"));
 const ItemAdd = React.lazy(() => import("./pages/Items/ItemAdd"));
@@ -27,6 +27,9 @@ const Role = React.lazy(() => import("./pages/Role/Role"));
 const AddCompany = React.lazy(() => import("./pages/company/AddCompany"));
 const UserProfileAdd = React.lazy(() => import("./pages/UserProfile/UserProfileAdd"));
 const UserProfile = React.lazy(() => import("./pages/UserProfile/UserProfile"));
+const Forget = React.lazy(() => import("./pages/Forget"));
+const Otp = React.lazy(() => import("./pages/Otp"));
+const ChangePassword = React.lazy(() => import("./pages/ChangePassword"));
 const NotFound = React.lazy(() => import("./pages/NotFound"));
 
 
@@ -67,9 +70,9 @@ const App = () => {
         <Route path="/admin/other-transaction/add" element={<TransactionAdd />} />
         <Route path="/admin/other-transaction/edit" element={<TransactionAdd mode="edit"/>} />
         <Route path="/admin/other-transaction" element={<Transaction />} />
-        <Route path="/admin/tax/add" element={< TaxAdd />} />
+        {/* <Route path="/admin/tax/add" element={< TaxAdd />} />
         <Route path="/admin/tax/edit" element={< TaxAdd mode="edit" />} />
-        <Route path="/admin/tax" element={< Tax />} />
+        <Route path="/admin/tax" element={< Tax />} /> */}
         <Route path="/admin/item-category/add" element={< CategoryAdd />} />
         <Route path="/admin/item-category/edit" element={< CategoryAdd mode="edit" />} />
         <Route path="/admin/item-category" element={<Category />} />
@@ -82,6 +85,9 @@ const App = () => {
         <Route path="/admin/user-profile/add" element={< UserProfileAdd />} />
         <Route path="/admin/user-profile/edit" element={< UserProfileAdd mode="edit" />} />
         <Route path="/admin/user-profile" element={< UserProfile />} />
+        <Route path="/admin/forget" element={< Forget />} />
+        <Route path="/admin/otp" element={< Otp />} />
+        <Route path="/admin/change-password" element={< ChangePassword />} />
         <Route path="*" element={< NotFound />} />
       </Routes>
     </Suspense>

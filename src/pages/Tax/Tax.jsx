@@ -18,19 +18,11 @@ import downloadPdf from '../../helper/downloadPdf';
 import Cookies from 'js-cookie';
 import useMyToaster from '../../hooks/useMyToaster';
 
-<<<<<<< HEAD
-const Tax = () => {
-=======
-<<<<<<< HEAD
+
+
 const Tax = () => {
   const toast = useMyToaster();
-  const { copyTable, downloadExcel, printTable, exportPdf } = useExportTable();
-=======
-const Tax = ({mode}) => {
->>>>>>> 5f604d112beaa06884b004fc6bda3a5b4076d737
-
-    const copyTable = useExportTable()
->>>>>>> dec09c559e09af3dc21613d45c68d5430a68bff5
+  const { copyTable, downloadExcel, printTable, exportPdf } = useExportTable()
   const [activePage, setActivePage] = useState(1);
   const [selected, setSelected] = useState([]);
   const navigate = useNavigate();
@@ -283,39 +275,27 @@ const Tax = ({mode}) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {
-                    taxData.map((data, i) => {
-                      return <tr key={i}>
-                        <td className='py-2 px-4 border-b max-w-[10px]'>
-                          <input type='checkbox' checked={selected.includes(data._id)} onChange={() => handleCheckboxChange(data._id)} />
-                        </td>
-                        <td className='px-4 border-b'>{data.title}</td>
-
-                        <td className='px-4 border-b min-w-[70px]'>
-<<<<<<< HEAD
-                          <div className='flex  justify-center flex-col md:flex-row gap-2 mr-2'>
-                            <button className='bg-blue-400 text-white px-2 py-1 rounded  text-[16px] '
-                             onClick={() => navigate('/admin/tax/edit')} > 
-=======
-                          <div className='flex flex-col md:flex-row gap-2 mr-2'>
-<<<<<<< HEAD
-                            <button className='bg-blue-400 text-white px-2 py-1 rounded w-[50px] text-[16px] '>
-                              <MdEditSquare className=' flex justify-between items-center ml-2' />
-=======
-                            <button className='bg-blue-400 text-white px-2 py-1 rounded w-[50px] text-[16px] '
-                             onClick={() => navigate('/admin/tax/edit')} > {mode}
->>>>>>> 5f604d112beaa06884b004fc6bda3a5b4076d737
-                              <MdEditSquare  className=' flex justify-between items-center ml-2'/>
->>>>>>> dec09c559e09af3dc21613d45c68d5430a68bff5
-                            </button>
-                            <button className='bg-red-500 text-white px-2 py-1 rounded  text-lg'>
-                              <IoInformationCircle className='flex justify-between items-center ml-2' />
-                            </button>
+                 {
+                   taxData.map((data, i) => {
+                                  return <tr key={i}>
+                                   <td className='py-2 px-4 border-b max-w-[10px]'>
+                                   <input type='checkbox' checked={selected.includes(data, _id)} onChange={() => handleCheckboxChange(data, _id)} />
+                                   </td>
+                                   <td className='px-4 border-b '>{data.title}</td>
+                                   <td className='px-4 border-b min-w-[70px]'>
+                               <div className='flex justify-center flex-col md:flex-row gap-2 mr-2'>
+                             <button className='bg-blue-400 text-white px-2 py-1 rounded  text-[16px]'
+                                 onClick={() => navigate('/admit/accout/edit')}>
+                                  <MdEditSquare />
+                              </button>
+                              <button className='bg-red-500 text-white px-2 py-1 rounded  text-lg'>
+                                   <IoInformationCircle />
+                              </button>
                           </div>
                         </td>
-                      </tr>
+                     </tr>
                     })
-                  }
+                  }  
                 </tbody>
               </table>
               <p className='py-4'>Showing 1 to 2 of 2 entries</p>
