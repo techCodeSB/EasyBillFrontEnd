@@ -5,12 +5,13 @@ import { useRef } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import { FaRegCheckCircle } from "react-icons/fa";
 import { LuRefreshCcw } from "react-icons/lu";
-// import { IoMdArrowRoundBack } from "react-icons/io";
+import { CgPlayListAdd } from "react-icons/cg";
 import useMyToaster from '../../hooks/useMyToaster';
 import { SelectPicker } from 'rsuite';
 import Cookies from 'js-cookie';
 import { useParams } from 'react-router-dom';
 import useApi from '../../hooks/useApi';
+import { RiDeleteBin6Line } from 'react-icons/ri';
 
 
 
@@ -194,6 +195,80 @@ const ItemAdd = ({ mode }) => {
                 }}
               />
             </div>
+            <div className='w-full overflow-auto mt-2'>
+              <table className='w-full border'>
+                <thead className='bg-gray-200'>
+                  <tr>
+                    <th className='p-1'>Unit</th>
+                    <th>Conversion (1 for 1st Unit)</th>
+                    <th>Opening</th>
+                    <th>Alert</th>
+                    <th align='center'>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {unitRow.map((u, i) => (
+                    <tr key={i}>
+                      <td className='p-1'>
+                        <select onChange={(e) => {
+                          const newUnitRow = [...unitRow];
+                          newUnitRow[i].unit = e.target.value;
+                          setUnitRow(newUnitRow);
+                        }} value={u.unit}>
+                          <option value={""}>--select--</option>
+                          {unit.map((u, i) => (
+                            <option key={i} value={u.value}>{u.label}</option>
+                          ))}
+                        </select>
+                      </td>
+                      <td className='p-1'>
+                        <input type="text" onChange={(e) => {
+                          const newUnitRow = [...unitRow];
+                          newUnitRow[i].conversion = e.target.value;
+                          setUnitRow(newUnitRow);
+                        }} value={u.conversion} />
+                      </td>
+                      <td className='p-1'>
+                        <input type="text" onChange={(e) => {
+                          const newUnitRow = [...unitRow];
+                          newUnitRow[i].opening = e.target.value;
+                          setUnitRow(newUnitRow);
+                        }} value={u.opening} />
+                      </td>
+                      <td className='p-1'>
+                        <input type="text" onChange={(e) => {
+                          const newUnitRow = [...unitRow];
+                          newUnitRow[i].alert = e.target.value;
+                          setUnitRow(newUnitRow);
+                        }} value={u.alert} />
+                      </td>
+                      <td align='center' className='p-1'>
+                        <RiDeleteBin6Line
+                          className='cursor-pointer text-[16px]'
+                          onClick={() => {
+                            if (unitRow.length === 1) return;
+                            const newUnitRow = [...unitRow];
+                            newUnitRow.splice(i, 1);
+                            setUnitRow(newUnitRow);
+                          }}
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colSpan={5}>
+                      <button
+                        className='w-full p-[5px] font-bold bg-gray-200 text-gray-800 rounded flex justify-center items-center'
+                        onClick={() => setUnitRow([...unitRow, unitRowSet])}>
+                        <CgPlayListAdd />  Add
+                      </button>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
             <div className='flex justify-center pt-9 mb-6'>
               <div className='flex rounded-sm bg-green-500 text-white'>
                 <FaRegCheckCircle className='mt-3 ml-2' />
@@ -203,10 +278,6 @@ const ItemAdd = ({ mode }) => {
                 <LuRefreshCcw className='mt-3 ml-2' />
                 <button className='p-2' onClick={fromvalueclear}>Reset</button>
               </div>
-              {/* <div className="flex rounded-sm ml-4 bg-gray-500 text-white">
-                                 <IoMdArrowRoundBack className='mt-3 ml-2' />
-                                 <button className='p-2'>Back</button>
-                                 </div>*/}
             </div>
           </div>
         </div>

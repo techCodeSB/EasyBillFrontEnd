@@ -38,7 +38,7 @@ const Forget = () => {
         return toast(res.err, "error")
       }
 
-      Cookies.set("token", res.token, {secure:true});
+      Cookies.set("token", res.token, { secure: true });
       navigate("/admin/dashboard")
 
     } catch (error) {
@@ -59,7 +59,7 @@ const Forget = () => {
             onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
             className='input_style' placeholder='Enter email'
           />
-          <button className='button_style' onClick={() => navigate('/admin/otp')}>Forget</button>
+          <button className='button_style' onClick={() => navigate('/admin/otp')}>Forgot</button>
         </form>
       </div>
     </main>

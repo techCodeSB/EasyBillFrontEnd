@@ -278,33 +278,6 @@ const Category = () => {
                   </tr>
                 </thead>
                 <tbody>
-<<<<<<< HEAD
-                   {
-                      Array.from({ length: 10 }).map((_, i) => {
-                           return <tr key={i}>
-                              <td className='py-2 px-4 border-b max-w-[10px]'>
-                                <input type='checkbox' checked={selected.includes(i)} onChange={() => handleCheckboxChange(i)} />
-                                   </td>
-                                     <td className='px-4 border-b '>Cash</td>
-                                       <td className='px-4 border-b'>Cash</td>
-                                          <td className='px-4 border-b '>0</td>
-                                         
-                                           <td className='px-4 border-b min-w-[70px]'>
-                                             <div className='flex justify-center flex-col md:flex-row gap-2 mr-2'>
-                                               <button className='bg-blue-400 text-white px-2 py-1 rounded  text-[16px]'
-                                                 onClick={() => navigate('/admit/accout/edit')}>
-                                                 <MdEditSquare />
-                                               </button>
-                                               <button className='bg-red-500 text-white px-2 py-1 rounded  text-lg'>
-                                                 <IoInformationCircle />
-                                               </button>
-                                             </div>
-                                           </td>
-                                         </tr>
-                         })
-                     }
-                    
-=======
                   {
                     categoryData.map((data, i) => {
                       return <tr key={i}>
@@ -324,7 +297,6 @@ const Category = () => {
                       </tr>
                     })
                   }
->>>>>>> 0e40a1d840f660fa258d1c71bc3a2d71a1073081
                 </tbody>
               </table>
               <p className='py-4'>Showing {categoryData.length} of {totalData} entries</p>

@@ -16,8 +16,8 @@ const TransactionAdd = React.lazy(() => import("./pages/Transactions/Transaction
 const Transaction = React.lazy(() => import("./pages/Transactions/Transaction"));
 const UnitAdd = React.lazy(() => import("./pages/Unit/UnitAdd"));
 const Unit = React.lazy(() => import("./pages/Unit/Unit"));
-// const Tax = React.lazy(() => import("./pages/Tax/Tax"));
-// const TaxAdd = React.lazy(() => import("./pages/Tax/TaxAdd"));
+const Tax = React.lazy(() => import("./pages/Tax/Tax"));
+const TaxAdd = React.lazy(() => import("./pages/Tax/TaxAdd"));
 const CategoryAdd = React.lazy(() => import("./pages/Item/CategoryAdd"));
 const Category = React.lazy(() => import("./pages/Item/Category"));
 const ItemAdd = React.lazy(() => import("./pages/Items/ItemAdd"));
@@ -72,17 +72,9 @@ const App = () => {
         <Route path="/admin/other-transaction/add" element={<TransactionAdd />} />
         <Route path="/admin/other-transaction/edit" element={<TransactionAdd mode="edit"/>} />
         <Route path="/admin/other-transaction" element={<Transaction />} />
-<<<<<<< HEAD
-        {/* <Route path="/admin/tax/add" element={< TaxAdd />} />
-        <Route path="/admin/tax/edit" element={< TaxAdd mode="edit" />} />
-        <Route path="/admin/tax" element={< Tax />} /> */}
-=======
-        
         <Route path="/admin/tax/add" element={< TaxAdd />} />
         <Route path="/admin/tax/edit/:id" element={< TaxAdd mode="edit" />} />
         <Route path="/admin/tax" element={< Tax />} />
-
->>>>>>> 0e40a1d840f660fa258d1c71bc3a2d71a1073081
         <Route path="/admin/item-category/add" element={< CategoryAdd />} />
         <Route path="/admin/item-category/edit/:id" element={< CategoryAdd mode="edit" />} />
         <Route path="/admin/item-category" element={<Category />} />

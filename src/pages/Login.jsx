@@ -39,7 +39,7 @@ const Login = () => {
         return toast(res.err, "error")
       }
 
-      Cookies.set("token", res.token, {secure:true});
+      Cookies.set("token", res.token, { secure: true });
       navigate("/admin/dashboard")
 
     } catch (error) {
@@ -68,11 +68,14 @@ const Login = () => {
           />
           <button className='button_style'>Sign in</button>
         </form>
-        <div className='flex justify-center'>
-           <Link to={'/admin/signup'}>New account</Link>
+        <div className='flex justify-center text-[12px]'>
+          You have no account?
+          <Link to={'/admin/signup'} className="ml-1">
+            SingnUp
+          </Link>
         </div>
-        <div className='flex justify-center mt-4'>
-        <Link to={'/admin/forget'}>Forget password</Link>
+        <div className='flex justify-center mt-2 text-[12px]'>
+          <Link to={'/admin/forget'}>Forgot password</Link>
         </div>
       </div>
     </main>
