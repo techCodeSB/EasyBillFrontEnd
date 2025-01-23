@@ -1,12 +1,13 @@
-import "../assets/css/login.css"
-import Logo from '../assets/images/logo.png';
+import "../../assets/css/login.css"
+import Logo from '../../assets/images/logo.png';
 import { useState } from "react";
-import useLoginShake from "../hooks/useLoginShake";
+import useLoginShake from "../../hooks/useLoginShake";
 import { useNavigate } from 'react-router-dom';
-import useMyToaster from '../hooks/useMyToaster';
+import useMyToaster from "../../hooks/useMyToaster";
 import Cookies from 'js-cookie';
+import { Link } from 'react-router-dom';
 
-const Forget = () => {
+const Login = () => {
   const [loginData, setLoginData] = useState({ email: '', password: '' });
   const shakeIt = useLoginShake();
   const navigate = useNavigate();
@@ -53,17 +54,32 @@ const Forget = () => {
     <main className='login__main'>
       <img src={Logo} alt="Logo.png" className='mb-5' />
       <div className="login__box flex flex-col" id="loginBox">
+        <h1 className='text-center text-[25px] mb-8 mt-4'>Sign In</h1>
         <form onSubmit={formAction}>
           <input type="emial" name="email"
             value={loginData.email}
             onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
             className='input_style' placeholder='Enter email'
           />
-          <button className='button_style' onClick={() => navigate('/admin/otp')}>Forgot</button>
+          <input type="password" name="pass"
+            value={loginData.password}
+            onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
+            className='input_style' placeholder='Enter password'
+          />
+          <button className='button_style'>Sign in</button>
         </form>
+        <div className='flex justify-center text-[12px]'>
+          You have no account?
+          <Link to={'/admin/signup'} className="ml-1">
+            SingnUp
+          </Link>
+        </div>
+        <div className='flex justify-center mt-2 text-[12px]'>
+          <Link to={'/admin/forget'}>Forgot password</Link>
+        </div>
       </div>
     </main>
   )
 }
 
-export default Forget;
+export default Login

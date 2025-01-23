@@ -1,13 +1,12 @@
-import React, { use, useEffect, useState } from 'react'
-import Nav from '../components/Nav';
-import SideNav from '../components/SideNav';
+import React, { useEffect, useState } from 'react'
+import Nav from '../../components/Nav';
+import SideNav from '../../components/SideNav';
 import { FaRegEyeSlash } from "react-icons/fa";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { LuFileX2, LuRefreshCcw } from "react-icons/lu";
-import { IoMdArrowRoundBack } from "react-icons/io";
 import { MdOutlineRemoveRedEye, MdUploadFile } from "react-icons/md";
-import checkfile from '../helper/checkfile';
-import useMyToaster from '../hooks/useMyToaster';
+import checkfile from '../../helper/checkfile';
+import useMyToaster from "../../hooks/useMyToaster";
 import Cookies from 'js-cookie';
 import { useSelector } from 'react-redux';
 

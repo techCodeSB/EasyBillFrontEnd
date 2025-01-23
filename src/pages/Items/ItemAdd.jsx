@@ -48,6 +48,12 @@ const ItemAdd = ({ mode }) => {
           body: JSON.stringify({ token: cookie, id: id })
         })
         const res = await req.json();
+        const data = res.data;
+        setForm({
+          title: data.title, type: data.type, salePrice: data.salePrice,
+          category: data.category._id, details: data.details, hsn: data.category.hsn, tax: data.category.tax
+        });
+        setUnitRow([...data.unit]);
       }
 
       get();
@@ -66,7 +72,7 @@ const ItemAdd = ({ mode }) => {
       // Tax
       {
         const { data } = await getApiData("tax");
-        setTax([...data.map(({ title }, _) => ({ label: title, value: title }))])
+        setTax([...data.map(({ _id, title }, _) => ({ label: title, value: _id }))])
       }
       // Unit
       {
@@ -92,38 +98,45 @@ const ItemAdd = ({ mode }) => {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(!mode ? { ...form, token } : { ...form, token, update: true, id: id })
+        body: JSON.stringify(
+          !mode ? { ...form, token, unit: unitRow }
+            : { ...form, token, unit: unitRow, update: true, id: id }
+        )
       })
       const res = await req.json();
       if (req.status !== 200 || res.err) {
         return toast(res.err, 'error');
       }
 
-      if (!mode) fromvalueclear();
+      if (!mode) clearData();
 
       return toast(!mode ? "Item create success" : "Item update success", 'success');
 
     } catch (error) {
+      console.log(error);
       return toast("Something went wrong", "error")
     }
 
   }
 
-  const fromvalueclear = () => setForm({
-    title: '', type: '', salePrice: '', category: '', details: '', hsn: ''
-  })
+  const clearData = () => {
+    setForm({
+      title: '', type: '', salePrice: '', category: '', details: '', hsn: ''
+    })
+    setUnitRow([unitRowSet]);
+  }
 
   const categoryChange = (v) => {
     fullCategory.forEach((c, _) => {
       if (c._id === v) {
-        setForm({ ...form, hsn: c.hsn, category: v, tax: c.tax.title })
+        setForm({ ...form, hsn: c.hsn, category: v, tax: c.tax._id })
       }
     })
   }
 
   return (
     <>
-      <Nav title={"Item "} />
+      <Nav title={mode ? "Update Item " : "Add Item"} />
       <main id='main'>
         <SideNav />
         <div className='content__body'>
@@ -217,7 +230,7 @@ const ItemAdd = ({ mode }) => {
                         }} value={u.unit}>
                           <option value={""}>--select--</option>
                           {unit.map((u, i) => (
-                            <option key={i} value={u.value}>{u.label}</option>
+                            <option key={i} value={u.label}>{u.label}</option>
                           ))}
                         </select>
                       </td>
@@ -276,7 +289,7 @@ const ItemAdd = ({ mode }) => {
               </div>
               <div className='flex rounded-sm ml-4 bg-blue-500 text-white'>
                 <LuRefreshCcw className='mt-3 ml-2' />
-                <button className='p-2' onClick={fromvalueclear}>Reset</button>
+                <button className='p-2' onClick={clearData}>Reset</button>
               </div>
             </div>
           </div>

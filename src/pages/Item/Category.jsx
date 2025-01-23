@@ -99,7 +99,7 @@ const Category = () => {
   const handleCheckboxChange = (id) => {
     setSelected((prevSelected) => {
       if (prevSelected.includes(id)) {
-        return prevSelected.filter((data, _) => data._id !== id);
+        return prevSelected.filter((previd, _) => previd !== id);
       } else {
         return [...prevSelected, id];
       }

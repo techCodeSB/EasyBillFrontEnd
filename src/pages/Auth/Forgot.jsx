@@ -1,12 +1,12 @@
-import "../assets/css/login.css"
-import Logo from '../assets/images/logo.png';
+import "../../assets/css/login.css"
+import Logo from '../../assets/images/logo.png';
 import { useState } from "react";
-import useLoginShake from "../hooks/useLoginShake";
+import useLoginShake from "../../hooks/useLoginShake";
 import { useNavigate } from 'react-router-dom';
-import useMyToaster from '../hooks/useMyToaster';
+import useMyToaster from "../../hooks/useMyToaster";
 import Cookies from 'js-cookie';
 
-const ChangePassword = () => {
+const Forget = () => {
   const [loginData, setLoginData] = useState({ email: '', password: '' });
   const shakeIt = useLoginShake();
   const navigate = useNavigate();
@@ -38,7 +38,7 @@ const ChangePassword = () => {
         return toast(res.err, "error")
       }
 
-      Cookies.set("token", res.token, {secure:true});
+      Cookies.set("token", res.token, { secure: true });
       navigate("/admin/dashboard")
 
     } catch (error) {
@@ -53,23 +53,17 @@ const ChangePassword = () => {
     <main className='login__main'>
       <img src={Logo} alt="Logo.png" className='mb-5' />
       <div className="login__box flex flex-col" id="loginBox">
-        <h1 className='text-center text-[25px] mb-8 mt-4'>Sign In</h1>
         <form onSubmit={formAction}>
-          <input type="text" name="text"
+          <input type="emial" name="email"
             value={loginData.email}
             onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
-            className='input_style' placeholder='New password'
+            className='input_style' placeholder='Enter email'
           />
-          <input type="text" name="text"
-            value={loginData.email}
-            onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
-            className='input_style' placeholder='Current password'
-          />
-          <button className='button_style' onClick={() => navigate('/admin/dashboard')}>Save</button>
+          <button className='button_style' onClick={() => navigate('/admin/otp')}>Forgot</button>
         </form>
       </div>
     </main>
   )
 }
 
-export default ChangePassword;
+export default Forget;

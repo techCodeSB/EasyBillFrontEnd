@@ -1,13 +1,12 @@
-import "../assets/css/login.css"
-import Logo from '../assets/images/logo.png';
+import "../../assets/css/login.css"
+import Logo from '../../assets/images/logo.png';
 import { useState } from "react";
-import useLoginShake from "../hooks/useLoginShake";
+import useLoginShake from "../../hooks/useLoginShake";
 import { useNavigate } from 'react-router-dom';
-import useMyToaster from '../hooks/useMyToaster';
-import { Link } from 'react-router-dom';
+import useMyToaster from "../../hooks/useMyToaster";
 import Cookies from 'js-cookie';
 
-const Login = () => {
+const Otp = () => {
   const [loginData, setLoginData] = useState({ email: '', password: '' });
   const shakeIt = useLoginShake();
   const navigate = useNavigate();
@@ -39,7 +38,7 @@ const Login = () => {
         return toast(res.err, "error")
       }
 
-      Cookies.set("token", res.token, { secure: true });
+      Cookies.set("token", res.token, {secure:true});
       navigate("/admin/dashboard")
 
     } catch (error) {
@@ -54,32 +53,35 @@ const Login = () => {
     <main className='login__main'>
       <img src={Logo} alt="Logo.png" className='mb-5' />
       <div className="login__box flex flex-col" id="loginBox">
-        <h1 className='text-center text-[25px] mb-8 mt-4'>Sign In</h1>
-        <form onSubmit={formAction}>
-          <input type="emial" name="email"
+        <form onSubmit={formAction} className='flex gap-4 justify-center items-center'>
+          <input type="text" name="text"
             value={loginData.email}
             onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
-            className='input_style' placeholder='Enter email'
+            className='w-[60px] h-[50px]'
           />
-          <input type="password" name="pass"
-            value={loginData.password}
-            onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
-            className='input_style' placeholder='Enter password'
+          <input type="text" name="text"
+            value={loginData.email}
+            onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
+            className='w-[60px] h-[50px]'
           />
-          <button className='button_style'>Sign in</button>
+          <input type="text" name="text"
+            value={loginData.email}
+            onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
+            className='w-[60px] h-[50px]'
+          />
+          <input type="text" name="text"
+            value={loginData.email}
+            onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
+            className='w-[60px] h-[50px]'
+          />
         </form>
-        <div className='flex justify-center text-[12px]'>
-          You have no account?
-          <Link to={'/admin/signup'} className="ml-1">
-            SingnUp
-          </Link>
-        </div>
-        <div className='flex justify-center mt-2 text-[12px]'>
-          <Link to={'/admin/forget'}>Forgot password</Link>
+        <div className='flex justify-center'>
+        <button className='bg-blue-500 text-lg rounded-lg mt-7 p-1 w-[90px] text-white flex justify-center'
+            onClick={() => navigate('/admin/change-password')}>OTP</button>
         </div>
       </div>
     </main>
   )
 }
 
-export default Login
+export default Otp;

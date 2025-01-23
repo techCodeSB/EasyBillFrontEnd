@@ -17,10 +17,11 @@ import useExportTable from '../../hooks/useExportTable';
 import useMyToaster from '../../hooks/useMyToaster';
 import Cookies from 'js-cookie';
 import downloadPdf from '../../helper/downloadPdf';
+import { GrFormNext, GrFormPrevious } from 'react-icons/gr';
 
 
 
-const Item = () => {
+const Item = ({ mode }) => {
   const toast = useMyToaster();
   const { copyTable, downloadExcel, printTable, exportPdf } = useExportTable();
   const [activePage, setActivePage] = useState(1);
@@ -32,9 +33,9 @@ const Item = () => {
   const [itemData, setItemData] = useState([]);
   const tableRef = useRef(null);
   const exportData = useMemo(() => {
-    return itemData && itemData.map(({ title, hsn }, _) => ({
+    return itemData && itemData.map(({ title, category }, _) => ({
       Title: title,
-      HSN: hsn
+      HSN: category.hsn
     }));
   }, [itemData]);
 
@@ -60,6 +61,7 @@ const Item = () => {
         const res = await req.json();
         setTotalData(res.totalData)
         setItemData([...res.data])
+        console.log(res.data)
 
       } catch (error) {
         console.log(error)
@@ -99,7 +101,7 @@ const Item = () => {
   const handleCheckboxChange = (id) => {
     setSelected((prevSelected) => {
       if (prevSelected.includes(id)) {
-        return prevSelected.filter((data, _) => data._id !== id);
+        return prevSelected.filter((previd, _) => previd !== id);
       } else {
         return [...prevSelected, id];
       }
@@ -179,7 +181,7 @@ const Item = () => {
       }
 
       selected.forEach((id, _) => {
-        itemData((prevData) => {
+        setItemData((prevData) => {
           return prevData.filter((data, _) => data._id !== id)
         })
       });
@@ -268,15 +270,16 @@ const Item = () => {
 
             {/* Table start */}
             <div className='overflow-x-auto mt-5 list__table'>
-              <table className='min-w-full bg-white' id='itemTable'>
+              <table className='min-w-full bg-white' id='itemTable' ref={tableRef}>
                 <thead className='bg-gray-100'>
                   <tr>
                     <th className='py-2 px-4 border-b w-[50px]'>
-                      <input type='checkbox' onChange={selectAll} checked={selected.length === 10} />
+                      <input type='checkbox' onChange={selectAll} checked={itemData.length > 0 && selected.length === itemData.length} />
                     </th>
                     <th className='py-2 px-4 border-b '>Title</th>
-                    <th className='py-2 px-4 border-b '>Stock</th>
-                    <th className='py-2 px-4 border-b '>Action</th>
+                    <th className='py-2 px-4 border-b '>HSN</th>
+                    <th className='py-2 px-4 border-b '>STOCK</th>
+                    <th className='py-2 px-4 border-b w-[100px]'>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -284,20 +287,31 @@ const Item = () => {
                     itemData.map((data, i) => {
                       return <tr key={i}>
                         <td className='py-2 px-4 border-b max-w-[10px]'>
-                          <input type='checkbox' checked={selected.includes(i)} onChange={() => handleCheckboxChange(i)} />
+                          <input type='checkbox' checked={selected.includes(data._id)} onChange={() => handleCheckboxChange(data._id)} />
                         </td>
-                        <td className='px-4 border-b '>{data.title}</td>
-                        <td className='px-4 border-b '>57864</td>
+                        <td className='px-4 border-b'>{data.title}</td>
+                        <td className='px-4 border-b' align='center'>{data.category.hsn}</td>
+                        <td className='px-4 border-b' align='center'>
+                          <div className='flex items-center justify-center gap-2'>
+                            {
+                              data.stock.map((stock, _) => {
+                                return stock.stock !== "" ? <p key={_}>
+                                  {stock.stock} <sub className='font-bold'>{stock.unit}</sub>
+                                </p> : "";
+                              })
+                            }
+                          </div>
+                        </td>
 
-                        <td className='px-4 border-b min-w-[70px]'>
+                        <td className='px-4 border-b min-w-[70px]' align='center'>
                           <div className='flex justify-center flex-col md:flex-row gap-2 mr-2'>
                             <button className='bg-blue-400 text-white px-2 py-1 rounded  text-[16px]'
-                              onClick={() => navigate('/admin/item/edit')}>
+                              onClick={() => navigate(`/admin/item/edit/${data._id}`)}>
                               <MdEditSquare />
                             </button>
-                            <button className='bg-red-500 text-white px-2 py-1 rounded  text-lg'>
+                            {/* <button className='bg-red-500 text-white px-2 py-1 rounded  text-lg'>
                               <IoInformationCircle />
-                            </button>
+                            </button> */}
                           </div>
                         </td>
                       </tr>
@@ -305,16 +319,36 @@ const Item = () => {
                   }
                 </tbody>
               </table>
-              <p className='py-4'>Showing 1 to 2 of 2 entries</p>
-              <div className='flex justify-end'>
-                <div className='bg-gray-200 p-1 rounded'>
-                  <Pagination total={100} limit={5}
-                    maxButtons={3}
-                    activePage={activePage}
-                    onChangePage={setActivePage}
-                  />
-                </div>
+              <p className='py-4'>Showing {itemData.length} of {totalData} entries</p>
+              {/* ----- Paginatin ----- */}
+              <div className='flex justify-end gap-2'>
+                {
+                  activePage > 1 ? <div
+                    onClick={() => setActivePage(activePage - 1)}
+                    className='border bg-blue-600 text-white w-[20px] h-[20px] grid place-items-center rounded cursor-pointer'>
+                    <GrFormPrevious />
+                  </div> : null
+                }
+                {
+                  Array.from({ length: Math.ceil((totalData / dataLimit)) }).map((_, i) => {
+                    return <div
+                      onClick={() => setActivePage(i + 1)}
+                      className='border-blue-400 border w-[20px] h-[20px] text-center rounded cursor-pointer'
+                      style={activePage === i + 1 ? { border: "1px solid blue" } : {}}
+                    >
+                      {i + 1}
+                    </div>
+                  })
+                }
+                {
+                  (totalData / dataLimit) > activePage ? <div
+                    onClick={() => setActivePage(activePage + 1)}
+                    className='border bg-blue-600 text-white w-[20px] h-[20px] flex items-center justify-center rounded cursor-pointer'>
+                    <GrFormNext />
+                  </div> : null
+                }
               </div>
+              {/* pagination end */}
             </div>
           </div>
         </div>

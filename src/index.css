@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-*{
+* {
   box-sizing: border-box;
 }
 
@@ -11,7 +11,9 @@
   width: 10px;
   height: 10px;
 }
-
+::-webkit-scrollbar-thumb:hover{
+  cursor: s-resize;
+}
 ::-webkit-scrollbar-track {
   border-radius: 30px;
   background-color: rgb(11, 7, 64);
@@ -23,41 +25,47 @@
 }
 
 
-#main{
+#main {
   min-width: 100%;
   height: calc(100vh - 50px);
   display: flex;
-  justify-content: space-between;  
+  justify-content: space-between;
 }
-.content__body{
+
+.content__body {
   width: 100%;
   background-color: #F6F7FB;
   padding: 20px;
   overflow-y: auto;
 }
 
-.content__body__main{
+.content__body__main {
   padding: 10px;
   border-radius: 5px;
   box-shadow: 0px 0px 5px lightgrey;
   font-size: 13px !important;
 }
 
-h1, h2, h3, h4, h5, h6{
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   line-height: 0% !important;
 }
 
-.nav__logo{
+.nav__logo {
   box-shadow: 4px 3px #888888;
 }
 
-.menu-link{
-  @apply hover:no-underline hover:text-gray-600 hover:bg-gray-200 focus-within:no-underline; 
+.menu-link {
+  @apply hover:no-underline hover:text-gray-600 hover:bg-gray-200 focus-within:no-underline;
   @apply text-[15px] flex items-center gap-2 py-2 text-gray-600 p-4;
 }
 
 /* Sidenav */
-.side__nav{
+.side__nav {
   transition: 0.3s all;
   overflow-y: auto;
 }
@@ -65,40 +73,49 @@ h1, h2, h3, h4, h5, h6{
 .side__nav::-webkit-scrollbar {
   width: 7px;
 }
+
 .side__nav::-webkit-scrollbar-thumb {
   background-color: #3f3d3d;
   border-radius: 7px;
 }
+
 .side__nav::-webkit-scrollbar-track {
   background-color: #2C323C;
 }
+
 .side__nav::-webkit-scrollbar-thumb:hover {
   background-color: #555;
 }
 
-.side__nav__links a{
- color: white;
+.side__nav__links a {
+  color: white;
 
 }
-.side__nav__links a:hover, .side__nav__links a:focus-within{
+
+.side__nav__links a:hover,
+.side__nav__links a:focus-within {
   text-decoration: none;
   color: white;
 }
-.side__nav__links li{
+
+.side__nav__links li {
   padding: 8px;
   font-size: 12px;
   padding-left: 15px;
   transition: 1s all;
   border-radius: 20px;
 }
-.side__nav__links li:hover{
+
+.side__nav__links li:hover {
   background-color: rgb(80, 80, 202);
 }
-.side__nav__links li svg{
+
+.side__nav__links li svg {
   color: rgb(167, 167, 247);
   font-size: 14px;
 }
-.side__nav__link__group  h3{
+
+.side__nav__link__group h3 {
   margin-left: 10px;
   font-size: 12px;
   color: rgb(218, 208, 208)
@@ -106,30 +123,35 @@ h1, h2, h3, h4, h5, h6{
 
 
 /* Breacrumb */
-.rs-breadcrumb-item a{
+.rs-breadcrumb-item a {
   color: blueviolet;
   font-size: 14px;
 }
-.rs-breadcrumb-item a:hover, .rs-breadcrumb-item a:focus-within{
+
+.rs-breadcrumb-item a:hover,
+.rs-breadcrumb-item a:focus-within {
   text-decoration: none;
 }
 
-.add__table{
+.add__table {
   @apply w-full bg-white rounded my-6 border border-gray-200;
 }
 
-.add__table thead tr th, .add__table thead tr td{
+.add__table thead tr th,
+.add__table thead tr td {
   @apply text-sm;
   padding: 10px;
 }
 
-input, textarea{
+input,
+textarea {
   @apply w-full p-1 border border-gray-200 outline-none hover:border-blue-500;
   @apply focus:border-blue-500;
   line-height: 16px !important;
   border-radius: 3px
 }
-select{
+
+select {
   @apply w-full p-[4px] border border-gray-200 rounded outline-none;
 }
 
@@ -139,42 +161,49 @@ select{
   border: 1px solid #E5E7EB;
 }
 
-.table-style td, .table-style th{
+.table-style td,
+.table-style th {
   border-right: 1px solid #E5E7EB;
   padding: 4px 5px;
   font-size: 12px !important;
   line-height: 5px;
 }
-.table-style thead tr th{
+
+.table-style thead tr th {
   padding: 2px;
 }
 
-#taxAmountTable .table-style td, #addtionalChargeTable .table-style td{
+#taxAmountTable .table-style td,
+#addtionalChargeTable .table-style td {
   padding-top: 8px !important;
 }
 
-.add__table thead{
+.add__table thead {
   background-color: #F6F7FB;
 }
 
-.list__icons{
+.list__icons {
   @apply flex gap-2;
   margin-top: 19px;
 }
-.list__icon{
+
+.list__icon {
   @apply bg-blue-700 rounded-full w-[30px] h-[30px] flex justify-center items-center cursor-pointer;
   @apply hover:bg-blue-800;
 }
-.list_buttons{
+
+.list_buttons {
   @apply w-full lg:w-[40%] flex gap-2 items-center justify-around text-nowrap mt-4;
 }
-.list_buttons select{
+
+.list_buttons select {
   width: 90px;
   height: 35px;
   border: 1px solid #E5E7EB;
   border-radius: 4px;
 }
-.list_buttons button{
+
+.list_buttons button {
   /* box-shadow: 1px 3px rgb(80, 80, 253); */
   width: 80px;
   padding: 5px;
@@ -186,13 +215,15 @@ select{
   gap: 5px;
 }
 
-.add-table-discount-input{
+.add-table-discount-input {
   position: relative;
 }
-.add-table-discount-input input{
+
+.add-table-discount-input input {
   padding-left: 33px;
 }
-.add-table-discount-input div{
+
+.add-table-discount-input div {
   position: absolute;
   left: 0;
   top: 0;
@@ -206,26 +237,38 @@ select{
   justify-content: center;
 }
 
-#Settings .forms p{
+#Settings .forms p {
   margin-bottom: 5px;
 }
 
 
-.file__uploader__div{
+.file__uploader__div {
   @apply w-full border rounded hover:border-blue-500;
   @apply flex justify-between items-center gap-1 p-1;
 
 }
-.file__upload{
+
+.file__upload {
   @apply bg-blue-600 text-[18px];
 }
-.remove__upload{
- @apply bg-red-500;
- font-size: 12px !important; 
+
+.remove__upload {
+  @apply bg-red-500;
+  font-size: 12px !important;
 }
-.file__upload, .remove__upload{
+
+.file__upload,
+.remove__upload {
   @apply text-white w-[25px] h-[25px] rounded-full p-1 cursor-pointer;
   display: grid;
   place-items: center;
 }
 
+.add-bill-btn {
+  @apply bg-green-500 hover:bg-green-400 text-white rounded w-[60px] ;
+  @apply flex items-center justify-center gap-1 py-2;
+}
+.reset-bill-btn{
+  @apply bg-blue-800 hover:bg-blue-700  text-white ;
+  @apply rounded w-[60px] flex items-center justify-center gap-1 py-2;
+}
