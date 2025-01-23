@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import Nav from '../../components/Nav';
 import SideNav from '../../components/SideNav';
-import { Pagination } from 'rsuite';
 import { BiPrinter } from "react-icons/bi";
 import { FaRegCopy } from "react-icons/fa";
 import { MdEditSquare } from "react-icons/md";
@@ -17,11 +16,16 @@ import useExportTable from '../../hooks/useExportTable';
 import downloadPdf from '../../helper/downloadPdf';
 import Cookies from 'js-cookie';
 import useMyToaster from '../../hooks/useMyToaster';
+import { GrFormNext, GrFormPrevious } from 'react-icons/gr';
+
+
 
 const Tax = ({ mode }) => {
   const toast = useMyToaster();
   const { copyTable, downloadExcel, printTable, exportPdf } = useExportTable();
   const [activePage, setActivePage] = useState(1);
+  const [dataLimit, setDataLimit] = useState(10);
+  const [totalData, setTotalData] = useState()
   const [selected, setSelected] = useState([]);
   const navigate = useNavigate();
   const [taxData, settaxData] = useState([]);
@@ -43,7 +47,7 @@ const Tax = ({ mode }) => {
           trash: tableStatusData === "trash" ? true : false,
           all: tableStatusData === "all" ? true : false
         }
-        const url = process.env.REACT_APP_API_URL + "/tax/get";
+        const url = process.env.REACT_APP_API_URL + `/tax/get?page=${activePage}&limit=${dataLimit}`;
         const req = await fetch(url, {
           method: "POST",
           headers: {
@@ -52,14 +56,16 @@ const Tax = ({ mode }) => {
           body: JSON.stringify(data)
         });
         const res = await req.json();
-        settaxData([...res])
+        console.log(res)
+        setTotalData(res.totalData)
+        settaxData([...res.data])
 
       } catch (error) {
         console.log(error)
       }
     }
     getParty();
-  }, [tableStatusData])
+  }, [tableStatusData, dataLimit, activePage])
 
   const searchTable = (e) => {
     const value = e.target.value.toLowerCase();
@@ -105,10 +111,10 @@ const Tax = ({ mode }) => {
       copyTable("listOfTax"); // Pass tableid
     }
     else if (whichType === "excel") {
-      downloadExcel(exportData, 'party-list.xlsx') // Pass data and filename
+      downloadExcel(exportData, 'tax-list.xlsx') // Pass data and filename
     }
     else if (whichType === "print") {
-      printTable(tableRef, "Party List"); // Pass table ref and title
+      printTable(tableRef, "Tax List"); // Pass table ref and title
     }
     else if (whichType === "pdf") {
       let document = exportPdf('Tax List', exportData);
@@ -187,6 +193,7 @@ const Tax = ({ mode }) => {
   }
 
 
+
   return (
     <>
       <Nav title={"Tax"} />
@@ -204,11 +211,11 @@ const Tax = ({ mode }) => {
               <div className='flex items-center gap-4 justify-between w-full lg:justify-start'>
                 <div className='flex flex-col'>
                   <p>Show</p>
-                  <select>
-                    <option>10</option>
-                    <option>25</option>
-                    <option>50</option>
-                    <option>100</option>
+                  <select value={dataLimit} onChange={(e) => setDataLimit(e.target.value)}>
+                    <option value={10}>10</option>
+                    <option value={25}>25</option>
+                    <option value={50}>50</option>
+                    <option value={100}>100</option>
                   </select>
                 </div>
                 <div className='list__icons'>
@@ -231,6 +238,7 @@ const Tax = ({ mode }) => {
                 <input type='text' onChange={searchTable} />
               </div>
             </div>
+
 
             {/* Second Row */}
             <div className='list_buttons'>
@@ -259,16 +267,17 @@ const Tax = ({ mode }) => {
               </select>
             </div>
 
+
             {/* Table start */}
             <div className='overflow-x-auto mt-5 list__table'>
               <table className='min-w-full bg-white' id='listOfTax' ref={tableRef}>
                 <thead className='bg-gray-100'>
                   <tr>
                     <th className='py-2 px-4 border-b w-[50px]'>
-                      <input type='checkbox' onChange={selectAll} checked={selected.length === taxData.length} />
+                      <input type='checkbox' onChange={selectAll} checked={taxData.length > 0 && selected.length === taxData.length} />
                     </th>
-                    <th className='py-2 px-4 border-b '>Title</th>
-                    <th className='py-2 px-4 border-b '>Action</th>
+                    <th className='py-2 px-4 border-b' >Title</th>
+                    <th className='py-2 px-4 border-b w-[70px]'>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -278,7 +287,7 @@ const Tax = ({ mode }) => {
                         <td className='py-2 px-4 border-b max-w-[10px]'>
                           <input type='checkbox' checked={selected.includes(data._id)} onChange={() => handleCheckboxChange(data._id)} />
                         </td>
-                        <td className='px-4 border-b'>{data.title}</td>
+                        <td className='px-4 border-b' align='center'>{data.title}</td>
 
                         <td className='px-4 border-b min-w-[70px]'>
                           <div className='flex flex-col md:flex-row gap-2 mr-2'>
@@ -289,29 +298,51 @@ const Tax = ({ mode }) => {
                             <button className='bg-red-500 text-white px-2 py-1 rounded w-[50px] text-lg'>
                               <IoInformationCircle className='flex justify-between items-center ml-2' />
                             </button>
+                          
                           </div>
-                        </td>
-                      </tr>
+                        </td >
+                      </tr >
                     })
                   }
-                </tbody>
-              </table>
-              <p className='py-4'>Showing 1 to 2 of 2 entries</p>
-              <div className='flex justify-end'>
-                <div className='bg-gray-200 p-1 rounded'>
-                  <Pagination total={100} limit={5}
-                    maxButtons={3}
-                    activePage={activePage}
-                    onChangePage={setActivePage}
-                  />
-                </div>
+                </tbody >
+              </table >
+              <p className='py-4'>Showing {taxData.length} of {totalData} entries</p>
+              {/* ----- Paginatin ----- */}
+              <div className='flex justify-end gap-2'>
+                {
+                  activePage > 1 ? <div
+                    onClick={() => setActivePage(activePage - 1)}
+                    className='border bg-blue-600 text-white w-[20px] h-[20px] grid place-items-center rounded cursor-pointer'>
+                    <GrFormPrevious />
+                  </div> : null
+                }
+                {
+                  Array.from({ length: Math.ceil((totalData / dataLimit)) }).map((_, i) => {
+                    return <div
+                      onClick={() => setActivePage(i + 1)}
+                      className='border-blue-400 border w-[20px] h-[20px] text-center rounded cursor-pointer'
+                      style={activePage === i + 1 ? { border: "1px solid blue" } : {}}
+                    >
+                      {i + 1}
+                    </div>
+                  })
+                }
+                {
+                  (totalData / dataLimit) > activePage ? <div
+                    onClick={() => setActivePage(activePage + 1)}
+                    className='border bg-blue-600 text-white w-[20px] h-[20px] flex items-center justify-center rounded cursor-pointer'>
+                    <GrFormNext />
+                  </div> : null
+                }
               </div>
-            </div>
+              {/* pagination end */}
+            </div >
           </div>
-        </div>
-      </main>
+        </div >
+      </main >
     </>
   )
 }
 
-export default Tax
+
+export default Tax;

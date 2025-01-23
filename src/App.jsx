@@ -1,12 +1,13 @@
 import React, { Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
+import { ProtectRoute, UnProtectRoute } from "./components/ProtectRoute";
 
-const Login = React.lazy(() => import("./pages/Login"));
+const Login = React.lazy(() => import("./pages/Auth/Login"));
 const Dashboard = React.lazy(() => import("./pages/Dashboard"));
 const AddQutation = React.lazy(() => import("./pages/quotation/AddQuotation"));
 const Quotation = React.lazy(() => import("./pages/quotation/Quotation"));
-const Profile = React.lazy(() => import("./pages/Profile"));
-const Signup = React.lazy(() => import("./pages/Signup"));
+const Profile = React.lazy(() => import("./pages/Auth/Profile"));
+const Signup = React.lazy(() => import("./pages/Auth/Signup"));
 const Accounts = React.lazy(() => import("./pages/accounts/Accounts"));
 const AddAccount = React.lazy(() => import("./pages/accounts/AddAccount"));
 const Setting = React.lazy(() => import("./pages/Setting"));
@@ -27,6 +28,9 @@ const Role = React.lazy(() => import("./pages/Role/Role"));
 const AddCompany = React.lazy(() => import("./pages/company/AddCompany"));
 const UserProfileAdd = React.lazy(() => import("./pages/UserProfile/UserProfileAdd"));
 const UserProfile = React.lazy(() => import("./pages/UserProfile/UserProfile"));
+const Forgot = React.lazy(() => import("./pages/Auth/Forgot"));
+const Otp = React.lazy(() => import("./pages/Auth/Otp"));
+const ChangePassword = React.lazy(() => import("./pages/Auth/ChangePassword"));
 const NotFound = React.lazy(() => import("./pages/NotFound"));
 
 
@@ -41,42 +45,59 @@ const App = () => {
       </div>
     </div>}>
       <Routes>
-        <Route path="/admin" element={<Login />} />
-        <Route path="/admin/signup" element={<Signup />} />
-        <Route path="admin/dashboard" element={<Dashboard />} />
-        <Route path="/admin/quotation-estimate" element={<Quotation />} />
-        <Route path="/admin/quotation-estimate/add" element={<AddQutation />} />
-        <Route path="/admin/site" element={<Setting />} />
-        <Route path="/admin/company" element={<AddCompany />} />
-        <Route path="/admin/quotation-estimate/add" element={<AddQutation />} />
-        <Route path="/admin/profile" element={<Profile />} />
-        <Route path="/admin/account/add" element={<AddAccount />} />
-        <Route path="admin/account" element={<Accounts />} />
+        <Route path="/admin" element={<UnProtectRoute login={true}><Login /></UnProtectRoute>} />
+        <Route path="/" element={<UnProtectRoute login={true}><Login /></UnProtectRoute>} />
+        <Route path="/admin/signup" element={<UnProtectRoute login={true}><Signup /></UnProtectRoute>} />
+        <Route path="/admin/forget" element={<UnProtectRoute login={true}>< Forgot /></UnProtectRoute>} />
+        <Route path="/admin/otp" element={<UnProtectRoute login={true}>< Otp /></UnProtectRoute>} />
+        <Route path="/admin/change-password" element={<UnProtectRoute login={true}>< ChangePassword /></UnProtectRoute>} />
 
-        <Route path="/admin/party" element={<Party />} />
-        <Route path="/admin/party/add" element={<AddParty />} />
-        <Route path="/admin/party/edit/:id" element={<AddParty mode={"edit"}/>} />
+        <Route path="admin/dashboard" element={<ProtectRoute><Dashboard /></ProtectRoute>} />
+        <Route path="/admin/quotation-estimate" element={<ProtectRoute><Quotation /></ProtectRoute>} />
+        <Route path="/admin/quotation-estimate/add" element={<ProtectRoute><AddQutation /></ProtectRoute>} />
+        <Route path="/admin/site" element={<ProtectRoute><Setting /></ProtectRoute>} />
+        <Route path="/admin/company" element={<ProtectRoute><AddCompany /></ProtectRoute>} />
+        <Route path="/admin/quotation-estimate/add" element={<ProtectRoute><AddQutation /></ProtectRoute>} />
+        <Route path="/admin/profile" element={<ProtectRoute><Profile /></ProtectRoute>} />
+        <Route path="/admin/account/add" element={<ProtectRoute><AddAccount /></ProtectRoute>} />
+        <Route path="/admin/account/edit" element={<ProtectRoute><AddAccount mode="edit" /></ProtectRoute>} />
+        <Route path="admin/account" element={<ProtectRoute><Accounts /></ProtectRoute>} />
 
-        <Route path="admin/other-transaction/add" element={<TransactionAdd />} />
-        <Route path="admin/other-transaction" element={<Transaction />} />
-        <Route path="admin/unit/add" element={< UnitAdd />} />
-        <Route path="admin/unit/edit" element={< UnitAdd mode="edit"/>} />
-        <Route path="/admin/account" element={<Accounts />} />
-        <Route path="/admin/other-transaction/add" element={<TransactionAdd />} />
-        <Route path="/admin/other-transaction" element={<Transaction />} />
-        <Route path="/admin/unit/add" element={< UnitAdd />} />
-        <Route path="/admin/unit" element={< Unit />} />
-        <Route path="/admin/tax/add" element={< TaxAdd />} />
-        <Route path="/admin/tax/edit" element={< TaxAdd mode="edit" />} />
-        <Route path="/admin/tax" element={< Tax />} />
-        <Route path="/admin/item-category/add" element={< CategoryAdd />} />
-        <Route path="/admin/item-category" element={<Category />} />
-        <Route path="/admin/item/add" element={< ItemAdd />} />
-        <Route path="/admin/item" element={< Item />} />
-        <Route path="/admin/role/add" element={< RoleAdd />} />
-        <Route path="/admin/role" element={< Role />} />
-        <Route path="/admin/user-profile/add" element={< UserProfileAdd />} />
-        <Route path="/admin/user-profile" element={< UserProfile />} />
+        <Route path="/admin/party" element={<ProtectRoute><Party /></ProtectRoute>} />
+        <Route path="/admin/party/add" element={<ProtectRoute><AddParty /></ProtectRoute>} />
+        <Route path="/admin/party/edit/:id" element={<ProtectRoute><AddParty mode={"edit"} /></ProtectRoute>} />
+
+        <Route path="admin/other-transaction/add" element={<ProtectRoute><TransactionAdd /></ProtectRoute>} />
+        <Route path="admin/other-transaction" element={<ProtectRoute><Transaction /></ProtectRoute>} />
+
+        <Route path="/admin/unit" element={<ProtectRoute>< Unit /></ProtectRoute>} />
+        <Route path="admin/unit/add" element={<ProtectRoute>< UnitAdd /></ProtectRoute>} />
+        <Route path="admin/unit/edit/:id" element={<ProtectRoute>< UnitAdd mode="edit" /></ProtectRoute>} />
+
+        <Route path="/admin/account" element={<ProtectRoute><Accounts /></ProtectRoute>} />
+        <Route path="/admin/other-transaction/add" element={<ProtectRoute><TransactionAdd /></ProtectRoute>} />
+        <Route path="/admin/other-transaction/edit" element={<ProtectRoute><TransactionAdd mode="edit" /></ProtectRoute>} />
+        <Route path="/admin/other-transaction" element={<ProtectRoute><Transaction /></ProtectRoute>} />
+
+        <Route path="/admin/tax/add" element={<ProtectRoute>< TaxAdd /></ProtectRoute>} />
+        <Route path="/admin/tax/edit/:id" element={<ProtectRoute>< TaxAdd mode="edit" /></ProtectRoute>} />
+        <Route path="/admin/tax" element={<ProtectRoute>< Tax /></ProtectRoute>} />
+
+        <Route path="/admin/item-category/add" element={<ProtectRoute>< CategoryAdd /></ProtectRoute>} />
+        <Route path="/admin/item-category/edit/:id" element={<ProtectRoute>< CategoryAdd mode="edit" /></ProtectRoute>} />
+        <Route path="/admin/item-category" element={<ProtectRoute><Category /></ProtectRoute>} />
+
+        <Route path="/admin/item/add" element={<ProtectRoute><ItemAdd /></ProtectRoute>} />
+        <Route path="/admin/item/edit/:id" element={<ProtectRoute>< ItemAdd mode="edit" /></ProtectRoute>} />
+        <Route path="/admin/item" element={<ProtectRoute>< Item /></ProtectRoute>} />
+
+        <Route path="/admin/role/add" element={<ProtectRoute>< RoleAdd /></ProtectRoute>} />
+        <Route path="/admin/role/edit" element={<ProtectRoute>< RoleAdd mode="edit" /></ProtectRoute>} />
+        <Route path="/admin/role" element={<ProtectRoute> < Role /> </ProtectRoute>} />
+        <Route path="/admin/user-profile/add" element={<ProtectRoute> < UserProfileAdd /></ProtectRoute>} />
+        <Route path="/admin/user-profile/edit" element={<ProtectRoute> < UserProfileAdd mode="edit" /></ProtectRoute>} />
+        <Route path="/admin/user-profile" element={<ProtectRoute>< UserProfile /></ProtectRoute>} />
+
         <Route path="*" element={< NotFound />} />
       </Routes>
     </Suspense>

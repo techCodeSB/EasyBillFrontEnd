@@ -6,13 +6,16 @@ import { CiSettings } from "react-icons/ci";
 import { FiUser } from "react-icons/fi";
 import { IoIosLogOut } from "react-icons/io";
 import { Avatar, Popover, Whisper } from 'rsuite';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import CompanyList from './CompanyList';
 import { useDispatch } from 'react-redux';
 import { toggleModal } from '../store/copanyListSlice';
 import useGetUserData from "../hooks/useGetUserData";
 import { HiOutlineSwitchHorizontal } from "react-icons/hi";
-
+import { CiCalculator1 } from "react-icons/ci";
+import Calculator from './Calculator';
+import { calcToggle } from '../store/calculatorSlice';
+import Cookies from 'js-cookie';
 
 
 const Nav = ({ title }) => {
@@ -20,6 +23,7 @@ const Nav = ({ title }) => {
   const dispatch = useDispatch();
   const getUserData = useGetUserData(); // Get user info api call
   const [companyName, setCompanyName] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     getUserData();
@@ -41,7 +45,8 @@ const Nav = ({ title }) => {
 
       sideBar.style.minWidth = prev ? "50px" : "175px";
       sideBar.querySelectorAll("li").forEach(e => e.style.borderRadius = prev ? "0px" : "20px");
-      sideBar.querySelectorAll("li span:nth-child(2), h3").forEach(e => e.style.display = prev ? "none" : "");
+      sideBar.querySelectorAll("li span:nth-child(2), li span:nth-child(3), h3").forEach(e => e.style.display = prev ? "none" : "");
+      sideBar.querySelectorAll("li .sub-menu").forEach(e => e.style.display = prev ? "none" : "");
       sideBar.querySelectorAll("ul a, ul li").forEach(item => {
         item.setAttribute("data-tooltip-content", prev ? item.querySelector("span:nth-child(2)").innerText : "");
       });
@@ -49,6 +54,11 @@ const Nav = ({ title }) => {
 
       return !prev;
     })
+  }
+
+  const logout = () => {
+    Cookies.remove("token");
+    document.location.href = "/admin";
   }
 
 
@@ -74,15 +84,19 @@ const Nav = ({ title }) => {
             </div>
             <Whisper className='' trigger={'click'} placement='bottomEnd' speaker={<Popover full>
               <Link className='menu-link' to={"/admin/site"}>
-                <CiSettings size={"24px"} />
+                <CiSettings size={"20px"} />
                 <span>Site/Company Creation</span>
               </Link>
               <Link className='menu-link ' to="/admin/profile">
-                <FiUser size={"18px"} />
+                <FiUser size={"16px"} />
                 <span>Profile</span>
               </Link>
-              <Link className='menu-link'>
-                <IoIosLogOut size={"18px"} />
+              <Link className='menu-link' onClick={() => dispatch(calcToggle(1))}>
+                <CiCalculator1 size={"16px"} />
+                <span>Calculator</span>
+              </Link>
+              <Link className='menu-link' onClick={logout}>
+                <IoIosLogOut size={"16px"} />
                 <span>Logout</span>
               </Link>
             </Popover>}>
@@ -94,7 +108,9 @@ const Nav = ({ title }) => {
           </div>
         </div>
       </nav>
+      {/* Company list modal */}
       <CompanyList getCompanyName={(n) => setCompanyName(n)} />
+      <Calculator />
     </>
   )
 }

@@ -1,10 +1,9 @@
-import "../assets/css/login.css"
-import Logo from '../assets/images/logo.png';
+import "../../assets/css/login.css"
+import Logo from '../../assets/images/logo.png';
 import { useState } from "react";
-import useLoginShake from "../hooks/useLoginShake";
+import useLoginShake from "../../hooks/useLoginShake";
 import { useNavigate } from 'react-router-dom';
-import useMyToaster from '../hooks/useMyToaster';
-
+import useMyToaster from "../../hooks/useMyToaster";
 
 
 document.title = "Signup";

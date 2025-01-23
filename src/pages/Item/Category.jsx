@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import Nav from '../../components/Nav';
 import SideNav from '../../components/SideNav';
 import { Pagination } from 'rsuite';
@@ -14,16 +14,61 @@ import { MdOutlineRestorePage } from "react-icons/md";
 import { MdDeleteOutline } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import useExportTable from '../../hooks/useExportTable';
+import useMyToaster from '../../hooks/useMyToaster';
+import Cookies from 'js-cookie';
+import downloadPdf from '../../helper/downloadPdf';
+import { GrFormNext, GrFormPrevious } from 'react-icons/gr';
+
 
 const Category = () => {
-
-    const copyTable = useExportTable()
+  const toast = useMyToaster();
+  const { copyTable, downloadExcel, printTable, exportPdf } = useExportTable();
   const [activePage, setActivePage] = useState(1);
+  const [dataLimit, setDataLimit] = useState(10);
+  const [totalData, setTotalData] = useState()
   const [selected, setSelected] = useState([]);
   const navigate = useNavigate();
+  const [tableStatusData, setTableStatusData] = useState('active');
+  const [categoryData, setCategoryData] = useState([]);
+  const tableRef = useRef(null);
+  const exportData = useMemo(() => {
+    return categoryData && categoryData.map(({ title, hsn }, _) => ({
+      Title: title,
+      HSN: hsn
+    }));
+  }, [categoryData]);
+
+
+
+  // Get data;
+  useEffect(() => {
+    const getCategory = async () => {
+      try {
+        const data = {
+          token: Cookies.get("token"),
+          trash: tableStatusData === "trash" ? true : false,
+          all: tableStatusData === "all" ? true : false
+        }
+        const url = process.env.REACT_APP_API_URL + `/category/get?page=${activePage}&limit=${dataLimit}`;
+        const req = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
+        const res = await req.json();
+        setTotalData(res.totalData)
+        setCategoryData([...res.data])
+
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    getCategory();
+  }, [tableStatusData, dataLimit, activePage])
 
   const searchTable = (e) => {
-
     const value = e.target.value.toLowerCase();
     const rows = document.querySelectorAll('.list__table tbody tr');
 
@@ -45,25 +90,110 @@ const Category = () => {
 
   const selectAll = (e) => {
     if (e.target.checked) {
-      setSelected(Array.from({ length: 10 }, (_, i) => i));
+      setSelected(categoryData.map((category, _) => category._id));
     } else {
       setSelected([]);
     }
   };
 
-  const handleCheckboxChange = (index) => {
+  const handleCheckboxChange = (id) => {
     setSelected((prevSelected) => {
-      if (prevSelected.includes(index)) {
-        return prevSelected.filter((i) => i !== index);
+      if (prevSelected.includes(id)) {
+        return prevSelected.filter((previd, _) => previd !== id);
       } else {
-        return [...prevSelected, index];
+        return [...prevSelected, id];
       }
     });
   };
 
+  const exportTable = async (whichType) => {
+    if (whichType === "copy") {
+      copyTable("categoryTable"); // Pass tableid
+    }
+    else if (whichType === "excel") {
+      downloadExcel(exportData, 'category-list.xlsx') // Pass data and filename
+    }
+    else if (whichType === "print") {
+      printTable(tableRef, "Category List"); // Pass table ref and title
+    }
+    else if (whichType === "pdf") {
+      let document = exportPdf('Category List', exportData);
+      downloadPdf(document)
+    }
+  }
+
+
+  const removeData = async (trash) => {
+    if (selected.length === 0 || tableStatusData !== 'active') {
+      return;
+    }
+    const url = process.env.REACT_APP_API_URL + "/category/delete";
+    try {
+      const req = await fetch(url, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ ids: selected, trash: trash })
+      });
+      const res = await req.json();
+
+      if (req.status !== 200 || res.err) {
+        return toast(res.err, 'error');
+      }
+
+      selected.forEach((id, _) => {
+        setCategoryData((prevData) => {
+          return prevData.filter((data, _) => data._id !== id)
+        })
+      });
+      setSelected([]);
+
+      return toast(res.msg, 'success');
+
+    } catch (error) {
+      console.log(error)
+      toast("Something went wrong", "error")
+    }
+  }
+
+  const restoreData = async () => {
+    if (selected.length === 0 || tableStatusData !== "trash") {
+      return;
+    }
+
+    const url = process.env.REACT_APP_API_URL + "/category/restore";
+    try {
+      const req = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ ids: selected })
+      });
+      const res = await req.json();
+
+      if (req.status !== 200 || res.err) {
+        return toast(res.err, 'error');
+      }
+
+      selected.forEach((id, _) => {
+        setCategoryData((prevData) => {
+          return prevData.filter((data, _) => data._id !== id)
+        })
+      });
+      setSelected([]);
+      return toast(res.msg, 'success');
+
+    } catch (error) {
+      console.log(error)
+      toast("Something went wrong", "error")
+    }
+  }
+
   return (
     <>
-     <Nav title={"Item Category"} />
+      <Nav title={"Item Category"} />
       <main id='main'>
         <SideNav />
         <div className='content__body'>
@@ -79,26 +209,24 @@ const Category = () => {
               <div className='flex items-center gap-4 justify-between w-full lg:justify-start'>
                 <div className='flex flex-col'>
                   <p>Show</p>
-                  <select>
-                    <option>10</option>
-                    <option>25</option>
-                    <option>50</option>
-                    <option>100</option>
+                  <select value={dataLimit} onChange={(e) => setDataLimit(e.target.value)}>
+                    <option value={10}>10</option>
+                    <option value={25}>25</option>
+                    <option value={50}>50</option>
+                    <option value={100}>100</option>
                   </select>
                 </div>
                 <div className='list__icons'>
-                  <div className='list__icon' title='Print'>
+                  <div className='list__icon' title='Print' onClick={() => exportTable('print')}>
                     <BiPrinter className='text-white text-[16px]' />
                   </div>
-                  <div className='list__icon' title='Copy'>
-                    <FaRegCopy className='text-white text-[16px]' onClick={() => {
-                      copyTable("listQuotation");
-                    }} />
+                  <div className='list__icon' title='Copy' onClick={() => exportTable('copy')}>
+                    <FaRegCopy className='text-white text-[16px]' />
                   </div>
-                  <div className='list__icon' title='PDF'>
+                  <div className='list__icon' title='PDF' onClick={() => exportTable('pdf')}>
                     <FaRegFilePdf className='text-white text-[16px]' />
                   </div>
-                  <div className='list__icon' title='Excel'>
+                  <div className='list__icon' title='Excel' onClick={() => exportTable('excel')}>
                     <FaRegFileExcel className='text-white text-[16px]' />
                   </div>
                 </div>
@@ -115,55 +243,54 @@ const Category = () => {
                 <MdAdd className='text-lg' />
                 Add New
               </button>
-              <button className='bg-orange-400 hover:bg-orange-300'>
+              <button className='bg-orange-400 hover:bg-orange-300' onClick={() => removeData(true)}>
                 <MdOutlineCancel className='text-lg' />
                 Trash
               </button>
-              <button className='bg-green-500 hover:bg-green-400'>
+              <button className='bg-green-500 hover:bg-green-400' onClick={restoreData}>
                 <MdOutlineRestorePage className='text-lg' />
                 Restore
               </button>
-              <button className='bg-red-600 hover:bg-red-500'>
+              <button className='bg-red-600 hover:bg-red-500' onClick={() => removeData(false)}>
                 <MdDeleteOutline className='text-lg' />
                 Delete
               </button>
-              <select name="" id="" className='bg-blue-500 text-white'>
-                <option value="">All</option>
-                <option value="">Active</option>
-                <option value="">Trash</option>
+              <select value={tableStatusData}
+                onChange={(e) => setTableStatusData(e.target.value)}
+                className='bg-blue-500 text-white'>
+                <option value="all">All</option>
+                <option value="active">Active</option>
+                <option value="trash">Trash</option>
               </select>
             </div>
 
             {/* Table start */}
             <div className='overflow-x-auto mt-5 list__table'>
-              <table className='min-w-full bg-white' id='listQuotation'>
+              <table className='min-w-full bg-white' id='categoryTable' ref={tableRef}>
                 <thead className='bg-gray-100'>
                   <tr>
                     <th className='py-2 px-4 border-b w-[50px]'>
-                      <input type='checkbox' onChange={selectAll} checked={selected.length === 10} />
+                      <input type='checkbox' onChange={selectAll} checked={categoryData.length > 0 && selected.length === categoryData.length} />
                     </th>
-                    <th className='py-2 px-4 border-b '>Title</th>
-                    <th className='py-2 px-4 border-b '>HSN/SAC</th>
-                    <th className='py-2 px-4 border-b '>Action</th>
+                    <th className='py-2 px-4 border-b'>Title</th>
+                    <th className='py-2 px-4 border-b'>HSN/SAC</th>
+                    <th className='py-2 px-4 border-b w-[100px]'>Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   {
-                    Array.from({ length: 10 }).map((_, i) => {
+                    categoryData.map((data, i) => {
                       return <tr key={i}>
                         <td className='py-2 px-4 border-b max-w-[10px]'>
-                          <input type='checkbox' checked={selected.includes(i)} onChange={() => handleCheckboxChange(i)} />
+                          <input type='checkbox' checked={selected.includes(data._id)} onChange={() => handleCheckboxChange(data._id)} />
                         </td>
-                        <td className='px-4 border-b '>Bag</td>
-                        <td className='px-4 border-b '>57864</td>
-                      
-                        <td className='px-4 border-b min-w-[70px]'>
-                          <div className='flex justify-end flex-col md:flex-row gap-2 mr-2'>
-                            <button className='bg-blue-400 text-white px-2 py-1 rounded  text-[16px]'>
+                        <td className='px-4 border-b' align='center'>{data.title}</td>
+                        <td className='px-4 border-b' align='center'>{data.hsn}</td>
+                        <td className='px-4 border-b min-w-[70px]' align='center'>
+                          <div className='flex justify-center flex-col md:flex-row gap-2 mr-2'>
+                            <button className='bg-blue-400 text-white px-2 py-1 rounded  text-[16px]'
+                              onClick={() => navigate(`/admin/item-category/edit/${data._id}`)}>
                               <MdEditSquare />
-                            </button>
-                            <button className='bg-red-500 text-white px-2 py-1 rounded  text-lg'>
-                              <IoInformationCircle />
                             </button>
                           </div>
                         </td>
@@ -172,16 +299,36 @@ const Category = () => {
                   }
                 </tbody>
               </table>
-              <p className='py-4'>Showing 1 to 2 of 2 entries</p>
-              <div className='flex justify-end'>
-                <div className='bg-gray-200 p-1 rounded'>
-                  <Pagination total={100} limit={5}
-                    maxButtons={3}
-                    activePage={activePage}
-                    onChangePage={setActivePage}
-                  />
-                </div>
+              <p className='py-4'>Showing {categoryData.length} of {totalData} entries</p>
+              {/* ----- Paginatin ----- */}
+              <div className='flex justify-end gap-2'>
+                {
+                  activePage > 1 ? <div
+                    onClick={() => setActivePage(activePage - 1)}
+                    className='border bg-blue-600 text-white w-[20px] h-[20px] grid place-items-center rounded cursor-pointer'>
+                    <GrFormPrevious />
+                  </div> : null
+                }
+                {
+                  Array.from({ length: Math.ceil((totalData / dataLimit)) }).map((_, i) => {
+                    return <div
+                      onClick={() => setActivePage(i + 1)}
+                      className='border-blue-400 border w-[20px] h-[20px] text-center rounded cursor-pointer'
+                      style={activePage === i + 1 ? { border: "1px solid blue" } : {}}
+                    >
+                      {i + 1}
+                    </div>
+                  })
+                }
+                {
+                  (totalData / dataLimit) > activePage ? <div
+                    onClick={() => setActivePage(activePage + 1)}
+                    className='border bg-blue-600 text-white w-[20px] h-[20px] flex items-center justify-center rounded cursor-pointer'>
+                    <GrFormNext />
+                  </div> : null
+                }
               </div>
+              {/* pagination end */}
             </div>
           </div>
         </div>

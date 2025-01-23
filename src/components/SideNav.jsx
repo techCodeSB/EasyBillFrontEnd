@@ -4,8 +4,7 @@ import { HiOutlineHome } from "react-icons/hi2";
 import { CiImageOn } from "react-icons/ci";
 import { IoSettingsOutline } from "react-icons/io5";
 import { TbUsersGroup } from "react-icons/tb";
-
-
+import { MdKeyboardArrowDown } from "react-icons/md";
 import { Link } from 'react-router-dom';
 import { IoIosArrowDown } from "react-icons/io";
 import { Tooltip } from 'react-tooltip';
@@ -147,7 +146,7 @@ const SideNav = () => {
       {
         name: 'Items',
         icon: <CiImageOn />,
-        link: '/admin/dashboard',
+        link: null,
         submenu: [
           {
             name: 'Category',
@@ -171,13 +170,17 @@ const SideNav = () => {
       },
     ]
   }
+  const [openSubmenus, setOpenSubmenus] = useState([]);
 
-  const [openSubmenus, setOpenSubmenus] = useState({});
+
   const toggleSubmenu = (name) => {
-    setOpenSubmenus((prev) => ({
-      ...prev,
-      [name]: !prev[name],
-    }));
+    setOpenSubmenus((pv) => {
+      if (pv.includes(name)) {
+        return pv.filter((item) => item !== name)
+      } else {
+        return [...pv, name]
+      }
+    })
   };
 
   return (
@@ -239,16 +242,101 @@ const SideNav = () => {
 
         <div className="side__nav__link__group">
           <h3 className='text-[16px] my-5'>Setup</h3>
-          <ul className=''>
+          <ul>
+            <Link data-tooltip-id="sideBarItemToolTip">
+              <li className='flex items-center'>
+                <span className='mr-3'><IoSettingsOutline /></span>
+                <span>Site/Business Settings</span>
+              </li>
+            </Link>
+            <Whisper enterable trigger={'hover'} speaker={
+              openSubmenus.includes('unit') ?
+                <Popover className='p-0 w-[100px]'>
+                  <ul>
+                    <Link data-tooltip-id="sideBarItemToolTip">
+                      <li className='flex items-center'>
+                        <span className='mr-2 text-[15px]'><CiImageOn /></span>
+                        <Link to={"/admin/role"} className='focus-within:no-underline text-blue-900 text-[13px]'>
+                          Role
+                        </Link>
+                      </li>
+                    </Link>
+                    <Link data-tooltip-id="sideBarItemToolTip">
+                      <li className='flex items-center'>
+                        <span className='mr-2 text-[15px]'><CiImageOn /></span>
+                        <Link to={"/admin/user"} className='focus-within:no-underline text-blue-900 text-[13px]'>
+                          User
+                        </Link>
+                      </li>
+                    </Link>
+                  </ul>
+                </Popover> : <div></div>
+            }>
+              <li onClick={() => toggleSubmenu('unit')} className='cursor-pointer'>
+                <div className='flex items-center justify-between'>
+                  <span> <TbUsersGroup /></span>
+                  <span>User Management</span>
+                  <span className={`transform transition-transform ${openSubmenus.includes('unit') ? 'rotate-180' : ''}`}>
+                    <MdKeyboardArrowDown />
+                  </span>
+                </div>
+                <ul className={`ml-2 ${openSubmenus.includes('unit') ? 'block' : 'hidden'} transform transition-transform sub-menu`} >
+                  <Link data-tooltip-id="sideBarItemToolTip">
+                    <li className='flex items-center'>
+                      <span className='mr-3'><CiImageOn /></span>
+                      <span>Role</span>
+                    </li>
+                  </Link>
+                  <Link data-tooltip-id="sideBarItemToolTip">
+                    <li className='flex items-center'>
+                      <span className='mr-3'><CiImageOn /></span>
+                      <span>User</span>
+                    </li>
+                  </Link>
+                </ul>
+              </li>
+            </Whisper>
+            <Link to={"/admin/unit"} data-tooltip-id="sideBarItemToolTip">
+              <li className='flex items-center'>
+                <span className='mr-3'><CiImageOn /></span>
+                <span>Unit</span>
+              </li>
+            </Link>
+            <Link to={"/admin/tax"} data-tooltip-id="sideBarItemToolTip">
+              <li className='flex items-center'>
+                <span className='mr-3'><CiImageOn /></span>
+                <span>Tax</span>
+              </li>
+            </Link>
+            <Link to={"/admin/item"} data-tooltip-id="sideBarItemToolTip">
+              <li className='flex items-center'>
+                <span className='mr-3'><CiImageOn /></span>
+                <span>Item</span>
+              </li>
+            </Link>
+            <Link to={"/admin/item-category"} data-tooltip-id="sideBarItemToolTip">
+              <li className='flex items-center'>
+                <span className='mr-3'><CiImageOn /></span>
+                <span>Category</span>
+              </li>
+            </Link>
+            <Link to={"/admin/party"} data-tooltip-id="sideBarItemToolTip">
+              <li className='flex items-center'>
+                <span className='mr-3'><CiImageOn /></span>
+                <span>Party</span>
+              </li>
+            </Link>
+          </ul>
+          {/* <ul className=''>
             {links.Setup.map((link, index) => (
               <Whisper key={index} enterable trigger={'hover'} speaker={
                 index === 4 ? <Popover className='p-0'>
                   <ul>
                     {links.Setup[4].submenu.map((sublink, subIndex) => (
-                      <Link to={sublink.link} className='focus-within:no-underline hover:no-underline text-blue-900'>
+                      <Link className='focus-within:no-underline hover:no-underline text-blue-900'>
                         <li  className='flex items-center'>
                           <span className='mr-2 text-[15px]'>{sublink.icon}</span>
-                          <Link className='focus-within:no-underline hover:no-underline text-blue-900 text-[13px]'>
+                          <Link to={sublink.link} className='focus-within:no-underline hover:no-underline text-blue-900 text-[13px]'>
                             {sublink.name}
                           </Link>
                         </li>
@@ -282,7 +370,7 @@ const SideNav = () => {
                 </li>
               </Whisper>
             ))}
-          </ul>
+          </ul> */}
 
         </div>
       </div>
