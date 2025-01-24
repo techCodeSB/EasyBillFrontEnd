@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { SelectPicker, DatePicker, Button } from 'rsuite';
 import MyBreadCrumb from '../../components/BreadCrumb';
 import Nav from '../../components/Nav';
@@ -12,17 +12,17 @@ import useMyToaster from '../../hooks/useMyToaster';
 import useApi from '../../hooks/useApi';
 import { useSelector } from 'react-redux';
 import useBillPrefix from '../../hooks/useBillPrefix';
+import { IoConstructOutline } from 'react-icons/io5';
 
 
 const Quotation = () => {
   const toast = useMyToaster();
-  const {get} = useBillPrefix();
-  const [billPrefix, setBillPrefix] = useState();
-  const {getApiData} = useApi();
+  const getBillPrefix = useBillPrefix("invoice");
+  const { getApiData } = useApi();
   const itemRowSet = {
-    QuotaionItem: 1, itemName: '', description: '', hsn: '', qun: '',
+    QuotaionItem: 1, itemName: '', description: '', hsn: '', qun: '1',
     unit: '', price: '', discountPerAmount: '', discountPerPercentage: '',
-    tax: '', taxAmount: '', amount: ''
+    tax: '', taxAmount: '', amount: '', unitSet: []
   }
   const additionalRowSet = {
     additionalRowsItem: 1, particular: '', amount: ''
@@ -34,6 +34,9 @@ const Quotation = () => {
     additionalCharge: additionalRows, note: '', terms: '',
     discountType: '', discountAmount: '', discountPercentage: '',
   })
+  const [perPrice, setPerPrice] = useState(null);
+  const [perTax, setPerTax] = useState(null);
+  const [perDiscount, setPerDiscount] = useState(null);
 
   // When change discount type;
   const [discountToggler, setDiscountToggler] = useState(true);
@@ -50,6 +53,7 @@ const Quotation = () => {
 
   // store item label and value pair for dropdown
   const [itemData, setItemData] = useState([])
+  const [taxData, setTaxData] = useState([]);
 
 
   useState(() => {
@@ -69,8 +73,9 @@ const Quotation = () => {
       }
       {
         const data = await getApiData("tax");
-        const tax = data.data.map(d => ({ label: d.title, value: d.title }));
-        setTax([...tax]);
+        const tax = data.data.map(d => ({ label: d.title, value: d.gst }));
+        setTax([...data.data]);
+        setTaxData([...tax]);
       }
       {
         const data = await getApiData("party");
@@ -85,10 +90,8 @@ const Quotation = () => {
 
 
   useEffect(() => {
-    
-    let bill = get("invoice");
-    console.log(bill)
-  }, [])
+    setFormData({ ...formData, quotationNumber: getBillPrefix });
+  }, [getBillPrefix])
 
   // add item and additional row
   const addItem = (which) => {
@@ -131,6 +134,81 @@ const Quotation = () => {
     }
 
   }
+
+  const onItemChange = (value, index) => {
+    let item = [...ItemRows];
+    item[index].itemName = value;
+    setItemRows(item);
+
+    let selectedItem = items.filter(i => i.title === value);
+    if (selectedItem.length >= 0) {
+      let item = [...ItemRows];
+      let currentUnit = [];
+      let taxId = selectedItem[0].category.tax;
+      const getTax = tax.filter((t, _) => t._id === taxId)[0];
+
+
+      item[index].hsn = selectedItem[0].category.hsn;
+      item[index].unit = selectedItem[0].unit;
+      item[index].tax = getTax.gst;
+      selectedItem[0].unit.forEach((u, _) => {
+        currentUnit.push(u.unit);
+      })
+      item[index].unitSet = [...currentUnit];
+
+      setItemRows(item);
+    }
+
+  }
+
+  const calculatePerTaxAmount = (index) => {
+    const tax = ItemRows[index].tax / 100;
+    const qun = ItemRows[index].qun;
+    const price = ItemRows[index].price;
+    const disAmount = ItemRows[index].discountPerAmount;
+    const amount = ((qun * price) - disAmount);
+    const taxamount = (amount * tax).toFixed(2);
+
+
+    return taxamount;
+  }
+
+  const calculatePerAmount = (index) => {
+    const qun = ItemRows[index].qun;
+    const price = ItemRows[index].price;
+    const disAmount = ItemRows[index].discountPerAmount;
+    const totalPerAmount = parseInt((qun * price) - disAmount) + parseInt(calculatePerTaxAmount(index));
+
+    return (totalPerAmount).toFixed(2);
+  }
+
+
+  const subTotal = useCallback(() => {
+    const subTotal = (which) => {
+      let total = 0;
+
+      ItemRows.forEach((item, index) => {
+        if (which === "discount") {
+          if (item.discountPerAmount) {
+            total = (parseInt(total) + parseInt(item.discountPerAmount)).toFixed(2)
+            console.log('callback---', total)
+          }
+        }
+        else if (which === "tax") {
+          total = (parseInt(total) + parseInt(calculatePerTaxAmount(index))).toFixed(2);
+        }
+        else if (which === "amount") {
+          total = (parseInt(total) + parseInt(calculatePerAmount(index))).toFixed(2);
+        }
+      })
+
+      return !isNaN(total) ? total : 0;
+
+    }
+    return subTotal;
+  }, [ItemRows, perPrice, perTax, perDiscount])
+
+
 
   return (
     <>
@@ -200,11 +278,7 @@ const Quotation = () => {
                       <td>
                         <div className='flex flex-col gap-2'>
                           <SelectPicker
-                            onChange={(v) => {
-                              let item = [...ItemRows];
-                              item[index].itemName = v;
-                              setItemRows(item);
-                            }}
+                            onChange={(v) => onItemChange(v, index)}
                             value={ItemRows[index].itemName}
                             data={itemData}
                           />
@@ -247,9 +321,11 @@ const Quotation = () => {
                           }}
                           value={ItemRows[index].unit}
                         >
-                          <option value="">aa</option>
-                          <option value="">bb</option>
-                          <option value="">cc</option>
+                          {
+                            ItemRows[index].unitSet.map((u, _) => {
+                              return <option key={_} value={u}>{u}</option>
+                            })
+                          }
                         </select>
                       </td>
                       <td align='center'>
@@ -259,18 +335,24 @@ const Quotation = () => {
                               let item = [...ItemRows];
                               item[index].price = e.target.value;
                               setItemRows(item);
+                              setPerPrice(e.target.value)
                             }}
                             value={ItemRows[index].price}
                           />
                         </div>
                       </td>
-                      <td>
+                      <td> {/** Discount amount and percentage */}
                         <div className='w-[100px] flex flex-col gap-2 items-center' >
                           <div className='add-table-discount-input' >
                             <input type="text"
                               onChange={(e) => {
                                 let item = [...ItemRows];
+                                let amount = item[index].price * item[index].qun;
+                                let percentage = ((e.target.value / amount) * 100).toFixed(2);
+
                                 item[index].discountPerAmount = e.target.value;
+                                item[index].discountPerPercentage = percentage;
+                                setPerDiscount('');
                                 setItemRows(item);
                               }}
                               value={ItemRows[index].discountPerAmount}
@@ -281,6 +363,10 @@ const Quotation = () => {
                             <input type="text"
                               onChange={(e) => {
                                 let item = [...ItemRows];
+                                let amount = item[index].price * item[index].qun;
+                                let value = ((e.target.value * amount) / 100).toFixed(2);
+
+                                item[index].discountPerAmount = value;
                                 item[index].discountPerPercentage = e.target.value;
                                 setItemRows(item);
                               }}
@@ -290,16 +376,17 @@ const Quotation = () => {
                           </div>
                         </div>
                       </td>
-                      <td>
+                      <td> {/** Tax and Taxamount */}
                         <div className='flex flex-col gap-2'>
                           <SelectPicker
                             onChange={(v) => {
                               let item = [...ItemRows];
                               item[index].tax = v;
                               setItemRows(item);
+                              setPerTax('')
                             }}
                             value={ItemRows[index].tax}
-                            data={tax}
+                            data={taxData}
                           />
                           <input type="text"
                             onChange={(e) => {
@@ -307,14 +394,14 @@ const Quotation = () => {
                               item[index].taxAmount = e.target.value;
                               setItemRows(item);
                             }}
-                            value={ItemRows[index].taxAmount}
+                            value={calculatePerTaxAmount(index)}
                           />
                         </div>
                       </td>
                       <td align='center'>
                         <div>
                           <input type="text"
-                            value={ItemRows[index].amount}
+                            value={calculatePerAmount(index)}
                             className='bg-gray-100'
                           />
                         </div>
@@ -341,9 +428,9 @@ const Quotation = () => {
                     <td colSpan={5} align='right'>
                       <p className='py-2 font-bold'>Sub-Total</p>
                     </td>
-                    <td>0.00</td>
-                    <td>0.00</td>
-                    <td>0.00</td>
+                    <td>{subTotal()('discount')}</td>
+                    <td>{subTotal()('tax')}</td>
+                    <td>{subTotal()('amount')}</td>
                   </tr>
                 </tfoot>
               </table>
@@ -373,7 +460,9 @@ const Quotation = () => {
                 <tbody>
                   <tr>
                     <td className='min-w-[150px]'>
-                      <input type="text" name="total_taxable_amount" id="" />
+                      <input type="text" name="total_taxable_amount" 
+                        value={}
+                      />
                     </td>
                     <td className='min-w-[150px]'>
                       <input type="text" name='total_tax_amount' />

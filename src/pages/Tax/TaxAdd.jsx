@@ -12,7 +12,7 @@ import Cookies from 'js-cookie';
 const TaxAdd = ({ mode }) => {
   const toast = useMyToaster();
   const editorRef = useRef(null);
-  const [form, setForm] = useState({ title: '', details: '' });
+  const [form, setForm] = useState({ title: '', details: '', gst: '0', cess: '0' });
   const { id } = useParams();
 
   useEffect(() => {
@@ -37,7 +37,7 @@ const TaxAdd = ({ mode }) => {
   }, [mode])
 
   const savebutton = async (e) => {
-    if (form.title === "") {
+    if (form.title === "" || form.gst === "" || form.cess === "") {
       return toast("fill the blank", "error")
     }
 
@@ -57,7 +57,7 @@ const TaxAdd = ({ mode }) => {
       }
 
       if (!mode) {
-        setForm({ title: "", details: '' });
+        setForm({ title: '', details: '', gst: '0', cess: '0' });
       }
 
       return toast(!mode ? "Tax create success" : "Tax update success", 'success');
@@ -82,11 +82,21 @@ const TaxAdd = ({ mode }) => {
         <SideNav />
         <div className='content__body'>
           <div className='content__body__main bg-white '>
-            <div className=' flex-col lg:flex-row'>
+            <div className='flex flex-col'>
               <div className='w-full'>
                 <div className='p-2'>
                   <p className='pb-1'>Title</p>
                   <input type='text' onChange={(e) => setForm({ ...form, title: e.target.value })} value={form.title} />
+                </div>
+              </div>
+              <div className='w-full flex flex-col lg:flex-row'>
+                <div className='p-2 w-full'>
+                  <p className='pb-1'>{"GST (%)"}</p>
+                  <input type='text' onChange={(e) => setForm({ ...form, gst: e.target.value })} value={form.gst} />
+                </div>
+                <div className='p-2 w-full'>
+                  <p className='pb-1'>{"CESS (%)"}</p>
+                  <input type='text' onChange={(e) => setForm({ ...form, cess: e.target.value })} value={form.cess} />
                 </div>
               </div>
             </div>
@@ -124,10 +134,6 @@ const TaxAdd = ({ mode }) => {
                 <LuRefreshCcw className='mt-3 ml-2' />
                 <button className='p-2' onClick={fromvalueclear}>Reset</button>
               </div>
-              {/* <div className="flex rounded-sm ml-4 bg-gray-500 text-white">
-                                 <IoMdArrowRoundBack className='mt-3 ml-2' />
-                                 <button className='p-2'>Back</button>
-                                 </div>*/}
             </div>
           </div>
         </div>

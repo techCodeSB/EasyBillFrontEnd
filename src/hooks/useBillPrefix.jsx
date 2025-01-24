@@ -1,24 +1,20 @@
 import { useSelector } from "react-redux";
 
 
-const useBillPrefix = () => {
+const useBillPrefix = (type) => {
   const userData = useSelector((state) => state.userDetail);
-  const get = (type) => {
-    const activeCompany = userData.activeCompany;
+  const activeCompany = userData.activeCompany;
 
-    userData.companies && userData.companies.forEach((company, _) => {
-      console.log(type)
-      if (company._id === activeCompany) {
-        if (type === 'invoice') { console.log(company.invoiceInitial); return company.invoiceInitial }
-        else if (type === "po") return company.poInitial;
-        else if (type === "proforma") return company.proformaInitial;
+  if (userData.companies) {
+    for (let i of userData.companies) {
+      if (i._id === activeCompany) {
+        if (type === 'invoice') return i.invoiceInitial;
+        else if (type === "po") return i.poInitial;
+        else if (type === "proforma") return i.proformaInitial;
         else return null;
-      
       }
-    })
+    }
   }
-
-  return { get };
 
 }
 
