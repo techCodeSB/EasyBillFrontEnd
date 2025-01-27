@@ -1,8 +1,8 @@
  .rs-picker-default .rs-picker-toggle.rs-btn .rs-picker-toggle-indicator .rs-picker-caret-icon{
-  top: 3px;
+  top: 3px !important;
  }
  .rs-picker-toggle{
-  line-height: 16px; 
+  line-height: 16px !important; 
   border-radius: 4px; 
   padding: 5px !important;
 }
@@ -12,7 +12,7 @@
 }
 
 .rs-input-group {
-  border-radius: 4px;
+  border-radius: 3px !important;
 }
 .rs-input-group.rs-input-group-inside .rs-input-group-addon {
   padding: 5px 12px;

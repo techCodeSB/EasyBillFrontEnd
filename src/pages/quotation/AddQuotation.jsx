@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { SelectPicker, DatePicker, Button } from 'rsuite';
-import MyBreadCrumb from '../../components/BreadCrumb';
 import Nav from '../../components/Nav';
 import SideNav from '../../components/SideNav';
 import { RiDeleteBin6Line } from "react-icons/ri";
@@ -10,9 +9,7 @@ import { FaRegCheckCircle } from "react-icons/fa";
 import { BiReset } from "react-icons/bi";
 import useMyToaster from '../../hooks/useMyToaster';
 import useApi from '../../hooks/useApi';
-import { useSelector } from 'react-redux';
 import useBillPrefix from '../../hooks/useBillPrefix';
-import { IoConstructOutline } from 'react-icons/io5';
 
 
 const Quotation = () => {
@@ -96,10 +93,35 @@ const Quotation = () => {
   // add item and additional row
   const addItem = (which) => {
     which === 1 ?
-      setItemRows([...ItemRows, { ...itemRowSet, QuotaionItem: ItemRows.length > 0 ? ItemRows[ItemRows.length - 1].QuotaionItem + 1 : itemRowSet }])
-      : setAdditionalRow([...additionalRows, { ...additionalRowSet, additionalRowsItem: additionalRows.length > 0 ? additionalRows[additionalRows.length - 1].additionalRowsItem + 1 : additionalRowSet }]);
+      setItemRows([
+        ...ItemRows, {
+          ...itemRowSet, QuotaionItem: ItemRows.length > 0 ? ItemRows[ItemRows.length - 1].QuotaionItem + 1 : itemRowSet,
+        }
+      ])
+      : setAdditionalRow([
+        ...additionalRows, {
+          ...additionalRowSet, additionalRowsItem: additionalRows.length > 0 ? additionalRows[additionalRows.length - 1].additionalRowsItem + 1 : additionalRowSet
+        }
+      ]);
 
   };
+
+
+  // When `discount type is before` and apply discount this useEffect run;
+  useEffect(() => {
+    if (formData.discountType === "before") {
+      let item = [...ItemRows];
+      item.forEach((i, _) => {
+        i.discountPerAmount = (formData.discountAmount / (ItemRows.length)).toFixed(2)
+        i.discountPerPercentage = ((formData.discountAmount / i.price * 100) / ItemRows.length).toFixed(2);
+      })
+
+      setItemData([...item])
+
+    }
+  }, [ItemRows])
+
+
 
   // delete item and additional row
   const deleteItem = (which, ItemId) => {
@@ -125,6 +147,7 @@ const Quotation = () => {
   }
 
 
+  // When change discount type `before` `after` `no`;
   const changeDiscountType = (e) => {
     setFormData({ ...formData, discountType: e.target.value });
     if (e.target.value !== "no") {
@@ -146,7 +169,6 @@ const Quotation = () => {
       let currentUnit = [];
       let taxId = selectedItem[0].category.tax;
       const getTax = tax.filter((t, _) => t._id === taxId)[0];
-
 
       item[index].hsn = selectedItem[0].category.hsn;
       item[index].unit = selectedItem[0].unit;
@@ -191,7 +213,6 @@ const Quotation = () => {
         if (which === "discount") {
           if (item.discountPerAmount) {
             total = (parseInt(total) + parseInt(item.discountPerAmount)).toFixed(2)
-            console.log('callback---', total)
           }
         }
         else if (which === "tax") {
@@ -209,28 +230,48 @@ const Quotation = () => {
   }, [ItemRows, perPrice, perTax, perDiscount])
 
 
-  
+
   const calculateFinalAmount = () => {
     let totalParticular = 0;
     let total = 0;
 
     // Total additionla amount and store
     additionalRows.forEach((d, _) => {
-      if(d.amount){
+      if (d.amount) {
         totalParticular = totalParticular + parseInt(d.amount);
       }
     })
 
-    if (formData.discountType === "no" || formData.discountType === "") {
+    if (formData.discountType === "no" || formData.discountType === "" || formData.discountType === "before") {
       total = subTotal()('amount');
     }
     else if (formData.discountType === "after") {
       total = (subTotal()('amount') - formData.discountAmount).toFixed(2);
     }
-    else if (formData.discountType === "before") {
-      total = 1;
-    }
+
     return !isNaN(totalParticular) ? (parseInt(totalParticular) + parseInt(total)).toFixed(2) : total;
+
+  }
+
+
+
+  const onDiscountAmountChange = (e) => {
+    if (discountToggler !== null) {
+      let per = ((e.target.value / subTotal()('amount')) * 100).toFixed(2)
+      setFormData({ ...formData, discountAmount: e.target.value, discountPercentage: per });
+
+      if (formData.discountType === "before") {
+        let items = [...ItemRows];
+        items.forEach((i, _) => {
+          let amount = parseInt(e.target.value) / parseInt(items.length);
+          i.discountPerAmount = amount;
+          i.discountPerPercentage = amount / i.price * 100;
+        })
+
+        setItemRows([...items]);
+      }
+
+    }
 
   }
 
@@ -367,10 +408,11 @@ const Quotation = () => {
                         </div>
                       </td>
                       <td> {/** Discount amount and percentage */}
-                        <div className='w-[100px] flex flex-col gap-2 items-center' >
-                          <div className='add-table-discount-input' >
+                        <div className={`w-[100px] flex flex-col gap-2 items-center`} >
+                          <div className='add-table-discount-input'>
                             <input type="text"
-                              onChange={(e) => {
+                              className={`${formData.discountType === 'before' ? 'bg-gray-100' : ''} `}
+                              onChange={formData.discountType !== 'before' ? (e) => {
                                 let item = [...ItemRows];
                                 let amount = item[index].price * item[index].qun;
                                 let percentage = ((e.target.value / amount) * 100).toFixed(2);
@@ -379,14 +421,15 @@ const Quotation = () => {
                                 item[index].discountPerPercentage = percentage;
                                 setPerDiscount('');
                                 setItemRows(item);
-                              }}
+                              } : null}
                               value={ItemRows[index].discountPerAmount}
                             />
                             <div><MdCurrencyRupee /></div>
                           </div>
                           <div className='add-table-discount-input' >
                             <input type="text"
-                              onChange={(e) => {
+                              className={`${formData.discountType === 'before' ? 'bg-gray-100' : ''} `}
+                              onChange={formData.discountType !== 'before' ? (e) => {
                                 let item = [...ItemRows];
                                 let amount = item[index].price * item[index].qun;
                                 let value = ((e.target.value * amount) / 100).toFixed(2);
@@ -394,7 +437,7 @@ const Quotation = () => {
                                 item[index].discountPerAmount = value;
                                 item[index].discountPerPercentage = e.target.value;
                                 setItemRows(item);
-                              }}
+                              } : null}
                               value={ItemRows[index].discountPerPercentage}
                             />
                             <div>%</div>
@@ -495,7 +538,7 @@ const Quotation = () => {
                       />
                     </td>
                     <td className='min-w-[180px]'>
-                      <select name="discount_type" id="" onChange={changeDiscountType}>
+                      <select name="discount_type" onChange={changeDiscountType}>
                         <option value="no">No Discount</option>
                         <option value="before">Before Tax</option>
                         <option value="after">After Tax</option>
@@ -505,11 +548,7 @@ const Quotation = () => {
                       <div className='add-table-discount-input' >
                         <input type="text"
                           className={`${discountToggler ? 'bg-gray-100' : ''}`}
-                          onChange={discountToggler ? null : (e) => {
-                            let per = ((e.target.value / subTotal()('amount')) * 100).toFixed(2)
-                            setFormData({ ...formData, discountAmount: e.target.value, discountPercentage: per })
-
-                          }}
+                          onChange={(e) => discountToggler ? null : onDiscountAmountChange(e)}
                           value={formData.discountAmount}
                         />
                         <div><MdCurrencyRupee /></div>
@@ -521,7 +560,19 @@ const Quotation = () => {
                           className={`${discountToggler ? 'bg-gray-100' : ''}`}
                           onChange={discountToggler ? null : (e) => {
                             let amount = ((subTotal()('amount') / 100) * e.target.value).toFixed(2)
-                            setFormData({ ...formData, discountPercentage: e.target.value, discountAmount: amount })
+                            setFormData({
+                              ...formData, discountPercentage: e.target.value, discountAmount: amount
+                            })
+
+                            if (formData.discountType === "before") {
+                              let items = [...ItemRows];
+                              items.forEach((i, _) => {
+                                i.discountPerAmount = amount / parseInt(items.length);
+                              })
+
+                              console.log(items);
+                              setItemRows([...items]);
+                            }
                           }}
                           value={formData.discountPercentage}
                         />
