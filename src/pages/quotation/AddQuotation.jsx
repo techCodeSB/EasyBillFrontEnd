@@ -209,6 +209,31 @@ const Quotation = () => {
   }, [ItemRows, perPrice, perTax, perDiscount])
 
 
+  
+  const calculateFinalAmount = () => {
+    let totalParticular = 0;
+    let total = 0;
+
+    // Total additionla amount and store
+    additionalRows.forEach((d, _) => {
+      if(d.amount){
+        totalParticular = totalParticular + parseInt(d.amount);
+      }
+    })
+
+    if (formData.discountType === "no" || formData.discountType === "") {
+      total = subTotal()('amount');
+    }
+    else if (formData.discountType === "after") {
+      total = (subTotal()('amount') - formData.discountAmount).toFixed(2);
+    }
+    else if (formData.discountType === "before") {
+      total = 1;
+    }
+    return !isNaN(totalParticular) ? (parseInt(totalParticular) + parseInt(total)).toFixed(2) : total;
+
+  }
+
 
   return (
     <>
@@ -460,12 +485,14 @@ const Quotation = () => {
                 <tbody>
                   <tr>
                     <td className='min-w-[150px]'>
-                      <input type="text" name="total_taxable_amount" 
-                        value={}
+                      <input type="text" name="total_taxable_amount"
+                        value={subTotal()('amount') - subTotal()('tax')}
                       />
                     </td>
                     <td className='min-w-[150px]'>
-                      <input type="text" name='total_tax_amount' />
+                      <input type="text" name='total_tax_amount'
+                        value={subTotal()('tax')}
+                      />
                     </td>
                     <td className='min-w-[180px]'>
                       <select name="discount_type" id="" onChange={changeDiscountType}>
@@ -478,7 +505,11 @@ const Quotation = () => {
                       <div className='add-table-discount-input' >
                         <input type="text"
                           className={`${discountToggler ? 'bg-gray-100' : ''}`}
-                          onChange={discountToggler ? null : (e) => setFormData({ ...formData, discountAmount: e.target.value })}
+                          onChange={discountToggler ? null : (e) => {
+                            let per = ((e.target.value / subTotal()('amount')) * 100).toFixed(2)
+                            setFormData({ ...formData, discountAmount: e.target.value, discountPercentage: per })
+
+                          }}
                           value={formData.discountAmount}
                         />
                         <div><MdCurrencyRupee /></div>
@@ -488,7 +519,10 @@ const Quotation = () => {
                       <div className='add-table-discount-input'>
                         <input type="text"
                           className={`${discountToggler ? 'bg-gray-100' : ''}`}
-                          onChange={discountToggler ? null : (e) => setFormData({ ...formData, discountPercentage: e.target.value })}
+                          onChange={discountToggler ? null : (e) => {
+                            let amount = ((subTotal()('amount') / 100) * e.target.value).toFixed(2)
+                            setFormData({ ...formData, discountPercentage: e.target.value, discountAmount: amount })
+                          }}
                           value={formData.discountPercentage}
                         />
                         <div>%</div>
@@ -497,7 +531,7 @@ const Quotation = () => {
                     <td className='min-w-[150px]'>
                       <input type="text" name="total_amount"
                         className='bg-gray-100'
-                        value={''}
+                        value={subTotal()('amount')}
                       />
                     </td>
                   </tr>
@@ -544,19 +578,19 @@ const Quotation = () => {
                                 onChange={(e) => {
                                   let item = [...additionalRows];
                                   item[index].particular = e.target.value;
-                                  setItemRows(item);
+                                  setAdditionalRow(item);
                                 }}
-                                value={ItemRows[index].particular}
+                                value={additionalRows[index].particular}
                               />
                             </td>
                             <td>
                               <input type="text"
                                 onChange={(e) => {
                                   let item = [...additionalRows];
-                                  item[index].particular = e.target.value;
-                                  setItemRows(item);
+                                  item[index].amount = e.target.value;
+                                  setAdditionalRow(item);
                                 }}
-                                value={ItemRows[index].particular}
+                                value={additionalRows[index].amount}
                               />
                             </td>
                             <td align='center'>
@@ -582,7 +616,9 @@ const Quotation = () => {
                   </table>
                 </div>
                 <p className='font-bold mt-4 mb-2'>Final Amount</p>
-                <input type="text" name="final_amount" className='w-full' />
+                <input type="text" name="final_amount" className='w-full'
+                  value={calculateFinalAmount()}
+                />
               </div>
             </div>
 
