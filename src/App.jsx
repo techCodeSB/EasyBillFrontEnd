@@ -51,13 +51,14 @@ const App = () => {
         <Route path="/admin/forget" element={<UnProtectRoute login={true}>< Forgot /></UnProtectRoute>} />
         <Route path="/admin/otp" element={<UnProtectRoute login={true}>< Otp /></UnProtectRoute>} />
         <Route path="/admin/change-password" element={<UnProtectRoute login={true}>< ChangePassword /></UnProtectRoute>} />
-
-        <Route path="admin/dashboard" element={<ProtectRoute><Dashboard /></ProtectRoute>} />
-        <Route path="/admin/quotation-estimate" element={<ProtectRoute><Quotation /></ProtectRoute>} />
-        <Route path="/admin/quotation-estimate/add" element={<ProtectRoute><AddQutation /></ProtectRoute>} />
         <Route path="/admin/site" element={<ProtectRoute><Setting /></ProtectRoute>} />
         <Route path="/admin/company" element={<ProtectRoute><AddCompany /></ProtectRoute>} />
+        <Route path="admin/dashboard" element={<ProtectRoute><Dashboard /></ProtectRoute>} />
+
+        <Route path="/admin/quotation-estimate" element={<ProtectRoute><Quotation /></ProtectRoute>} />
         <Route path="/admin/quotation-estimate/add" element={<ProtectRoute><AddQutation /></ProtectRoute>} />
+        <Route path="/admin/quotation-estimate/edit/:id" element={<ProtectRoute><AddQutation mode={"edit"}/></ProtectRoute>} />
+      
         <Route path="/admin/profile" element={<ProtectRoute><Profile /></ProtectRoute>} />
         <Route path="/admin/account/add" element={<ProtectRoute><AddAccount /></ProtectRoute>} />
         <Route path="/admin/account/edit" element={<ProtectRoute><AddAccount mode="edit" /></ProtectRoute>} />

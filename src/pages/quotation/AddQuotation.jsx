@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { SelectPicker, DatePicker, Button } from 'rsuite';
 import Nav from '../../components/Nav';
 import SideNav from '../../components/SideNav';
@@ -10,16 +10,21 @@ import { BiReset } from "react-icons/bi";
 import useMyToaster from '../../hooks/useMyToaster';
 import useApi from '../../hooks/useApi';
 import useBillPrefix from '../../hooks/useBillPrefix';
+import Cookies from 'js-cookie';
+import { useParams } from 'react-router-dom';
 
 
-const Quotation = () => {
+
+document.title = "Quotation";
+const Quotation = ({ mode }) => {
   const toast = useMyToaster();
+  const { id } = useParams()
   const getBillPrefix = useBillPrefix("invoice");
   const { getApiData } = useApi();
   const itemRowSet = {
     QuotaionItem: 1, itemName: '', description: '', hsn: '', qun: '1',
-    unit: '', price: '', discountPerAmount: '', discountPerPercentage: '',
-    tax: '', taxAmount: '', amount: '', unitSet: []
+    unit: [], price: '', discountPerAmount: '', discountPerPercentage: '',
+    tax: '', taxAmount: '', amount: '',
   }
   const additionalRowSet = {
     additionalRowsItem: 1, particular: '', amount: ''
@@ -51,6 +56,33 @@ const Quotation = () => {
   // store item label and value pair for dropdown
   const [itemData, setItemData] = useState([])
   const [taxData, setTaxData] = useState([]);
+
+
+
+  useEffect(() => {
+    if (mode) {
+      const get = async () => {
+        const url = process.env.REACT_APP_API_URL + "/quotation/get";
+        const cookie = Cookies.get("token");
+
+        const req = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": 'application/json'
+          },
+          body: JSON.stringify({ token: cookie, id: id })
+        })
+        const res = await req.json();
+        // setItemRows()
+        setFormData({ ...formData, ...res.data });
+        setAdditionalRow([...res.data.additionalCharge])
+        setItemRows([...res.data.items]);
+        console.log(res.data.items)
+      }
+
+      get();
+    }
+  }, [mode])
 
 
   useState(() => {
@@ -125,25 +157,10 @@ const Quotation = () => {
 
   // delete item and additional row
   const deleteItem = (which, ItemId) => {
+    console.log(ItemId)
     which === 1 ?
-      setItemRows(ItemRows.filter((i, _) => i.QuotaionItem !== ItemId))
-      : setAdditionalRow(additionalRows.filter((i, _) => i.additionalRowsItem !== ItemId))
-  }
-
-
-  const saveBill = () => {
-    if ([formData.party, formData.quotationNumber, formData.estimateData, formData.validDate]
-      .some((field) => field === "")) {
-      return toast("Fill the blank", "error");
-    }
-    ItemRows.forEach((row, _) => {
-      if ([row.itemName, row.qun, row.unit, row.price, row.tax, row.taxAmount]
-        .some((field) => field === "")) {
-        return toast("Fill the blank", "error");
-      }
-    });
-
-
+      setItemRows(ItemRows.filter((i, index) => index !== ItemId))
+      : setAdditionalRow(additionalRows.filter((i, index) => index !== ItemId))
   }
 
 
@@ -157,6 +174,7 @@ const Quotation = () => {
     }
 
   }
+
 
   const onItemChange = (value, index) => {
     let item = [...ItemRows];
@@ -176,12 +194,13 @@ const Quotation = () => {
       selectedItem[0].unit.forEach((u, _) => {
         currentUnit.push(u.unit);
       })
-      item[index].unitSet = [...currentUnit];
+      item[index].unit = [...currentUnit];
 
       setItemRows(item);
     }
 
   }
+
 
   const calculatePerTaxAmount = (index) => {
     const tax = ItemRows[index].tax / 100;
@@ -191,20 +210,27 @@ const Quotation = () => {
     const amount = ((qun * price) - disAmount);
     const taxamount = (amount * tax).toFixed(2);
 
-
     return taxamount;
   }
+
+
 
   const calculatePerAmount = (index) => {
     const qun = ItemRows[index].qun;
     const price = ItemRows[index].price;
     const disAmount = ItemRows[index].discountPerAmount;
-    const totalPerAmount = parseInt((qun * price) - disAmount) + parseInt(calculatePerTaxAmount(index));
+    const totalPerAmount = parseFloat((qun * price) - disAmount) + parseFloat(calculatePerTaxAmount(index));
 
     return (totalPerAmount).toFixed(2);
   }
 
 
+  // Return Sub-Total
+  /*
+    Total Discount.
+    Total Tax.
+    Total Amount.
+  */
   const subTotal = useCallback(() => {
     const subTotal = (which) => {
       let total = 0;
@@ -212,18 +238,18 @@ const Quotation = () => {
       ItemRows.forEach((item, index) => {
         if (which === "discount") {
           if (item.discountPerAmount) {
-            total = (parseInt(total) + parseInt(item.discountPerAmount)).toFixed(2)
+            total = (parseFloat(total) + parseFloat(item.discountPerAmount)).toFixed(2)
           }
         }
         else if (which === "tax") {
-          total = (parseInt(total) + parseInt(calculatePerTaxAmount(index))).toFixed(2);
+          total = (parseFloat(total) + parseFloat(calculatePerTaxAmount(index))).toFixed(2);
         }
         else if (which === "amount") {
-          total = (parseInt(total) + parseInt(calculatePerAmount(index))).toFixed(2);
+          total = (parseFloat(total) + parseFloat(calculatePerAmount(index))).toFixed(2);
         }
       })
 
-      return !isNaN(total) ? total : 0;
+      return !isNaN(total) ? total : 0.00;
 
     }
     return subTotal;
@@ -238,7 +264,7 @@ const Quotation = () => {
     // Total additionla amount and store
     additionalRows.forEach((d, _) => {
       if (d.amount) {
-        totalParticular = totalParticular + parseInt(d.amount);
+        totalParticular = totalParticular + parseFloat(d.amount);
       }
     })
 
@@ -249,7 +275,7 @@ const Quotation = () => {
       total = (subTotal()('amount') - formData.discountAmount).toFixed(2);
     }
 
-    return !isNaN(totalParticular) ? (parseInt(totalParticular) + parseInt(total)).toFixed(2) : total;
+    return !isNaN(totalParticular) ? (parseFloat(totalParticular) + parseFloat(total)).toFixed(2) : total;
 
   }
 
@@ -263,7 +289,7 @@ const Quotation = () => {
       if (formData.discountType === "before") {
         let items = [...ItemRows];
         items.forEach((i, _) => {
-          let amount = parseInt(e.target.value) / parseInt(items.length);
+          let amount = parseFloat(e.target.value) / parseFloat(items.length);
           i.discountPerAmount = amount;
           i.discountPerPercentage = amount / i.price * 100;
         })
@@ -276,9 +302,68 @@ const Quotation = () => {
   }
 
 
+  // *Save bill
+  const saveBill = async () => {
+    if ([formData.party, formData.quotationNumber, formData.estimateData, formData.validDate]
+      .some((field) => field === "")) {
+      return toast("Fill the blank", "error");
+    }
+
+    for (let row of ItemRows) {
+      if ([row.itemName, row.qun, row.unit, row.price, row.tax]
+        .some((field) => field === "")) {
+        return toast("Fill the blank in item", "error");
+      }
+    }
+
+    try {
+      const url = process.env.REACT_APP_API_URL + "/quotation/add";
+      const token = Cookies.get("token");
+
+      const req = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(!mode ? { ...formData, token } : { ...formData, token, update: true, id: id })
+      })
+      const res = await req.json();
+      if (req.status !== 200 || res.err) {
+        return toast(res.err, 'error');
+      }
+
+      if (mode) {
+        return toast('Quotation update successfully', 'success');
+      }
+      
+      return toast('Quotation add successfully', 'success');
+      clearForm();
+
+
+    } catch (error) {
+      console.log(error);
+      return toast('Something went wrong', 'error')
+    }
+
+  }
+
+
+  // *Clear form values;
+  const clearForm = () => {
+    setItemRows([itemRowSet]);
+    setAdditionalRow([additionalRowSet])
+    setFormData({
+      party: '', quotationNumber: getBillPrefix, estimateData: '', validDate: '', items: ItemRows,
+      additionalCharge: additionalRows, note: '', terms: '',
+      discountType: '', discountAmount: '', discountPercentage: '',
+    });
+
+  }
+
+
   return (
     <>
-      <Nav title={"Add Quotation"} />
+      <Nav title={mode ? "Update Quotation" : "Add Quotation"} />
       <main id='main'>
         <SideNav />
         <div className='content__body'>
@@ -341,6 +426,8 @@ const Quotation = () => {
                 <tbody>
                   {ItemRows.map((i, index) => (
                     <tr key={i.QuotaionItem} className='border-b'>
+
+                      {/* Item name and description */}
                       <td>
                         <div className='flex flex-col gap-2'>
                           <SelectPicker
@@ -388,7 +475,7 @@ const Quotation = () => {
                           value={ItemRows[index].unit}
                         >
                           {
-                            ItemRows[index].unitSet.map((u, _) => {
+                            ItemRows[index].unit.map((u, _) => {
                               return <option key={_} value={u}>{u}</option>
                             })
                           }
@@ -477,7 +564,7 @@ const Quotation = () => {
                       <td align='center' className='w-[20px]'>
                         <RiDeleteBin6Line
                           className='cursor-pointer text-[16px]'
-                          onClick={() => ItemRows.length > 1 && deleteItem(1, i.QuotaionItem)}
+                          onClick={() => ItemRows.length > 1 && deleteItem(1, index)}
                         />
                       </td>
                     </tr>
@@ -508,8 +595,8 @@ const Quotation = () => {
               <table className='table-style w-full'>
                 <thead>
                   <tr>
-                    <td>Total Taxable Amount</td>
-                    <td>Total Tax Amount</td>
+                    <td className='font-bold'>Total Taxable Amount</td>
+                    <td className='font-bold'>Total Tax Amount</td>
                     <td>
                       <span className='font-bold mr-1'>Discount Type</span>
                       <span>(Additional)</span>
@@ -522,7 +609,7 @@ const Quotation = () => {
                       <span className='font-bold mr-1'>Discount Percentage</span>
                       <span>(Additional)</span>
                     </td>
-                    <td>Total Amount</td>
+                    <td className='font-bold'>Total Amount</td>
                   </tr>
                 </thead>
                 <tbody>
@@ -567,7 +654,7 @@ const Quotation = () => {
                             if (formData.discountType === "before") {
                               let items = [...ItemRows];
                               items.forEach((i, _) => {
-                                i.discountPerAmount = amount / parseInt(items.length);
+                                i.discountPerAmount = amount / parseFloat(items.length);
                               })
 
                               console.log(items);
@@ -647,7 +734,7 @@ const Quotation = () => {
                             <td align='center'>
                               <RiDeleteBin6Line
                                 className='cursor-pointer text-lg'
-                                onClick={() => deleteItem(2, i.additionalRowsItem)}
+                                onClick={() => deleteItem(2, index)}
                               />
                             </td>
                           </tr>
@@ -678,9 +765,9 @@ const Quotation = () => {
                 onClick={saveBill}
                 className='add-bill-btn'>
                 <FaRegCheckCircle />
-                Save
+                {!mode ? "Save" : "Upadte"}
               </button>
-              <button className='reset-bill-btn'>
+              <button className='reset-bill-btn' onClick={clearForm}>
                 <BiReset />
                 Reset
               </button>

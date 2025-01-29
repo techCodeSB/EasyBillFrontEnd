@@ -13,6 +13,7 @@
 
 .rs-input-group {
   border-radius: 3px !important;
+  height: 26px;
 }
 .rs-input-group.rs-input-group-inside .rs-input-group-addon {
   padding: 5px 12px;
@@ -20,6 +21,7 @@
 
 .rs-input {
   padding: 5px 11px;
+  font-size: 12px !important;
 }
 
 .rs-btn{

@@ -16,14 +16,13 @@ import useExportTable from '../../hooks/useExportTable';
 import Cookies from 'js-cookie';
 import useMyToaster from '../../hooks/useMyToaster';
 import downloadPdf from '../../helper/downloadPdf';
-
 import { GrFormNext } from "react-icons/gr";
 import { GrFormPrevious } from "react-icons/gr";
 
 
 
 
-document.title = "Party"
+document.title = "Party";
 const Party = () => {
   const toast = useMyToaster();
   const { copyTable, downloadExcel, printTable, exportPdf } = useExportTable();
@@ -93,6 +92,7 @@ const Party = () => {
     });
   }
 
+
   const selectAll = (e) => {
     if (e.target.checked) {
       setSelected(partyData.map(party => party._id));
@@ -100,6 +100,7 @@ const Party = () => {
       setSelected([]);
     }
   };
+  
 
   const handleCheckboxChange = (id) => {
     setSelected((prevSelected) => {

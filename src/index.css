@@ -265,7 +265,7 @@ select {
 }
 
 .add-bill-btn {
-  @apply bg-green-500 hover:bg-green-400 text-white rounded w-[60px] ;
+  @apply bg-green-500 hover:bg-green-400 text-white rounded w-[70px] ;
   @apply flex items-center justify-center gap-1 py-2;
 }
 .reset-bill-btn{
