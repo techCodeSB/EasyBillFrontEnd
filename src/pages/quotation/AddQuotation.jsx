@@ -73,11 +73,13 @@ const Quotation = ({ mode }) => {
           body: JSON.stringify({ token: cookie, id: id })
         })
         const res = await req.json();
-        // setItemRows()
         setFormData({ ...formData, ...res.data });
         setAdditionalRow([...res.data.additionalCharge])
         setItemRows([...res.data.items]);
-        console.log(res.data.items)
+
+        if(res.data.discountType != "no"){
+          setDiscountToggler(false);
+        }
       }
 
       get();
@@ -122,21 +124,44 @@ const Quotation = ({ mode }) => {
     setFormData({ ...formData, quotationNumber: getBillPrefix });
   }, [getBillPrefix])
 
-  // add item and additional row
-  const addItem = (which) => {
-    which === 1 ?
-      setItemRows([
-        ...ItemRows, {
-          ...itemRowSet, QuotaionItem: ItemRows.length > 0 ? ItemRows[ItemRows.length - 1].QuotaionItem + 1 : itemRowSet,
-        }
-      ])
-      : setAdditionalRow([
-        ...additionalRows, {
-          ...additionalRowSet, additionalRowsItem: additionalRows.length > 0 ? additionalRows[additionalRows.length - 1].additionalRowsItem + 1 : additionalRowSet
-        }
-      ]);
 
+  // add item row and additional row
+  const addItem = (which) => {
+    if (which === 1) {
+      setItemRows((prevItemRows) => {
+        const newItem = {
+          ...itemRowSet,
+          QuotaionItem: prevItemRows.length > 0 ? prevItemRows[prevItemRows.length - 1].QuotaionItem + 1 : itemRowSet.QuotaionItem,
+        };
+        const updatedItems = [...prevItemRows, newItem];
+
+        // Update formData after itemRows is updated
+        setFormData((prev) => ({
+          ...prev,
+          items: updatedItems,
+        }));
+
+        return updatedItems;
+      });
+    } else {
+      setAdditionalRow((prevAdditionalRows) => {
+        const newAdditionalRow = {
+          ...additionalRowSet,
+          additionalRowsItem: prevAdditionalRows.length > 0 ? prevAdditionalRows[prevAdditionalRows.length - 1].additionalRowsItem + 1 : additionalRowSet.additionalRowsItem,
+        };
+        const updatedAdditionalRows = [...prevAdditionalRows, newAdditionalRow];
+
+        // Update formData after additionalRows is updated
+        setFormData((prev) => ({
+          ...prev,
+          additionalCharge: updatedAdditionalRows,
+        }));
+
+        return updatedAdditionalRows;
+      });
+    }
   };
+
 
 
   // When `discount type is before` and apply discount this useEffect run;
@@ -157,11 +182,33 @@ const Quotation = ({ mode }) => {
 
   // delete item and additional row
   const deleteItem = (which, ItemId) => {
-    console.log(ItemId)
-    which === 1 ?
-      setItemRows(ItemRows.filter((i, index) => index !== ItemId))
-      : setAdditionalRow(additionalRows.filter((i, index) => index !== ItemId))
-  }
+    if (which === 1) {
+      setItemRows((prevItemRows) => {
+        const updatedItems = prevItemRows.filter((_, index) => index !== ItemId);
+
+        // Update formData after itemRows is updated
+        setFormData((prev) => ({
+          ...prev,
+          items: updatedItems,
+        }));
+
+        return updatedItems;
+      });
+    } else {
+      setAdditionalRow((prevAdditionalRows) => {
+        const updatedAdditionalRows = prevAdditionalRows.filter((_, index) => index !== ItemId);
+
+        // Update formData after additionalRows is updated
+        setFormData((prev) => ({
+          ...prev,
+          additionalCharge: updatedAdditionalRows,
+        }));
+
+        return updatedAdditionalRows;
+      });
+    }
+  };
+
 
 
   // When change discount type `before` `after` `no`;
@@ -304,6 +351,7 @@ const Quotation = ({ mode }) => {
 
   // *Save bill
   const saveBill = async () => {
+
     if ([formData.party, formData.quotationNumber, formData.estimateData, formData.validDate]
       .some((field) => field === "")) {
       return toast("Fill the blank", "error");
@@ -335,9 +383,9 @@ const Quotation = ({ mode }) => {
       if (mode) {
         return toast('Quotation update successfully', 'success');
       }
-      
-      return toast('Quotation add successfully', 'success');
+
       clearForm();
+      return toast('Quotation add successfully', 'success');
 
 
     } catch (error) {
@@ -625,12 +673,13 @@ const Quotation = ({ mode }) => {
                       />
                     </td>
                     <td className='min-w-[180px]'>
-                      <select name="discount_type" onChange={changeDiscountType}>
+                      <select name="discount_type" value={formData.discountType} onChange={changeDiscountType}>
                         <option value="no">No Discount</option>
                         <option value="before">Before Tax</option>
                         <option value="after">After Tax</option>
                       </select>
                     </td>
+
                     <td className='min-w-[180px]'>
                       <div className='add-table-discount-input' >
                         <input type="text"

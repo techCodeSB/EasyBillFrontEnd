@@ -32,6 +32,8 @@ const Forgot = React.lazy(() => import("./pages/Auth/Forgot"));
 const Otp = React.lazy(() => import("./pages/Auth/Otp"));
 const ChangePassword = React.lazy(() => import("./pages/Auth/ChangePassword"));
 const NotFound = React.lazy(() => import("./pages/NotFound"));
+const Invoice = React.lazy(()=>import("./pages/details/Invoice"));
+
 
 
 const App = () => {
@@ -54,6 +56,7 @@ const App = () => {
         <Route path="/admin/site" element={<ProtectRoute><Setting /></ProtectRoute>} />
         <Route path="/admin/company" element={<ProtectRoute><AddCompany /></ProtectRoute>} />
         <Route path="admin/dashboard" element={<ProtectRoute><Dashboard /></ProtectRoute>} />
+        <Route path="admin/bill/details/:id" element={<ProtectRoute><Invoice /></ProtectRoute>} />
 
         <Route path="/admin/quotation-estimate" element={<ProtectRoute><Quotation /></ProtectRoute>} />
         <Route path="/admin/quotation-estimate/add" element={<ProtectRoute><AddQutation /></ProtectRoute>} />

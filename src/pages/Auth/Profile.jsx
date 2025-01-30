@@ -21,7 +21,7 @@ const Profile = () => {
   });
   const [cPassword, setCPassword] = useState({ currentPassword: '', newPassword: '' });
   const userData = useSelector((state) => state.userDetail)
-  console.log(userData)
+
 
   useEffect(() => {
     const image = Object.keys(userData).length > 0 ? userData.profile.split('\\')[userData.profile.split("\\").length - 1] : "";

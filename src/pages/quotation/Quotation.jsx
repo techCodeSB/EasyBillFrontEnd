@@ -301,18 +301,22 @@ const Quotation = () => {
                         <td className='px-4 border-b' align='center'>{data.estimateData}</td>
                         <td className='px-4 border-b' align='center'>{data.quotationNumber}</td>
                         <td className='px-4 border-b' align='center'>{data.party}</td>
-                        <td className='px-4 border-b' align='center'>07 Jan 2025</td>
-                        <td className='px-4 border-b max-w-[20px]'>
-                          <span className='bg-green-500 px-2 text-white rounded-lg text-[12px] font-bold'>Valid</span>
+                        <td className='px-4 border-b' align='center'>{data.validDate}</td>
+                        <td className='px-4 border-b max-w-[20px]' align='center'>
+                          <span className='bg-green-500 px-2 text-white rounded-lg text-[12px] font-bold'>
+                            {new Date(Date.parse(new Date().toLocaleDateString())).toISOString() > new Date(Date.parse(data.validDate)).toISOString() ? "Expired" : "Valid"}
+                          </span>
                         </td>
                         <td className='px-4 border-b max-w-[70px]'>
                           <div className='flex flex-col md:flex-row gap-2 mr-2'>
                             <button
-                              onClick={()=>navigate(`/admin/quotation-estimate/edit/${data._id}`)}
+                              onClick={() => navigate(`/admin/quotation-estimate/edit/${data._id}`)}
                               className='bg-blue-400 text-white px-2 py-1 rounded w-full text-[16px]'>
                               <MdEditSquare />
                             </button>
-                            <button className='bg-red-500 text-white px-2 py-1 rounded w-full text-lg'>
+                            <button
+                              onClick={() => navigate(`/admin/bill/details/${data._id}`)}
+                              className='bg-red-500 text-white px-2 py-1 rounded w-full text-lg'>
                               <IoInformationCircle />
                             </button>
                           </div>
