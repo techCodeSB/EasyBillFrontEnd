@@ -133,9 +133,12 @@ const Invoice = () => {
 
             <div className='p-3'>
               <p className='text-[12px]'>TO</p>
-              <p className='text-black font-bold text-[12px] uppercase'>{billData?.party}</p>
-              <p className='text-[12px]'>Address: Khakurda</p>
-              <p className='text-[12px]'>GSTIN: 19ANGIO5478E5Z5 State: West Bengal</p>
+              <p className='text-black font-bold text-[12px] uppercase'>{billData?.party.name}</p>
+              <p className='text-[12px]'><span className='text-black font-bold'>Address:</span> {billData?.party.address}</p>
+              <p className='text-[12px] uppercase text-black'>
+                <span className='font-bold'>GSTIN:</span> {billData?.party.gst}
+                <span className='font-bold ml-2'>State:</span> {billData?.party.state}
+              </p>
             </div>
           </div>
           <table className='w-full text-[12px]'>
@@ -160,7 +163,16 @@ const Invoice = () => {
                     <td>{data.hsn}</td>
                     <td>{data.qun}</td>
                     <td>{data.price}</td>
-                    <td>{data.discountPerAmount}</td>
+                    <td align='right'>
+                      {data.discountPerAmount}
+                      <div className='text-gray-500'>
+                        {
+                          isNaN(parseFloat(data.discountPerAmount) / (parseFloat(data.price) * parseFloat(data.qun)) * 100)
+                            ? ""
+                            : `(${((parseFloat(data.discountPerAmount) / (parseFloat(data.price) * parseFloat(data.qun)) )* 100).toFixed(2)}%)`
+                        }
+                      </div>
+                    </td>
                     <td align='right'>
                       {((data.qun * data.price) / 100 * data.tax).toFixed(2)}
                       <div className='text-gray-500'>({data.tax}%)</div>

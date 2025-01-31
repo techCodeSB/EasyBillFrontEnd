@@ -300,7 +300,7 @@ const Quotation = () => {
                         </td>
                         <td className='px-4 border-b' align='center'>{data.estimateData}</td>
                         <td className='px-4 border-b' align='center'>{data.quotationNumber}</td>
-                        <td className='px-4 border-b' align='center'>{data.party}</td>
+                        <td className='px-4 border-b' align='center'>{data.party.name}</td>
                         <td className='px-4 border-b' align='center'>{data.validDate}</td>
                         <td className='px-4 border-b max-w-[20px]' align='center'>
                           <span className='bg-green-500 px-2 text-white rounded-lg text-[12px] font-bold'>
