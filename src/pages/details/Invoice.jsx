@@ -164,18 +164,18 @@ const Invoice = () => {
                     <td>{data.qun}</td>
                     <td>{data.price}</td>
                     <td align='right'>
-                      {data.discountPerAmount}
+                      {data.discountPerAmount || "0.00"}
                       <div className='text-gray-500'>
                         {
                           isNaN(parseFloat(data.discountPerAmount) / (parseFloat(data.price) * parseFloat(data.qun)) * 100)
-                            ? ""
-                            : `(${((parseFloat(data.discountPerAmount) / (parseFloat(data.price) * parseFloat(data.qun)) )* 100).toFixed(2)}%)`
+                            ? "(0.00%)"
+                            : `(${((parseFloat(data.discountPerAmount) / (parseFloat(data.price) * parseFloat(data.qun))) * 100).toFixed(2)}%)`
                         }
                       </div>
                     </td>
                     <td align='right'>
                       {((data.qun * data.price) / 100 * data.tax).toFixed(2)}
-                      <div className='text-gray-500'>({data.tax}%)</div>
+                      <div className='text-gray-500'>{`(${data.tax || '0.00'}%)`}</div>
                     </td>
                     <td>{
                       (parseFloat(data.price) * parseFloat(data.qun) - parseFloat(data.discountPerAmount || 0) + ((data.qun * data.price) / 100 * data.tax)).toFixed(2)
@@ -207,20 +207,29 @@ const Invoice = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td rowSpan={2}>HSN Code</td>
-                <td>Tax Type</td>
-                <td>Rate</td>
-                <td>Amount</td>
-                <td>Total Tax Amount</td>
-              </tr>
-              <tr>
-                <td>Tax Type</td>
-                <td>Rate</td>
-                <td>Amount</td>
-                <td>Total Tax Amount</td>
-              </tr>
+              {billData &&
+                billData.items.map((data, i, arr) => {
+                  // Check if the previous item has the same HSN (to avoid duplicate rowspan)
+                  const isFirstOccurrence = i === 0 || arr[i - 1].hsn !== data.hsn;
+
+                  // Count occurrences for rowspan
+                  const rowSpan = isFirstOccurrence
+                    ? arr.filter(item => item.hsn === data.hsn).length
+                    : 0;
+
+                  return (
+                    <tr key={i}>
+                      {/* Apply rowSpan only for the first occurrence of an HSN */}
+                      {isFirstOccurrence && <td rowSpan={rowSpan}>{data.hsn}</td>}
+                      <td>{data.taxType}</td>
+                      <td>{data.rate}</td>
+                      <td>{data.amount}</td>
+                      <td>{data.totalTaxAmount}</td>
+                    </tr>
+                  );
+                })}
             </tbody>
+
           </table>
 
           <div className='border border-black w-full mt-2'>

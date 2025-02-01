@@ -129,44 +129,6 @@ const Quotation = ({ mode }) => {
   }, [getBillPrefix])
 
 
-  // add item row and additional row
-  const addItem = (which) => {
-    if (which === 1) {
-      setItemRows((prevItemRows) => {
-        const newItem = {
-          ...itemRowSet,
-          QuotaionItem: prevItemRows.length > 0 ? prevItemRows[prevItemRows.length - 1].QuotaionItem + 1 : itemRowSet.QuotaionItem,
-        };
-        const updatedItems = [...prevItemRows, newItem];
-
-        // Update formData after itemRows is updated
-        setFormData((prev) => ({
-          ...prev,
-          items: updatedItems,
-        }));
-
-        return updatedItems;
-      });
-    } else {
-      setAdditionalRow((prevAdditionalRows) => {
-        const newAdditionalRow = {
-          ...additionalRowSet,
-          additionalRowsItem: prevAdditionalRows.length > 0 ? prevAdditionalRows[prevAdditionalRows.length - 1].additionalRowsItem + 1 : additionalRowSet.additionalRowsItem,
-        };
-        const updatedAdditionalRows = [...prevAdditionalRows, newAdditionalRow];
-
-        // Update formData after additionalRows is updated
-        setFormData((prev) => ({
-          ...prev,
-          additionalCharge: updatedAdditionalRows,
-        }));
-
-        return updatedAdditionalRows;
-      });
-    }
-  };
-
-
 
   // When `discount type is before` and apply discount this useEffect run;
   // useEffect(() => {
@@ -194,6 +156,43 @@ const Quotation = ({ mode }) => {
     }
   }, [formData.discountAmount, ItemRows.length]);
 
+
+  // Add item row
+  const addItem = (which) => {
+    if (which === 1) {
+      setItemRows((prevItemRows) => {
+        const newItem = {
+          ...itemRowSet,
+          QuotaionItem: prevItemRows.length > 0 ? prevItemRows[prevItemRows.length - 1].QuotaionItem + 1 : itemRowSet.QuotaionItem,
+        };
+        const updatedItems = [...prevItemRows, newItem];
+  
+        // Update formData after itemRows is updated
+        setFormData((prev) => ({
+          ...prev,
+          items: updatedItems,
+        }));
+  
+        return updatedItems;
+      });
+    } else {
+      setAdditionalRow((prevAdditionalRows) => {
+        const newAdditionalRow = {
+          ...additionalRowSet,
+          additionalRowsItem: prevAdditionalRows.length > 0 ? prevAdditionalRows[prevAdditionalRows.length - 1].additionalRowsItem + 1 : additionalRowSet.additionalRowsItem,
+        };
+        const updatedAdditionalRows = [...prevAdditionalRows, newAdditionalRow];
+  
+        // Update formData after additionalRows is updated
+        setFormData((prev) => ({
+          ...prev,
+          additionalCharge: updatedAdditionalRows,
+        }));
+  
+        return updatedAdditionalRows;
+      });
+    }
+  };
 
 
   // delete item and additional row
@@ -232,8 +231,8 @@ const Quotation = ({ mode }) => {
     setFormData({ ...formData, discountType: e.target.value });
     if (e.target.value !== "no") {
       setDiscountToggler(false);
-      document.querySelector("#discountAmount").value="";
-      document.querySelector("#discountPercentage").value="";
+      document.querySelector("#discountAmount").value = "";
+      document.querySelector("#discountPercentage").value = "";
     } else {
       setDiscountToggler(true);
     }
@@ -269,34 +268,61 @@ const Quotation = ({ mode }) => {
   const onPerDiscountAmountChange = (val, index) => {
     let item = [...ItemRows];
     let amount = parseFloat(item[index].price) * parseFloat(item[index].qun);
-    let percentage = ((parseFloat(val) / amount) * 100).toFixed(2);
+    let dis_amount = amount
+    // let percentage = ((parseFloat(val) / amount) * 100).toFixed(2);
 
-    item[index].discountPerAmount = val;
-    item[index].discountPerPercentage = isNaN(percentage) ? "" : percentage;
+    // item[index].discountPerAmount = val;
+    // item[index].discountPerPercentage = isNaN(percentage) ? "" : percentage;
     setItemRows(item);
 
   }
 
   const calculatePerTaxAmount = (index) => {
-    const tax = ItemRows[index].tax / 100;
+    const tax = ItemRows[index].tax  / 100;
     const qun = ItemRows[index].qun;
     const price = ItemRows[index].price;
     const disAmount = ItemRows[index].discountPerAmount;
     const amount = ((qun * price) - disAmount);
     const taxamount = (amount * tax).toFixed(2);
-
+  
     return taxamount;
   }
-
-
+  
   const calculatePerAmount = (index) => {
     const qun = ItemRows[index].qun;
     const price = ItemRows[index].price;
     const disAmount = ItemRows[index].discountPerAmount;
     const totalPerAmount = parseFloat((qun * price) - disAmount) + parseFloat(calculatePerTaxAmount(index));
-
+  
     return (totalPerAmount).toFixed(2);
   }
+  
+  
+  const calculateFinalAmount = () => {
+    let totalParticular = 0;
+    let total = 0;
+  
+    // Total additionla amount and store
+    additionalRows.forEach((d, _) => {
+      if (d.amount) {
+        totalParticular = totalParticular + parseFloat(d.amount);
+      }
+    })
+  
+    if (formData.discountType === "no" || formData.discountType === "" || formData.discountType === "before") {
+      total = subTotal()('amount');
+    }
+    else if (formData.discountType === "after") {
+      total = (subTotal()('amount') - formData.discountAmount).toFixed(2);
+    }
+  
+    return !isNaN(totalParticular) ? (parseFloat(totalParticular) + parseFloat(total)).toFixed(2) : total;
+  
+  }
+  
+
+
+
 
 
   // Return Sub-Total
@@ -331,34 +357,10 @@ const Quotation = ({ mode }) => {
 
 
 
-  const calculateFinalAmount = () => {
-    let totalParticular = 0;
-    let total = 0;
-
-    // Total additionla amount and store
-    additionalRows.forEach((d, _) => {
-      if (d.amount) {
-        totalParticular = totalParticular + parseFloat(d.amount);
-      }
-    })
-
-    if (formData.discountType === "no" || formData.discountType === "" || formData.discountType === "before") {
-      total = subTotal()('amount');
-    }
-    else if (formData.discountType === "after") {
-      total = (subTotal()('amount') - formData.discountAmount).toFixed(2);
-    }
-
-    return !isNaN(totalParticular) ? (parseFloat(totalParticular) + parseFloat(total)).toFixed(2) : total;
-
-  }
-
-
-
   const onDiscountAmountChange = (e) => {
     if (discountToggler !== null) {
       let per = ((e.target.value / subTotal()('amount')) * 100).toFixed(2) //Get percentage
-      setFormData({ ...formData, discountAmount: e.target.value, discountPercentage: per });
+      setFormData({ ...formData, discountAmount: e.target.value || 0, discountPercentage: per });
 
       if (formData.discountType === "before") {
         let items = [...ItemRows];

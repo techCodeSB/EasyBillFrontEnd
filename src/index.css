@@ -277,6 +277,7 @@ select {
   border: 1px solid black;
   padding: 3px;
   color: black;
+  font-size: 11px;
 }
 
 #invoice thead td{
