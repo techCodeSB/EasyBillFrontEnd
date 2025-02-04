@@ -32,7 +32,8 @@ const Forgot = React.lazy(() => import("./pages/Auth/Forgot"));
 const Otp = React.lazy(() => import("./pages/Auth/Otp"));
 const ChangePassword = React.lazy(() => import("./pages/Auth/ChangePassword"));
 const NotFound = React.lazy(() => import("./pages/NotFound"));
-const Invoice = React.lazy(()=>import("./pages/details/Invoice"));
+const Invoice = React.lazy(() => import("./pages/details/Invoice"));
+const AddPayment = React.lazy(() => import("./pages/paymentout/AddPayment"));
 
 
 
@@ -60,8 +61,8 @@ const App = () => {
 
         <Route path="/admin/quotation-estimate" element={<ProtectRoute><Quotation /></ProtectRoute>} />
         <Route path="/admin/quotation-estimate/add" element={<ProtectRoute><AddQutation /></ProtectRoute>} />
-        <Route path="/admin/quotation-estimate/edit/:id" element={<ProtectRoute><AddQutation mode={"edit"}/></ProtectRoute>} />
-      
+        <Route path="/admin/quotation-estimate/edit/:id" element={<ProtectRoute><AddQutation mode={"edit"} /></ProtectRoute>} />
+
         <Route path="/admin/profile" element={<ProtectRoute><Profile /></ProtectRoute>} />
         <Route path="/admin/account/add" element={<ProtectRoute><AddAccount /></ProtectRoute>} />
         <Route path="/admin/account/edit" element={<ProtectRoute><AddAccount mode="edit" /></ProtectRoute>} />
@@ -101,6 +102,8 @@ const App = () => {
         <Route path="/admin/user-profile/add" element={<ProtectRoute> < UserProfileAdd /></ProtectRoute>} />
         <Route path="/admin/user-profile/edit" element={<ProtectRoute> < UserProfileAdd mode="edit" /></ProtectRoute>} />
         <Route path="/admin/user-profile" element={<ProtectRoute>< UserProfile /></ProtectRoute>} />
+
+        <Route path="/admin/payment-out/add" element={<ProtectRoute>< AddPayment /></ProtectRoute>} />
 
         <Route path="*" element={< NotFound />} />
       </Routes>
