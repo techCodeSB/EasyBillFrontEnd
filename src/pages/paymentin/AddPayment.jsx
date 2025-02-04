@@ -6,6 +6,8 @@ import { Editor } from '@tinymce/tinymce-react'
 import { FaRegCheckCircle } from 'react-icons/fa'
 import { BiReset } from 'react-icons/bi'
 
+
+// --- PAYMENT IN ---
 const AddPayment = ({mode}) => {
   return (
     <>
@@ -24,11 +26,11 @@ const AddPayment = ({mode}) => {
                   />
                 </div>
                 <div>
-                  <p className='mb-1'>Payment Out Number</p>
+                  <p className='mb-1'>Payment in Number</p>
                   <input type='text' />
                 </div>
                 <div>
-                  <p className='mb-1'>Payment Out Date</p>
+                  <p className='mb-1'>Payment in Date</p>
                   <DatePicker
                     className='w-full'
                   />
@@ -101,4 +103,4 @@ const AddPayment = ({mode}) => {
   )
 }
 
-export default AddPayment
+export default AddPayment;
