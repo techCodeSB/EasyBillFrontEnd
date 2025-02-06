@@ -63,6 +63,7 @@ const Quotation = () => {
           body: JSON.stringify(data)
         });
         const res = await req.json();
+        console.log(res)
         setTotalData(res.totalData)
         setBillData([...res.data])
 

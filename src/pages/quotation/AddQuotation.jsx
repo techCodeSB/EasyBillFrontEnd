@@ -268,11 +268,11 @@ const Quotation = ({ mode }) => {
   const onPerDiscountAmountChange = (val, index) => {
     let item = [...ItemRows];
     let amount = parseFloat(item[index].price) * parseFloat(item[index].qun);
-    let dis_amount = amount
-    // let percentage = ((parseFloat(val) / amount) * 100).toFixed(2);
+    // let dis_amount = amount
+    let percentage = ((parseFloat(val) / amount) * 100).toFixed(2);
 
-    // item[index].discountPerAmount = val;
-    // item[index].discountPerPercentage = isNaN(percentage) ? "" : percentage;
+    item[index].discountPerAmount = val;
+    item[index].discountPerPercentage = isNaN(percentage) ? "" : percentage;
     setItemRows(item);
 
   }
@@ -470,6 +470,7 @@ const Quotation = ({ mode }) => {
                   }}
                   value={new Date(formData.estimateData)}
                 />
+                {/* <input type="date" name="" id="" /> */}
               </div>
               <div className='flex flex-col gap-2 w-full lg:w-1/3'>
                 <p className='text-xs'>Valid To</p>
