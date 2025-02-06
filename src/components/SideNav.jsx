@@ -56,7 +56,7 @@ const SideNav = () => {
       {
         name: 'Payment In',
         icon: <CiImageOn />,
-        link: '/admin/dashboard',
+        link: '/admin/payment-in',
         submenu: null
       },
       {
@@ -94,7 +94,7 @@ const SideNav = () => {
       {
         name: 'Payment Out',
         icon: <CiImageOn />,
-        link: '/admin/dashboard',
+        link: '/admin/payment-out',
         submenu: null
       },
       {

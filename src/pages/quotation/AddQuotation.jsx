@@ -24,7 +24,7 @@ const Quotation = ({ mode }) => {
   const itemRowSet = {
     QuotaionItem: 1, itemName: '', description: '', hsn: '', qun: '1',
     unit: [], price: '', discountPerAmount: '', discountPerPercentage: '',
-    tax: '', taxAmount: '', amount: '',
+    tax: '', taxAmount: '', amount: '', perDiscountType: "", //for checking purpose only
   }
   const additionalRowSet = {
     additionalRowsItem: 1, particular: '', amount: ''
@@ -131,26 +131,13 @@ const Quotation = ({ mode }) => {
 
 
   // When `discount type is before` and apply discount this useEffect run;
-  // useEffect(() => {
-  //   if (formData.discountType === "before") {
-  //     let item = [...ItemRows];
-  //     item.forEach((i, _) => {
-  //       i.discountPerAmount = (formData.discountAmount / (ItemRows.length)).toFixed(2)
-  //       i.discountPerPercentage = ((formData.discountAmount / i.price * 100) / ItemRows.length).toFixed(2);
-  //     })
-
-  //     setItemRows([...item])
-
-  //   }
-  // }, [ItemRows])
   useEffect(() => {
-    console.log('run discount type')
     if (formData.discountType === "before" && ItemRows.length > 0) {
       setItemRows(prevItems =>
         prevItems.map(i => ({
           ...i,
+          discountPerPercentage: ((parseFloat(formData.discountAmount) / parseFloat(i.price) * 100)).toFixed(2),
           discountPerAmount: (parseFloat(formData.discountAmount) / parseFloat(prevItems.length)).toFixed(2),
-          discountPerPercentage: ((parseFloat(formData.discountAmount) / parseFloat(i.price) * 100) / parseFloat(prevItems.length)).toFixed(2)
         }))
       );
     }
@@ -166,13 +153,13 @@ const Quotation = ({ mode }) => {
           QuotaionItem: prevItemRows.length > 0 ? prevItemRows[prevItemRows.length - 1].QuotaionItem + 1 : itemRowSet.QuotaionItem,
         };
         const updatedItems = [...prevItemRows, newItem];
-  
+
         // Update formData after itemRows is updated
         setFormData((prev) => ({
           ...prev,
           items: updatedItems,
         }));
-  
+
         return updatedItems;
       });
     } else {
@@ -182,13 +169,13 @@ const Quotation = ({ mode }) => {
           additionalRowsItem: prevAdditionalRows.length > 0 ? prevAdditionalRows[prevAdditionalRows.length - 1].additionalRowsItem + 1 : additionalRowSet.additionalRowsItem,
         };
         const updatedAdditionalRows = [...prevAdditionalRows, newAdditionalRow];
-  
+
         // Update formData after additionalRows is updated
         setFormData((prev) => ({
           ...prev,
           additionalCharge: updatedAdditionalRows,
         }));
-  
+
         return updatedAdditionalRows;
       });
     }
@@ -231,10 +218,29 @@ const Quotation = ({ mode }) => {
     setFormData({ ...formData, discountType: e.target.value });
     if (e.target.value !== "no") {
       setDiscountToggler(false);
-      document.querySelector("#discountAmount").value = "";
-      document.querySelector("#discountPercentage").value = "";
+
     } else {
+      setFormData((pv) => ({
+        ...pv,
+        discountAmount: (0).toFixed(2),
+        discountPercentage: (0).toFixed(2)
+      }))
       setDiscountToggler(true);
+    }
+
+  }
+
+
+  const onPerDiscountAmountChange = (val, index) => {
+    let item = [...ItemRows];
+    let amount = parseFloat(item[index].price) * parseFloat(item[index].qun);
+    let percentage = ((parseFloat(val) / amount) * 100).toFixed(2);
+
+    if (item[index].perDiscountType !== "percentage") {
+      // item[index].perDiscountType = "amount";
+      item[index].discountPerAmount = val;
+      item[index].discountPerPercentage = isNaN(percentage) ? "" : percentage;
+      setItemRows(item);
     }
 
   }
@@ -265,61 +271,62 @@ const Quotation = ({ mode }) => {
 
   }
 
-  const onPerDiscountAmountChange = (val, index) => {
+
+  const onPerDiscountPercentageChange = (val, index) => {
     let item = [...ItemRows];
     let amount = parseFloat(item[index].price) * parseFloat(item[index].qun);
-    // let dis_amount = amount
-    let percentage = ((parseFloat(val) / amount) * 100).toFixed(2);
+    let dis_amount = amount
+    // let percentage = ((parseFloat(val) / amount) * 100).toFixed(2);
 
-    item[index].discountPerAmount = val;
-    item[index].discountPerPercentage = isNaN(percentage) ? "" : percentage;
+    // item[index].discountPerAmount = val;
+    // item[index].discountPerPercentage = isNaN(percentage) ? "" : percentage;
     setItemRows(item);
 
   }
 
   const calculatePerTaxAmount = (index) => {
-    const tax = ItemRows[index].tax  / 100;
+    const tax = ItemRows[index].tax / 100;
     const qun = ItemRows[index].qun;
     const price = ItemRows[index].price;
     const disAmount = ItemRows[index].discountPerAmount;
     const amount = ((qun * price) - disAmount);
     const taxamount = (amount * tax).toFixed(2);
-  
+
     return taxamount;
   }
-  
+
   const calculatePerAmount = (index) => {
     const qun = ItemRows[index].qun;
     const price = ItemRows[index].price;
     const disAmount = ItemRows[index].discountPerAmount;
     const totalPerAmount = parseFloat((qun * price) - disAmount) + parseFloat(calculatePerTaxAmount(index));
-  
+
     return (totalPerAmount).toFixed(2);
   }
-  
-  
+
+
   const calculateFinalAmount = () => {
     let totalParticular = 0;
     let total = 0;
-  
+
     // Total additionla amount and store
     additionalRows.forEach((d, _) => {
       if (d.amount) {
         totalParticular = totalParticular + parseFloat(d.amount);
       }
     })
-  
+
     if (formData.discountType === "no" || formData.discountType === "" || formData.discountType === "before") {
       total = subTotal()('amount');
     }
     else if (formData.discountType === "after") {
       total = (subTotal()('amount') - formData.discountAmount).toFixed(2);
     }
-  
+
     return !isNaN(totalParticular) ? (parseFloat(totalParticular) + parseFloat(total)).toFixed(2) : total;
-  
+
   }
-  
+
 
 
 
@@ -358,15 +365,16 @@ const Quotation = ({ mode }) => {
 
 
   const onDiscountAmountChange = (e) => {
+    console.log("run discount")
     if (discountToggler !== null) {
       let per = ((e.target.value / subTotal()('amount')) * 100).toFixed(2) //Get percentage
-      setFormData({ ...formData, discountAmount: e.target.value || 0, discountPercentage: per });
+      setFormData({ ...formData, discountAmount: e.target.value, discountPercentage: per });
 
       if (formData.discountType === "before") {
         let items = [...ItemRows];
         items.forEach((i, _) => {
           let amount = parseFloat(e.target.value) / parseFloat(items.length);
-          i.discountPerAmount = amount;
+          i.discountPerAmount = Number.isNaN(amount) ? 0.00 : amount;
           i.discountPerPercentage = (amount / (i.price * i.qun)) * 100;
         })
 
@@ -540,7 +548,9 @@ const Quotation = ({ mode }) => {
                             item[index].qun = e.target.value;
                             setItemRows(item);
                             setPerQun(e.target.value);
+                            console.log(formData.items[index].discountPerPercentage);
                             onPerDiscountAmountChange(formData.items[index].discountPerAmount, index);
+                            onPerDiscountPercentageChange(formData.items[index].discountPerPercentage, index);
                           }}
                           value={ItemRows[index].qun}
                         />
@@ -570,6 +580,7 @@ const Quotation = ({ mode }) => {
                               setItemRows(item);
                               setPerPrice(e.target.value);
                               onPerDiscountAmountChange(formData.items[index].discountPerAmount, index);
+                              onPerDiscountPercentageChange(formData.items[index].discountPerPercentage, index);
                             }}
                             value={ItemRows[index].price}
                           />
@@ -580,7 +591,12 @@ const Quotation = ({ mode }) => {
                           <div className='add-table-discount-input'>
                             <input type="text"
                               className={`${formData.discountType === 'before' ? 'bg-gray-100' : ''} `}
-                              onChange={formData.discountType !== 'before' ? (e) => onPerDiscountAmountChange(e.target.value, index) : null}
+                              onChange={formData.discountType !== 'before' ? (e) => {
+                                let form = { ...formData };
+                                form.items[index].perDiscountType = 'amount';
+                                setFormData({ ...form });
+                                onPerDiscountAmountChange(e.target.value, index)
+                              } : null}
                               value={ItemRows[index].discountPerAmount}
                             // value={calculatePerDiscountAmount(index)}
                             />
@@ -590,13 +606,10 @@ const Quotation = ({ mode }) => {
                             <input type="text"
                               className={`${formData.discountType === 'before' ? 'bg-gray-100' : ''} `}
                               onChange={formData.discountType !== 'before' ? (e) => {
-                                let item = [...ItemRows];
-                                let amount = parseFloat(item[index].price) * parseFloat(item[index].qun);
-                                let value = ((e.target.value * amount) / 100).toFixed(2);
-
-                                item[index].discountPerAmount = value;
-                                item[index].discountPerPercentage = e.target.value;
-                                setItemRows(item);
+                                let form = { ...formData };
+                                form.items[index].perDiscountType = 'percentage';
+                                setFormData({ ...form });
+                                onPerDiscountPercentageChange(e.target.value, index)
                               } : null}
                               value={ItemRows[index].discountPerPercentage}
                             // value={calculatePerDiscountPercentage(index)}
@@ -690,7 +703,7 @@ const Quotation = ({ mode }) => {
                   <tr>
                     <td className='min-w-[150px]'>
                       <input type="text" name="total_taxable_amount"
-                        value={subTotal()('amount') - subTotal()('tax')}
+                        value={(subTotal()('amount') - subTotal()('tax')).toFixed(2)}
                       />
                     </td>
                     <td className='min-w-[150px]'>
@@ -725,18 +738,18 @@ const Quotation = ({ mode }) => {
                           id='discountPercentage'
                           className={`${discountToggler ? 'bg-gray-100' : ''}`}
                           onChange={discountToggler ? null : (e) => {
-                            let amount = ((subTotal()('amount') / 100) * e.target.value).toFixed(2)
+                            let amount = ((subTotal()('amount') / 100) * e.target.value).toFixed(2);
                             setFormData({
-                              ...formData, discountPercentage: e.target.value, discountAmount: amount
+                              ...formData, discountPercentage: e.target.value, discountAmount: amount,
                             })
 
                             if (formData.discountType === "before") {
                               let items = [...ItemRows];
                               items.forEach((i, _) => {
-                                i.discountPerAmount = amount / parseFloat(items.length);
+                                // i.discountPerAmount = amount / parseFloat(items.length);
+                                i.discountPerPercentage = e.target.value;
                               })
 
-                              console.log(items);
                               setItemRows([...items]);
                             }
                           }}
