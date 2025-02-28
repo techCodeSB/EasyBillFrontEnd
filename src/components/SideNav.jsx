@@ -38,7 +38,7 @@ const SideNav = () => {
       {
         name: 'Proforma Invoice',
         icon: <CiImageOn />,
-        link: '/admin/dashboard',
+        link: '/admin/proforma-invoice/',
         submenu: null
       },
       {

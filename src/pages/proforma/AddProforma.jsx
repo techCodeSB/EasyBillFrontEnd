@@ -15,8 +15,8 @@ import { useParams } from 'react-router-dom';
 
 
 
-document.title = "Quotation";
-const Quotation = ({ mode }) => {
+document.title = "Proforma";
+const Proforma = ({ mode }) => {
   const toast = useMyToaster();
   const { id } = useParams()
   const getBillPrefix = useBillPrefix("invoice");
@@ -460,7 +460,7 @@ const Quotation = ({ mode }) => {
 
   return (
     <>
-      <Nav title={mode ? "Update Quotation" : "Add Quotation"} />
+      <Nav title={mode ? "Update Proforma" : "Add Proforma"} />
       <main id='main'>
         <SideNav />
         <div className='content__body'>
@@ -889,4 +889,4 @@ const Quotation = ({ mode }) => {
   )
 }
 
-export default Quotation;
+export default Proforma;

@@ -37,6 +37,9 @@ const AddPaymentOut = React.lazy(() => import("./pages/paymentout/AddPayment"));
 const AddPaymentIn = React.lazy(() => import("./pages/paymentin/AddPayment"));
 const PaymentIn = React.lazy(() => import("./pages/paymentin/PaymentIn"));
 const PaymentOut = React.lazy(() => import("./pages/paymentout/PaymentOut"));
+const AddProforma = React.lazy(()=>import("./pages/proforma/AddProforma"));
+const Proforma = React.lazy(()=>import("./pages/proforma/Proforma"));
+
 
 
 
@@ -65,6 +68,11 @@ const App = () => {
         <Route path="/admin/quotation-estimate" element={<ProtectRoute><Quotation /></ProtectRoute>} />
         <Route path="/admin/quotation-estimate/add" element={<ProtectRoute><AddQutation /></ProtectRoute>} />
         <Route path="/admin/quotation-estimate/edit/:id" element={<ProtectRoute><AddQutation mode={"edit"} /></ProtectRoute>} />
+
+        {/* Proforma route */}
+        <Route path="/admin/proforma-invoice" element={<ProtectRoute><Proforma /></ProtectRoute>} />
+        <Route path="/admin/proforma-invoice/add" element={<ProtectRoute><AddProforma /></ProtectRoute>} />
+        <Route path="/admin/proforma-invoice/edit/:id" element={<ProtectRoute><AddProforma mode={"edit"} /></ProtectRoute>} />
 
         <Route path="/admin/profile" element={<ProtectRoute><Profile /></ProtectRoute>} />
         <Route path="/admin/account/add" element={<ProtectRoute><AddAccount /></ProtectRoute>} />
