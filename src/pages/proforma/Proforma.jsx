@@ -41,7 +41,7 @@ const Proforma = () => {
         return billData && billData.map(({ estimateData, proformaNumber, party, validDate }) => ({
             "Estimate Data": estimateData,
             "Proforma Number": proformaNumber,
-            "Party": party,
+            "Party": party.name,
             "Valid Date": validDate
         }));
     }, [billData]);

@@ -39,7 +39,7 @@ const Quotation = () => {
     return billData && billData.map(({ estimateData, quotationNumber, party, validDate }) => ({
       "Estimate Data": estimateData,
       "Quotation Number": quotationNumber,
-      "Party": party,
+      "Party": party.name,
       "Valid Date": validDate
     }));
   }, [billData]);

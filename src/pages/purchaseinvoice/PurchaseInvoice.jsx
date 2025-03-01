@@ -38,11 +38,12 @@ const PurchaseInvoice = () => {
     const tableRef = useRef(null);
     const [tableStatusData, setTableStatusData] = useState('active');
     const exportData = useMemo(() => {
-        return billData && billData.map(({ estimateData, poNumber, party, validDate }) => ({
-            "Estimate Data": estimateData,
-            "PO Number": poNumber,
-            "Party": party,
-            "Valid Date": validDate
+        return billData && billData.map(({ estimateData, purchaseInvoiceNumber, originalInvoiceNumber, party, validDate }) => ({
+            "Invoice Date": estimateData,
+            "Purchase Invoice Number": purchaseInvoiceNumber,
+            "Original Invoice Number": originalInvoiceNumber,
+            "Party": party.name,
+            "Due Date": validDate
         }));
     }, [billData]);
 
@@ -56,7 +57,7 @@ const PurchaseInvoice = () => {
                     trash: tableStatusData === "trash" ? true : false,
                     all: tableStatusData === "all" ? true : false
                 }
-                const url = process.env.REACT_APP_API_URL + `/po/get?page=${activePage}&limit=${dataLimit}`;
+                const url = process.env.REACT_APP_API_URL + `/purchaseinvoice/get?page=${activePage}&limit=${dataLimit}`;
                 const req = await fetch(url, {
                     method: "POST",
                     headers: {
@@ -65,7 +66,7 @@ const PurchaseInvoice = () => {
                     body: JSON.stringify(data)
                 });
                 const res = await req.json();
-                console.log(res)
+                console.log(res.data)
                 setTotalData(res.totalData)
                 setBillData([...res.data])
 
@@ -130,7 +131,7 @@ const PurchaseInvoice = () => {
             printTable(tableRef, "Party List"); // Pass table ref and title
         }
         else if (whichType === "pdf") {
-            let document = exportPdf('Po List', exportData);
+            let document = exportPdf('Invoice List', exportData);
             downloadPdf(document)
         }
     }
@@ -139,7 +140,7 @@ const PurchaseInvoice = () => {
         if (selected.length === 0 || tableStatusData !== 'active') {
             return;
         }
-        const url = process.env.REACT_APP_API_URL + "/po/delete";
+        const url = process.env.REACT_APP_API_URL + "/purchaseinvoice/delete";
         try {
             const req = await fetch(url, {
                 method: "DELETE",
@@ -174,7 +175,7 @@ const PurchaseInvoice = () => {
             return;
         }
 
-        const url = process.env.REACT_APP_API_URL + "/po/restore";
+        const url = process.env.REACT_APP_API_URL + "/purchaseinvoice/restore";
         try {
             const req = await fetch(url, {
                 method: "POST",
@@ -207,7 +208,7 @@ const PurchaseInvoice = () => {
 
     return (
         <>
-            <Nav title={"Purchase Order"} />
+            <Nav title={"Purchase Invoice"} />
             <main id='main'>
                 <SideNav />
                 <div className='content__body'>
@@ -287,9 +288,10 @@ const PurchaseInvoice = () => {
                                             <input type='checkbox' onChange={selectAll} checked={billData.length > 0 && selected.length === billData.length} />
                                         </th>
                                         <th className='py-2 px-4 border-b'>Date</th>
-                                        <th className='py-2 px-4 border-b'>Purchase Order Number</th>
+                                        <th className='py-2 px-4 border-b'>Purchase Invoice Number</th>
+                                        <th className='py-2 px-4 border-b'>Original Invoice Number</th>
                                         <th className='py-2 px-4 border-b'>Party Name</th>
-                                        <th className='py-2 px-4 border-b'>Valid To</th>
+                                        <th className='py-2 px-4 border-b'>Due Date</th>
                                         <th className='py-2 px-4 border-b'>Status</th>
                                         <th className='py-2 px-4 border-b'>Action</th>
                                     </tr>
@@ -302,7 +304,8 @@ const PurchaseInvoice = () => {
                                                     <input type='checkbox' checked={selected.includes(data._id)} onChange={() => handleCheckboxChange(data._id)} />
                                                 </td>
                                                 <td className='px-4 border-b' align='center'>{data.estimateData}</td>
-                                                <td className='px-4 border-b' align='center'>{data.poNumber}</td>
+                                                <td className='px-4 border-b' align='center'>{data.purchaseInvoiceNumber}</td>
+                                                <td className='px-4 border-b' align='center'>{data.originalInvoiceNumber}</td>
                                                 <td className='px-4 border-b' align='center'>{data.party.name}</td>
                                                 <td className='px-4 border-b' align='center'>{data.validDate}</td>
                                                 <td className='px-4 border-b max-w-[20px]' align='center'>
@@ -314,7 +317,7 @@ const PurchaseInvoice = () => {
                                                     <div className='flex flex-col md:flex-row gap-2 mr-2'>
                                                         <button
                                                             title='Edit'
-                                                            onClick={() => navigate(`/admin/purchase-order/edit/${data._id}`)}
+                                                            onClick={() => navigate(`/admin/purchase-invoice/edit/${data._id}`)}
                                                             className='bg-blue-400 text-white px-2 py-1 rounded w-full text-[16px]'>
                                                             <MdEditSquare />
                                                         </button>
@@ -323,11 +326,6 @@ const PurchaseInvoice = () => {
                                                             onClick={() => navigate(`/admin/bill/details/${data._id}`)}
                                                             className='bg-red-500 text-white px-2 py-1 rounded w-full text-lg'>
                                                             <IoInformationCircle />
-                                                        </button>
-                                                        <button
-                                                            title='Convert to Invoice'
-                                                            className='bg-green-500 text-white px-2 py-1 rounded w-full text-lg'>
-                                                            <SiConvertio />
                                                         </button>
                                                     </div>
                                                 </td>

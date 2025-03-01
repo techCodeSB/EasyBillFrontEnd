@@ -41,7 +41,7 @@ const PO = () => {
         return billData && billData.map(({ estimateData, poNumber, party, validDate }) => ({
             "Estimate Data": estimateData,
             "PO Number": poNumber,
-            "Party": party,
+            "Party": party.name,
             "Valid Date": validDate
         }));
     }, [billData]);
