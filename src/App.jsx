@@ -39,6 +39,10 @@ const PaymentIn = React.lazy(() => import("./pages/paymentin/PaymentIn"));
 const PaymentOut = React.lazy(() => import("./pages/paymentout/PaymentOut"));
 const AddProforma = React.lazy(()=>import("./pages/proforma/AddProforma"));
 const Proforma = React.lazy(()=>import("./pages/proforma/Proforma"));
+const Po = React.lazy(()=>import("./pages/po/Po"));
+const AddPo = React.lazy(()=>import("./pages/po/AddPo"));
+const PurchaseInvoice = React.lazy(()=>import("./pages/purchaseinvoice/PurchaseInvoice"));
+const AddPurchaseInvoice = React.lazy(()=>import("./pages/purchaseinvoice/AddPurchaseInvoice"));
 
 
 
@@ -65,19 +69,36 @@ const App = () => {
         <Route path="admin/dashboard" element={<ProtectRoute><Dashboard /></ProtectRoute>} />
         <Route path="admin/bill/details/:id" element={<ProtectRoute><Invoice /></ProtectRoute>} />
 
+
         <Route path="/admin/quotation-estimate" element={<ProtectRoute><Quotation /></ProtectRoute>} />
         <Route path="/admin/quotation-estimate/add" element={<ProtectRoute><AddQutation /></ProtectRoute>} />
         <Route path="/admin/quotation-estimate/edit/:id" element={<ProtectRoute><AddQutation mode={"edit"} /></ProtectRoute>} />
+
 
         {/* Proforma route */}
         <Route path="/admin/proforma-invoice" element={<ProtectRoute><Proforma /></ProtectRoute>} />
         <Route path="/admin/proforma-invoice/add" element={<ProtectRoute><AddProforma /></ProtectRoute>} />
         <Route path="/admin/proforma-invoice/edit/:id" element={<ProtectRoute><AddProforma mode={"edit"} /></ProtectRoute>} />
 
+
+        {/* PO route */}
+        <Route path="/admin/purchase-order" element={<ProtectRoute><Po /></ProtectRoute>} />
+        <Route path="/admin/purchase-order/add" element={<ProtectRoute><AddPo /></ProtectRoute>} />
+        <Route path="/admin/purchase-order/edit/:id" element={<ProtectRoute><AddPo mode={"edit"} /></ProtectRoute>} />
+
+        
+        {/* Purchase Invoice route */}
+        <Route path="/admin/purchase-invoice" element={<ProtectRoute><PurchaseInvoice /></ProtectRoute>} />
+        <Route path="/admin/purchase-invoice/add/" element={<ProtectRoute><AddPurchaseInvoice /></ProtectRoute>} />
+        <Route path="/admin/purchase-invoice/add/:id" element={<ProtectRoute><AddPurchaseInvoice mode={"convert"} /></ProtectRoute>} />
+        <Route path="/admin/purchase-invoice/edit/:id" element={<ProtectRoute><AddPurchaseInvoice mode={"edit"} /></ProtectRoute>} />
+
+
         <Route path="/admin/profile" element={<ProtectRoute><Profile /></ProtectRoute>} />
         <Route path="/admin/account/add" element={<ProtectRoute><AddAccount /></ProtectRoute>} />
         <Route path="/admin/account/edit" element={<ProtectRoute><AddAccount mode="edit" /></ProtectRoute>} />
         <Route path="admin/account" element={<ProtectRoute><Accounts /></ProtectRoute>} />
+
 
         <Route path="/admin/party" element={<ProtectRoute><Party /></ProtectRoute>} />
         <Route path="/admin/party/add" element={<ProtectRoute><AddParty /></ProtectRoute>} />

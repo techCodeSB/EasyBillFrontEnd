@@ -25,8 +25,8 @@ import { SiConvertio } from "react-icons/si";
 
 
 // Proforma page
-document.title = "Proforma"
-const Proforma = () => {
+document.title = "Purchase Order";
+const PO = () => {
     const toast = useMyToaster();
     const { copyTable, downloadExcel, printTable, exportPdf } = useExportTable();
     const [activePage, setActivePage] = useState(1);
@@ -38,9 +38,9 @@ const Proforma = () => {
     const tableRef = useRef(null);
     const [tableStatusData, setTableStatusData] = useState('active');
     const exportData = useMemo(() => {
-        return billData && billData.map(({ estimateData, proformaNumber, party, validDate }) => ({
+        return billData && billData.map(({ estimateData, poNumber, party, validDate }) => ({
             "Estimate Data": estimateData,
-            "Proforma Number": proformaNumber,
+            "PO Number": poNumber,
             "Party": party,
             "Valid Date": validDate
         }));
@@ -56,7 +56,7 @@ const Proforma = () => {
                     trash: tableStatusData === "trash" ? true : false,
                     all: tableStatusData === "all" ? true : false
                 }
-                const url = process.env.REACT_APP_API_URL + `/proforma/get?page=${activePage}&limit=${dataLimit}`;
+                const url = process.env.REACT_APP_API_URL + `/po/get?page=${activePage}&limit=${dataLimit}`;
                 const req = await fetch(url, {
                     method: "POST",
                     headers: {
@@ -130,7 +130,7 @@ const Proforma = () => {
             printTable(tableRef, "Party List"); // Pass table ref and title
         }
         else if (whichType === "pdf") {
-            let document = exportPdf('Proforma List', exportData);
+            let document = exportPdf('Po List', exportData);
             downloadPdf(document)
         }
     }
@@ -139,7 +139,7 @@ const Proforma = () => {
         if (selected.length === 0 || tableStatusData !== 'active') {
             return;
         }
-        const url = process.env.REACT_APP_API_URL + "/proforma/delete";
+        const url = process.env.REACT_APP_API_URL + "/po/delete";
         try {
             const req = await fetch(url, {
                 method: "DELETE",
@@ -174,7 +174,7 @@ const Proforma = () => {
             return;
         }
 
-        const url = process.env.REACT_APP_API_URL + "/proforma/restore";
+        const url = process.env.REACT_APP_API_URL + "/po/restore";
         try {
             const req = await fetch(url, {
                 method: "POST",
@@ -207,7 +207,7 @@ const Proforma = () => {
 
     return (
         <>
-            <Nav title={"Proforma"} />
+            <Nav title={"Purchase Order"} />
             <main id='main'>
                 <SideNav />
                 <div className='content__body'>
@@ -253,7 +253,7 @@ const Proforma = () => {
 
                         {/* Second Row */}
                         <div className='list_buttons'>
-                            <button className='bg-teal-500 hover:bg-teal-400' onClick={() => navigate('/admin/proforma-invoice/add')}>
+                            <button className='bg-teal-500 hover:bg-teal-400' onClick={() => navigate('/admin/purchase-order/add')}>
                                 <MdAdd className='text-lg' />
                                 Add New
                             </button>
@@ -287,7 +287,7 @@ const Proforma = () => {
                                             <input type='checkbox' onChange={selectAll} checked={billData.length > 0 && selected.length === billData.length} />
                                         </th>
                                         <th className='py-2 px-4 border-b'>Date</th>
-                                        <th className='py-2 px-4 border-b'>Quotation / Estimate Number</th>
+                                        <th className='py-2 px-4 border-b'>Purchase Order Number</th>
                                         <th className='py-2 px-4 border-b'>Party Name</th>
                                         <th className='py-2 px-4 border-b'>Valid To</th>
                                         <th className='py-2 px-4 border-b'>Status</th>
@@ -302,7 +302,7 @@ const Proforma = () => {
                                                     <input type='checkbox' checked={selected.includes(data._id)} onChange={() => handleCheckboxChange(data._id)} />
                                                 </td>
                                                 <td className='px-4 border-b' align='center'>{data.estimateData}</td>
-                                                <td className='px-4 border-b' align='center'>{data.proformaNumber}</td>
+                                                <td className='px-4 border-b' align='center'>{data.poNumber}</td>
                                                 <td className='px-4 border-b' align='center'>{data.party.name}</td>
                                                 <td className='px-4 border-b' align='center'>{data.validDate}</td>
                                                 <td className='px-4 border-b max-w-[20px]' align='center'>
@@ -313,16 +313,21 @@ const Proforma = () => {
                                                 <td className='px-4 border-b max-w-[70px]'>
                                                     <div className='flex flex-col md:flex-row gap-2 mr-2'>
                                                         <button
-                                                            onClick={() => navigate(`/admin/proforma-invoice/edit/${data._id}`)}
+                                                            title='Edit'
+                                                            onClick={() => navigate(`/admin/purchase-order/edit/${data._id}`)}
                                                             className='bg-blue-400 text-white px-2 py-1 rounded w-full text-[16px]'>
                                                             <MdEditSquare />
                                                         </button>
                                                         <button
+                                                            title='Details'
                                                             onClick={() => navigate(`/admin/bill/details/${data._id}`)}
                                                             className='bg-red-500 text-white px-2 py-1 rounded w-full text-lg'>
                                                             <IoInformationCircle />
                                                         </button>
-                                                        <button className='bg-green-500 text-white px-2 py-1 rounded w-full text-lg'>
+                                                        <button
+                                                            onClick={() => navigate(`/admin/purchase-invoice/add/${data._id}`)}
+                                                            title='Convert to Invoice'
+                                                            className='bg-green-500 text-white px-2 py-1 rounded w-full text-lg'>
                                                             <SiConvertio />
                                                         </button>
                                                     </div>
@@ -371,5 +376,5 @@ const Proforma = () => {
     )
 }
 
-export default Proforma;
+export default PO;
 

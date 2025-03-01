@@ -76,7 +76,7 @@ const SideNav = () => {
       {
         name: 'Purshase Order',
         icon: <CiImageOn />,
-        link: '/admin/dashboard',
+        link: '/admin/purchase-order',
         submenu: null
       },
       {

@@ -15,11 +15,11 @@ import { useParams } from 'react-router-dom';
 
 
 
-document.title = "Proforma";
-const Proforma = ({ mode }) => {
+document.title = "Purchase Invoice";
+const PurchaseInvoice = ({ mode }) => {
   const toast = useMyToaster();
   const { id } = useParams()
-  const getBillPrefix = useBillPrefix("proforma");
+  const getBillPrefix = useBillPrefix("po");
   const { getApiData } = useApi();
   const itemRowSet = {
     QuotaionItem: 1, itemName: '', description: '', hsn: '', qun: '1',
@@ -32,7 +32,7 @@ const Proforma = ({ mode }) => {
   const [ItemRows, setItemRows] = useState([itemRowSet]);
   const [additionalRows, setAdditionalRow] = useState([additionalRowSet]); //{ additionalRowsItem: 1 }
   const [formData, setFormData] = useState({
-    party: '', proformaNumber: '', estimateData: '', validDate: '', items: ItemRows,
+    party: '', poNumber: '', estimateData: '', validDate: '', items: ItemRows,
     additionalCharge: additionalRows, note: '', terms: '',
     discountType: '', discountAmount: '', discountPercentage: '',
   })
@@ -65,7 +65,7 @@ const Proforma = ({ mode }) => {
   useEffect(() => {
     if (mode) {
       const get = async () => {
-        const url = process.env.REACT_APP_API_URL + "/proforma/get";
+        const url = process.env.REACT_APP_API_URL + "/po/get";
         const cookie = Cookies.get("token");
 
         const req = await fetch(url, {
@@ -125,9 +125,9 @@ const Proforma = ({ mode }) => {
   }, [])
 
 
-  // Set proforma number
+  // Set PO number
   useEffect(() => {
-    setFormData({ ...formData, proformaNumber: getBillPrefix });
+    setFormData({ ...formData, poNumber: getBillPrefix });
   }, [getBillPrefix])
 
 
@@ -382,7 +382,7 @@ const Proforma = ({ mode }) => {
   // *Save bill
   const saveBill = async () => {
 
-    if ([formData.party, formData.proformaNumber, formData.estimateData, formData.validDate]
+    if ([formData.party, formData.poNumber, formData.estimateData, formData.validDate]
       .some((field) => field === "")) {
       return toast("Fill the blank", "error");
     }
@@ -395,7 +395,7 @@ const Proforma = ({ mode }) => {
     }
 
     try {
-      const url = process.env.REACT_APP_API_URL + "/proforma/add";
+      const url = process.env.REACT_APP_API_URL + "/po/add";
       const token = Cookies.get("token");
 
       const req = await fetch(url, {
@@ -403,7 +403,7 @@ const Proforma = ({ mode }) => {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(!mode ? { ...formData, token } : { ...formData, token, update: true, id: id })
+        body: JSON.stringify(!mode || mode !== "edit" ? { ...formData, token } : { ...formData, token, update: true, id: id })
       })
       const res = await req.json();
       if (req.status !== 200 || res.err) {
@@ -411,11 +411,11 @@ const Proforma = ({ mode }) => {
       }
 
       if (mode) {
-        return toast('Proforma update successfully', 'success');
+        return toast('PO update successfully', 'success');
       }
 
       clearForm();
-      return toast('Proforma add successfully', 'success');
+      return toast('PO add successfully', 'success');
 
 
     } catch (error) {
@@ -431,7 +431,7 @@ const Proforma = ({ mode }) => {
     setItemRows([itemRowSet]);
     setAdditionalRow([additionalRowSet])
     setFormData({
-      party: '', proformaNumber: getBillPrefix, estimateData: '', validDate: '', items: ItemRows,
+      party: '', poNumber: getBillPrefix, estimateData: '', validDate: '', items: ItemRows,
       additionalCharge: additionalRows, note: '', terms: '',
       discountType: '', discountAmount: '', discountPercentage: '',
     });
@@ -441,7 +441,7 @@ const Proforma = ({ mode }) => {
 
   return (
     <>
-      <Nav title={mode ? "Update Proforma" : "Add Proforma"} />
+      <Nav title={mode ? "Update Purchase Invoice" : "Add Purchase Invoice"} />
       <main id='main'>
         <SideNav />
         <div className='content__body'>
@@ -456,14 +456,14 @@ const Proforma = ({ mode }) => {
                 />
               </div>
               <div className='flex flex-col gap-2 w-full lg:w-1/3'>
-                <p className='text-xs'>Proforma / Estimate Number</p>
+                <p className='text-xs'>PO Number</p>
                 <input type="text"
-                  onChange={(e) => setFormData({ ...formData, proformaNumber: e.target.value })}
-                  value={formData.proformaNumber}
+                  onChange={(e) => setFormData({ ...formData, poNumber: e.target.value })}
+                  value={formData.poNumber}
                 />
               </div>
               <div className='flex flex-col gap-2 w-full lg:w-1/3'>
-                <p className='text-xs'>Proforma / Estimate Date</p>
+                <p className='text-xs'>PO Date</p>
                 <DatePicker className='text-xs'
                   onChange={(data) => {
                     let date = new Date(data);
@@ -870,4 +870,4 @@ const Proforma = ({ mode }) => {
   )
 }
 
-export default Proforma;
+export default PurchaseInvoice;
