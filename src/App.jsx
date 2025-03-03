@@ -43,6 +43,14 @@ const Po = React.lazy(()=>import("./pages/po/Po"));
 const AddPo = React.lazy(()=>import("./pages/po/AddPo"));
 const PurchaseInvoice = React.lazy(()=>import("./pages/purchaseinvoice/PurchaseInvoice"));
 const AddPurchaseInvoice = React.lazy(()=>import("./pages/purchaseinvoice/AddPurchaseInvoice"));
+const PurchaseReturn = React.lazy(()=>import("./pages/purchasereturn/PurchaseReturn"));
+const AddPurchaseReturn = React.lazy(()=>import("./pages/purchasereturn/AddPurchaseReturn"));
+const DebitNote = React.lazy(()=>import("./pages/debitnote/DebitNote"));
+const AddDebitNote = React.lazy(()=>import("./pages/debitnote/AddDebitNote"));
+const SalesInvoice = React.lazy(()=>import("./pages/salesinvoice/SalesInvoice"));
+const AddSalesInvoice = React.lazy(()=>import("./pages/salesinvoice/AddSalesInvoice"));
+const SalesReturn = React.lazy(()=>import("./pages/salesreturn/SalesReturn"));
+const AddSalesReturn = React.lazy(()=>import("./pages/salesreturn/AddSalesReturn"));
 
 
 
@@ -93,6 +101,32 @@ const App = () => {
         <Route path="/admin/purchase-invoice/add/:id" element={<ProtectRoute><AddPurchaseInvoice mode={"convert"} /></ProtectRoute>} />
         <Route path="/admin/purchase-invoice/edit/:id" element={<ProtectRoute><AddPurchaseInvoice mode={"edit"} /></ProtectRoute>} />
 
+
+        {/* Purchase Return route */}
+        <Route path="/admin/purchase-return" element={<ProtectRoute><PurchaseReturn /></ProtectRoute>} />
+        <Route path="/admin/purchase-return/add" element={<ProtectRoute><AddPurchaseReturn /></ProtectRoute>} />
+        <Route path="/admin/purchase-return/edit/:id" element={<ProtectRoute><AddPurchaseReturn mode={"edit"} /></ProtectRoute>} />
+
+
+        {/* Debit Note route */}
+        <Route path="/admin/debit-note" element={<ProtectRoute><DebitNote /></ProtectRoute>} />
+        <Route path="/admin/debit-note/add" element={<ProtectRoute><AddDebitNote /></ProtectRoute>} />
+        <Route path="/admin/debit-note/edit/:id" element={<ProtectRoute><AddDebitNote mode={"edit"} /></ProtectRoute>} />
+
+
+        {/* Sales Invoice route */}
+        <Route path="/admin/sales-invoice" element={<ProtectRoute><SalesInvoice /></ProtectRoute>} />
+        <Route path="/admin/sales-invoice/add" element={<ProtectRoute><AddSalesInvoice /></ProtectRoute>} />
+        <Route path="/admin/sales-invoice/add/:id" element={<ProtectRoute><AddSalesInvoice mode={"convert"} /></ProtectRoute>} />
+        <Route path="/admin/sales-invoice/edit/:id" element={<ProtectRoute><AddSalesInvoice mode={"edit"} /></ProtectRoute>} />
+
+
+        {/* Sales Return route */}
+        <Route path="/admin/sales-return" element={<ProtectRoute><SalesReturn /></ProtectRoute>} />
+        <Route path="/admin/sales-return/add" element={<ProtectRoute><AddSalesReturn /></ProtectRoute>} />
+        <Route path="/admin/sales-return/edit/:id" element={<ProtectRoute><AddSalesReturn mode={"edit"} /></ProtectRoute>} />
+
+        
 
         <Route path="/admin/profile" element={<ProtectRoute><Profile /></ProtectRoute>} />
         <Route path="/admin/account/add" element={<ProtectRoute><AddAccount /></ProtectRoute>} />

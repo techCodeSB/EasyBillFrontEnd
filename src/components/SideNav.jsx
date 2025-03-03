@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
 import { HiOutlineHome } from "react-icons/hi2";
 // import { FaEarthAmericas } from "react-icons/fa6";
-import { CiImageOn } from "react-icons/ci";
+// import { PiComputerTowerThin } from "react-icons/ci";
+import { PiComputerTowerThin } from "react-icons/pi";
+
 import { IoSettingsOutline } from "react-icons/io5";
 import { TbUsersGroup } from "react-icons/tb";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { Link } from 'react-router-dom';
-import { IoIosArrowDown } from "react-icons/io";
+// import { IoIosArrowDown } from "react-icons/io";
 import { Tooltip } from 'react-tooltip';
 import { Popover, Whisper } from 'rsuite';
 
@@ -31,89 +33,89 @@ const SideNav = () => {
     "sales": [
       {
         name: 'Quotation / Estimate',
-        icon: <CiImageOn />,
-        link: '/admin/quotation-estimate/',
+        icon: <PiComputerTowerThin />,
+        link: '/admin/quotation-estimate',
         submenu: null
       },
       {
         name: 'Proforma Invoice',
-        icon: <CiImageOn />,
-        link: '/admin/proforma-invoice/',
+        icon: <PiComputerTowerThin />,
+        link: '/admin/proforma-invoice',
         submenu: null
       },
       {
         name: 'Sales Invoice',
-        icon: <CiImageOn />,
-        link: '/admin/dashboard',
+        icon: <PiComputerTowerThin />,
+        link: '/admin/sales-invoice',
         submenu: null
       },
       {
         name: 'Sales Return',
-        icon: <CiImageOn />,
-        link: '/admin/dashboard',
+        icon: <PiComputerTowerThin />,
+        link: '/admin/sales-return',
         submenu: null
       },
       {
         name: 'Payment In',
-        icon: <CiImageOn />,
+        icon: <PiComputerTowerThin />,
         link: '/admin/payment-in',
         submenu: null
       },
       {
         name: 'Credit Note',
-        icon: <CiImageOn />,
+        icon: <PiComputerTowerThin />,
         link: '/admin/dashboard',
         submenu: null
       },
       {
         name: 'Delivery Challan',
-        icon: <CiImageOn />,
+        icon: <PiComputerTowerThin />,
         link: '/admin/dashboard',
         submenu: null
       },
     ],
     "Purshase": [
       {
-        name: 'Purshase Order',
-        icon: <CiImageOn />,
+        name: 'Purchase Order',
+        icon: <PiComputerTowerThin />,
         link: '/admin/purchase-order',
         submenu: null
       },
       {
-        name: 'Purshase Invoice',
-        icon: <CiImageOn />,
-        link: '/admin/dashboard',
+        name: 'Purchase Invoice',
+        icon: <PiComputerTowerThin />,
+        link: '/admin/purchase-invoice',
         submenu: null
       },
       {
-        name: 'Purshase Return',
-        icon: <CiImageOn />,
-        link: '/admin/dashboard',
+        name: 'Purchase Return',
+        icon: <PiComputerTowerThin />,
+        link: '/admin/purchase-return',
         submenu: null
       },
       {
         name: 'Payment Out',
-        icon: <CiImageOn />,
+        icon: <PiComputerTowerThin />,
         link: '/admin/payment-out',
         submenu: null
       },
       {
         name: 'Debit Note',
-        icon: <CiImageOn />,
-        link: '/admin/dashboard',
+        icon: <PiComputerTowerThin />,
+        link: '/admin/debit-note',
         submenu: null
       },
     ],
     "Accounting": [
       {
         name: 'Accounts',
-        icon: <CiImageOn />,
+        icon: <PiComputerTowerThin />,
         link: '/admin/account',
         submenu: null
       },
       {
         name: 'Other Transactions',
-        icon: <CiImageOn />,
+        icon: <PiComputerTowerThin />,
         link: '/admin/other-transaction',
         submenu: null
       },
@@ -133,30 +135,30 @@ const SideNav = () => {
       },
       {
         name: 'Unit',
-        icon: <CiImageOn />,
+        icon: <PiComputerTowerThin />,
         link: '/admin/unit',
         submenu: null
       },
       {
         name: 'Tax',
-        icon: <CiImageOn />,
+        icon: <PiComputerTowerThin />,
         link: '/admin/tax',
         submenu: null
       },
       {
         name: 'Items',
-        icon: <CiImageOn />,
+        icon: <PiComputerTowerThin />,
         link: null,
         submenu: [
           {
             name: 'Category',
-            icon: <CiImageOn />,
+            icon: <PiComputerTowerThin />,
             link: '/admin/item-category',
             submenu: null
           },
           {
             name: 'Items',
-            icon: <CiImageOn />,
+            icon: <PiComputerTowerThin />,
             link: '/admin/item',
             submenu: null
           },
@@ -164,7 +166,7 @@ const SideNav = () => {
       },
       {
         name: 'Party',
-        icon: <CiImageOn />,
+        icon: <PiComputerTowerThin />,
         link: '/admin/party',
         submenu: null
       },
@@ -184,7 +186,7 @@ const SideNav = () => {
   };
 
   return (
-    <aside className='side__nav min-w-[175px] h-[calc(100vh-50px)] bg-[#0D1726] text-white' id='sideBar'>
+    <aside className='side__nav min-w-[175px] h-[calc(100vh-50px)] bg-[#003e32] text-white' id='sideBar'>
       <div className="side__nav__logo flex justify-center items-center">
       </div>
       <div className="side__nav__links">
@@ -255,7 +257,7 @@ const SideNav = () => {
                   <ul>
                     <Link data-tooltip-id="sideBarItemToolTip">
                       <li className='flex items-center'>
-                        <span className='mr-2 text-[15px]'><CiImageOn /></span>
+                        <span className='mr-2 text-[15px]'><PiComputerTowerThin /></span>
                         <Link to={"/admin/role"} className='focus-within:no-underline text-blue-900 text-[13px]'>
                           Role
                         </Link>
@@ -263,7 +265,7 @@ const SideNav = () => {
                     </Link>
                     <Link data-tooltip-id="sideBarItemToolTip">
                       <li className='flex items-center'>
-                        <span className='mr-2 text-[15px]'><CiImageOn /></span>
+                        <span className='mr-2 text-[15px]'><PiComputerTowerThin /></span>
                         <Link to={"/admin/user"} className='focus-within:no-underline text-blue-900 text-[13px]'>
                           User
                         </Link>
@@ -283,13 +285,13 @@ const SideNav = () => {
                 <ul className={`ml-2 ${openSubmenus.includes('unit') ? 'block' : 'hidden'} transform transition-transform sub-menu`} >
                   <Link data-tooltip-id="sideBarItemToolTip">
                     <li className='flex items-center'>
-                      <span className='mr-3'><CiImageOn /></span>
+                      <span className='mr-3'><PiComputerTowerThin /></span>
                       <span>Role</span>
                     </li>
                   </Link>
                   <Link data-tooltip-id="sideBarItemToolTip">
                     <li className='flex items-center'>
-                      <span className='mr-3'><CiImageOn /></span>
+                      <span className='mr-3'><PiComputerTowerThin /></span>
                       <span>User</span>
                     </li>
                   </Link>
@@ -298,31 +300,31 @@ const SideNav = () => {
             </Whisper>
             <Link to={"/admin/unit"} data-tooltip-id="sideBarItemToolTip">
               <li className='flex items-center'>
-                <span className='mr-3'><CiImageOn /></span>
+                <span className='mr-3'><PiComputerTowerThin /></span>
                 <span>Unit</span>
               </li>
             </Link>
             <Link to={"/admin/tax"} data-tooltip-id="sideBarItemToolTip">
               <li className='flex items-center'>
-                <span className='mr-3'><CiImageOn /></span>
+                <span className='mr-3'><PiComputerTowerThin /></span>
                 <span>Tax</span>
               </li>
             </Link>
             <Link to={"/admin/item"} data-tooltip-id="sideBarItemToolTip">
               <li className='flex items-center'>
-                <span className='mr-3'><CiImageOn /></span>
+                <span className='mr-3'><PiComputerTowerThin /></span>
                 <span>Item</span>
               </li>
             </Link>
             <Link to={"/admin/item-category"} data-tooltip-id="sideBarItemToolTip">
               <li className='flex items-center'>
-                <span className='mr-3'><CiImageOn /></span>
+                <span className='mr-3'><PiComputerTowerThin /></span>
                 <span>Category</span>
               </li>
             </Link>
             <Link to={"/admin/party"} data-tooltip-id="sideBarItemToolTip">
               <li className='flex items-center'>
-                <span className='mr-3'><CiImageOn /></span>
+                <span className='mr-3'><PiComputerTowerThin /></span>
                 <span>Party</span>
               </li>
             </Link>

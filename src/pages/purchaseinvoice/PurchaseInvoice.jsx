@@ -136,6 +136,7 @@ const PurchaseInvoice = () => {
         }
     }
 
+
     const removeData = async (trash) => {
         if (selected.length === 0 || tableStatusData !== 'active') {
             return;
@@ -169,6 +170,7 @@ const PurchaseInvoice = () => {
             toast("Something went wrong", "error")
         }
     }
+    
 
     const restoreData = async () => {
         if (selected.length === 0 || tableStatusData !== "trash") {
@@ -238,10 +240,10 @@ const PurchaseInvoice = () => {
                                     <div className='list__icon' title='Copy'>
                                         <FaRegCopy className='text-white text-[16px]' onClick={() => exportTable('copy')} />
                                     </div>
-                                    <div className='list__icon' title='PDF' onClick={() => exportTable('pdf')}>
+                                    <div className='list__icon' title='Download PDF' onClick={() => exportTable('pdf')}>
                                         <FaRegFilePdf className="text-white text-[16px]" />
                                     </div>
-                                    <div className='list__icon' title='Excel'>
+                                    <div className='list__icon' title='Download Excel'>
                                         <FaRegFileExcel className='text-white text-[16px]' onClick={() => exportTable('excel')} />
                                     </div>
                                 </div>
@@ -254,7 +256,7 @@ const PurchaseInvoice = () => {
 
                         {/* Second Row */}
                         <div className='list_buttons'>
-                            <button className='bg-teal-500 hover:bg-teal-400' onClick={() => navigate('/admin/purchase-order/add')}>
+                            <button className='bg-teal-500 hover:bg-teal-400' onClick={() => navigate('/admin/purchase-invoice/add')}>
                                 <MdAdd className='text-lg' />
                                 Add New
                             </button>

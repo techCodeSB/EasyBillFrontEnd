@@ -15,8 +15,8 @@ import { useParams } from 'react-router-dom';
 
 
 
-document.title = "Purchase Invoice";
-const PurchaseInvoice = ({ mode }) => {
+document.title = "Sales Return";
+const SalesReturn = ({ mode }) => {
   const toast = useMyToaster();
   const { id } = useParams()
   const getBillPrefix = useBillPrefix("invoice");
@@ -32,7 +32,7 @@ const PurchaseInvoice = ({ mode }) => {
   const [ItemRows, setItemRows] = useState([itemRowSet]);
   const [additionalRows, setAdditionalRow] = useState([additionalRowSet]); //{ additionalRowsItem: 1 }
   const [formData, setFormData] = useState({
-    party: '', purchaseInvoiceNumber: '', originalInvoiceNumber: '', estimateData: '', validDate: '',
+    party: '', salesReturnNumber: '', returnData: '',
     items: ItemRows, additionalCharge: additionalRows, note: '', terms: '',
     discountType: '', discountAmount: '', discountPercentage: '',
   })
@@ -65,8 +65,7 @@ const PurchaseInvoice = ({ mode }) => {
   useEffect(() => {
     if (mode) {
       const get = async () => {
-        const url = `${process.env.REACT_APP_API_URL}${mode == 'edit' ? "/purchaseinvoice/get" : "/po/get"}`;
-        console.log(url)
+        const url = `${process.env.REACT_APP_API_URL}/salesreturn/get`;
         const cookie = Cookies.get("token");
 
         const req = await fetch(url, {
@@ -125,11 +124,6 @@ const PurchaseInvoice = ({ mode }) => {
 
   }, [])
 
-
-  //set Invoice number
-  // useEffect(() => {
-  //   setFormData({ ...formData, purchaseInvoiceNumber: getBillPrefix });
-  // }, [getBillPrefix])
 
 
 
@@ -384,7 +378,7 @@ const PurchaseInvoice = ({ mode }) => {
   // *Save bill
   const saveBill = async () => {
 
-    if ([formData.party, formData.purchaseInvoiceNumber, formData.estimateData, formData.validDate]
+    if ([formData.party, formData.salesReturnNumber, formData.returnData, formData.validDate]
       .some((field) => field === "")) {
       return toast("Fill the blank", "error");
     }
@@ -397,7 +391,7 @@ const PurchaseInvoice = ({ mode }) => {
     }
 
     try {
-      const url = process.env.REACT_APP_API_URL + "/purchaseinvoice/add";
+      const url = process.env.REACT_APP_API_URL + "/salesreturn/add";
       const token = Cookies.get("token");
 
       const req = await fetch(url, {
@@ -413,11 +407,11 @@ const PurchaseInvoice = ({ mode }) => {
       }
 
       if (mode === "edit") {
-        return toast('Invoice update successfully', 'success');
+        return toast('Sales Return update successfully', 'success');
       }
 
       clearForm();
-      return toast('Invoice add successfully', 'success');
+      return toast('Sales Return successfully', 'success');
 
 
     } catch (error) {
@@ -433,9 +427,9 @@ const PurchaseInvoice = ({ mode }) => {
     setItemRows([itemRowSet]);
     setAdditionalRow([additionalRowSet])
     setFormData({
-      party: '', purchaseInvoiceNumber: getBillPrefix, estimateData: '', validDate: '', items: ItemRows,
+      party: '', salesReturnNumber: getBillPrefix, returnData: '', items: ItemRows,
       additionalCharge: additionalRows, note: '', terms: '',
-      discountType: '', discountAmount: '', discountPercentage: '', originalInvoiceNumber: ''
+      discountType: '', discountAmount: '', discountPercentage: ''
     });
 
   }
@@ -443,13 +437,13 @@ const PurchaseInvoice = ({ mode }) => {
 
   return (
     <>
-      <Nav title={mode == "edit" ? "Update Purchase Invoice" : "Add Purchase Invoice"} />
+      <Nav title={mode == "edit" ? "Update Sales Return" : "Add Sales Return"} />
       <main id='main'>
         <SideNav />
         <div className='content__body'>
           <div className='content__body__main bg-white' id='addQuotationTable'>
             <div className='flex flex-col lg:flex-row items-center justify-around gap-4'>
-              <div className='flex flex-col gap-2 w-full'>
+              <div className='flex flex-col gap-2 w-full lg:max-w-[450px]'>
                 <p className='text-xs'>Select Party</p>
                 <SelectPicker
                   onChange={(data) => setFormData({ ...formData, party: data })}
@@ -458,41 +452,22 @@ const PurchaseInvoice = ({ mode }) => {
                 />
               </div>
               <div className='flex flex-col gap-2 w-full lg:w-1/3'>
-                <p className='text-xs'>Purchase Invoice Number</p>
+                <p className='text-xs'>Sales Return Number</p>
                 <input type="text"
-                  onChange={(e) => setFormData({ ...formData, purchaseInvoiceNumber: e.target.value })}
-                  value={formData.purchaseInvoiceNumber}
+                  onChange={(e) => setFormData({ ...formData, salesReturnNumber: e.target.value })}
+                  value={formData.salesReturnNumber}
                 />
               </div>
               <div className='flex flex-col gap-2 w-full lg:w-1/3'>
-                <p className='text-xs'>Original Invoice Number</p>
-                <input type="text"
-                  onChange={(e) => setFormData({ ...formData, originalInvoiceNumber: e.target.value })}
-                  value={formData.originalInvoiceNumber}
-                />
-              </div>
-              <div className='flex flex-col gap-2 w-full lg:w-1/3'>
-                <p className='text-xs'>Invoice Date</p>
+                <p className='text-xs'>Return Date</p>
                 <DatePicker className='text-xs'
                   onChange={(data) => {
                     let date = new Date(data);
-                    setFormData({ ...formData, estimateData: date.toDateString() })
+                    setFormData({ ...formData, returnData: date.toDateString() })
                   }}
-                  value={new Date(formData.estimateData)}
+                  value={new Date(formData.returnData)}
                 />
                 {/* <input type="date" name="" id="" /> */}
-              </div>
-              <div className='flex flex-col gap-2 w-full lg:w-1/3'>
-                <p className='text-xs'>Due Date</p>
-                <DatePicker
-                  placement='bottomEnd'
-                  className='text-xs'
-                  onChange={(data) => {
-                    let date = new Date(data);
-                    setFormData({ ...formData, validDate: date.toDateString() })
-                  }}
-                  value={new Date(formData.validDate)}
-                />
               </div>
             </div>
 
@@ -879,4 +854,4 @@ const PurchaseInvoice = ({ mode }) => {
   )
 }
 
-export default PurchaseInvoice;
+export default SalesReturn;

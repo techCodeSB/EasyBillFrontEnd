@@ -65,22 +65,22 @@ const Nav = ({ title }) => {
   return (
     <>
       <nav className='w-full text-white h-[50px] bg-white shadow-lg flex justify-between'>
-        <div className="logo__area w-[175px] h-[100%] bg-[#252A34] px-3 py-2 flex justify-between items-center">
-          <div className='nav__logo p-2 bg-[#DDDDDD] w-[60px] rounded-md'>
-            <img src={Logo} alt="" width={80} className='shadow-lg' />
-          </div>
+        <div className="logo__area w-[175px]  h-[100%] bg-[#003628] px-3 flex justify-between items-center">
+          {/* <div className='nav__logo bg-[#003e32] w-[90px] rounded-md'> */}
+            <img src={Logo} alt="" width={70} className='shadow-lg' />
+          {/* </div> */}
           <TbMenuDeep className='text-white text-xl cursor-pointer' onClick={toggleSideBar} />
         </div>
         <div className='flex items-center justify-between w-[calc(100%-175px)]'>
           <h6 className='text-black ml-5'>{title}</h6>
           <div className="admin__area px-4 py-2 flex items-center cursor-pointer gap-3">
             <div
-              className='flex items-center justify-between bg-gray-100 text-black p-1 rounded'
+              className='flex items-center justify-between bg-[#003E32] text-white py-1 px-3 rounded'
               onClick={() => {
                 dispatch(toggleModal(true))
               }}>
               <span className='text-[12px]'>{companyName}</span>
-              <HiOutlineSwitchHorizontal className='text-[16px] ml-2 text-blue-700' />
+              <HiOutlineSwitchHorizontal className='text-[16px] ml-2 text-white' />
             </div>
             <Whisper className='' trigger={'click'} placement='bottomEnd' speaker={<Popover full>
               <Link className='menu-link' to={"/admin/site"}>

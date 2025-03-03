@@ -313,16 +313,21 @@ const Proforma = () => {
                                                 <td className='px-4 border-b max-w-[70px]'>
                                                     <div className='flex flex-col md:flex-row gap-2 mr-2'>
                                                         <button
+                                                            title='Edit '
                                                             onClick={() => navigate(`/admin/proforma-invoice/edit/${data._id}`)}
                                                             className='bg-blue-400 text-white px-2 py-1 rounded w-full text-[16px]'>
                                                             <MdEditSquare />
                                                         </button>
                                                         <button
+                                                            title='Details'
                                                             onClick={() => navigate(`/admin/bill/details/${data._id}`)}
                                                             className='bg-red-500 text-white px-2 py-1 rounded w-full text-lg'>
                                                             <IoInformationCircle />
                                                         </button>
-                                                        <button className='bg-green-500 text-white px-2 py-1 rounded w-full text-lg'>
+                                                        <button
+                                                            onClick={() => navigate(`/admin/sales-invoice/add/${data._id}`)}
+                                                            title='Convert to final invoice'
+                                                            className='bg-green-500 text-white px-2 py-1 rounded w-full text-lg'>
                                                             <SiConvertio />
                                                         </button>
                                                     </div>

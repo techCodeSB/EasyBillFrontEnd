@@ -15,8 +15,8 @@ import { useParams } from 'react-router-dom';
 
 
 
-document.title = "Purchase Invoice";
-const PurchaseInvoice = ({ mode }) => {
+document.title = "Sales Invoice";
+const SalesInvoice = ({ mode }) => {
   const toast = useMyToaster();
   const { id } = useParams()
   const getBillPrefix = useBillPrefix("invoice");
@@ -32,7 +32,7 @@ const PurchaseInvoice = ({ mode }) => {
   const [ItemRows, setItemRows] = useState([itemRowSet]);
   const [additionalRows, setAdditionalRow] = useState([additionalRowSet]); //{ additionalRowsItem: 1 }
   const [formData, setFormData] = useState({
-    party: '', purchaseInvoiceNumber: '', originalInvoiceNumber: '', estimateData: '', validDate: '',
+    party: '', salesInvoiceNumber: '', invoiceDate: '', DueDate: '',
     items: ItemRows, additionalCharge: additionalRows, note: '', terms: '',
     discountType: '', discountAmount: '', discountPercentage: '',
   })
@@ -65,7 +65,7 @@ const PurchaseInvoice = ({ mode }) => {
   useEffect(() => {
     if (mode) {
       const get = async () => {
-        const url = `${process.env.REACT_APP_API_URL}${mode == 'edit' ? "/purchaseinvoice/get" : "/po/get"}`;
+        const url = `${process.env.REACT_APP_API_URL}${mode == 'edit' ? "/salesinvoice/get" : "/proforma/get"}`;
         console.log(url)
         const cookie = Cookies.get("token");
 
@@ -128,7 +128,7 @@ const PurchaseInvoice = ({ mode }) => {
 
   //set Invoice number
   // useEffect(() => {
-  //   setFormData({ ...formData, purchaseInvoiceNumber: getBillPrefix });
+  //   setFormData({ ...formData, salesInvoiceNumber: getBillPrefix });
   // }, [getBillPrefix])
 
 
@@ -384,7 +384,7 @@ const PurchaseInvoice = ({ mode }) => {
   // *Save bill
   const saveBill = async () => {
 
-    if ([formData.party, formData.purchaseInvoiceNumber, formData.estimateData, formData.validDate]
+    if ([formData.party, formData.salesInvoiceNumber, formData.invoiceDate, formData.DueDate]
       .some((field) => field === "")) {
       return toast("Fill the blank", "error");
     }
@@ -397,7 +397,7 @@ const PurchaseInvoice = ({ mode }) => {
     }
 
     try {
-      const url = process.env.REACT_APP_API_URL + "/purchaseinvoice/add";
+      const url = process.env.REACT_APP_API_URL + "/salesinvoice/add";
       const token = Cookies.get("token");
 
       const req = await fetch(url, {
@@ -433,9 +433,9 @@ const PurchaseInvoice = ({ mode }) => {
     setItemRows([itemRowSet]);
     setAdditionalRow([additionalRowSet])
     setFormData({
-      party: '', purchaseInvoiceNumber: getBillPrefix, estimateData: '', validDate: '', items: ItemRows,
+      party: '', salesInvoiceNumber: getBillPrefix, invoiceDate: '', DueDate: '', items: ItemRows,
       additionalCharge: additionalRows, note: '', terms: '',
-      discountType: '', discountAmount: '', discountPercentage: '', originalInvoiceNumber: ''
+      discountType: '', discountAmount: '', discountPercentage: ''
     });
 
   }
@@ -443,7 +443,7 @@ const PurchaseInvoice = ({ mode }) => {
 
   return (
     <>
-      <Nav title={mode == "edit" ? "Update Purchase Invoice" : "Add Purchase Invoice"} />
+      <Nav title={mode == "edit" ? "Update Sales Invoice" : "Add Sales Invoice"} />
       <main id='main'>
         <SideNav />
         <div className='content__body'>
@@ -458,17 +458,10 @@ const PurchaseInvoice = ({ mode }) => {
                 />
               </div>
               <div className='flex flex-col gap-2 w-full lg:w-1/3'>
-                <p className='text-xs'>Purchase Invoice Number</p>
+                <p className='text-xs'>Sales Invoice Number</p>
                 <input type="text"
-                  onChange={(e) => setFormData({ ...formData, purchaseInvoiceNumber: e.target.value })}
-                  value={formData.purchaseInvoiceNumber}
-                />
-              </div>
-              <div className='flex flex-col gap-2 w-full lg:w-1/3'>
-                <p className='text-xs'>Original Invoice Number</p>
-                <input type="text"
-                  onChange={(e) => setFormData({ ...formData, originalInvoiceNumber: e.target.value })}
-                  value={formData.originalInvoiceNumber}
+                  onChange={(e) => setFormData({ ...formData, salesInvoiceNumber: e.target.value })}
+                  value={formData.salesInvoiceNumber}
                 />
               </div>
               <div className='flex flex-col gap-2 w-full lg:w-1/3'>
@@ -476,9 +469,9 @@ const PurchaseInvoice = ({ mode }) => {
                 <DatePicker className='text-xs'
                   onChange={(data) => {
                     let date = new Date(data);
-                    setFormData({ ...formData, estimateData: date.toDateString() })
+                    setFormData({ ...formData, invoiceDate: date.toDateString() })
                   }}
-                  value={new Date(formData.estimateData)}
+                  value={new Date(formData.invoiceDate)}
                 />
                 {/* <input type="date" name="" id="" /> */}
               </div>
@@ -489,9 +482,9 @@ const PurchaseInvoice = ({ mode }) => {
                   className='text-xs'
                   onChange={(data) => {
                     let date = new Date(data);
-                    setFormData({ ...formData, validDate: date.toDateString() })
+                    setFormData({ ...formData, DueDate: date.toDateString() })
                   }}
-                  value={new Date(formData.validDate)}
+                  value={new Date(formData.DueDate)}
                 />
               </div>
             </div>
@@ -879,4 +872,4 @@ const PurchaseInvoice = ({ mode }) => {
   )
 }
 
-export default PurchaseInvoice;
+export default SalesInvoice;
