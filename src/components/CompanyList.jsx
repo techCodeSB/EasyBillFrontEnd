@@ -56,7 +56,7 @@ const CompanyList = ({ isOpen, getCompanyName }) => {
   }
 
   return (
-    <div id='companyList' >
+    <div id='companyList'>
       <Modal open={storeVal} onClose={() => dispatch(toggleModal(false))} size={300}>
         <Modal.Header>
           <p className='font-bold'>Your companies</p>
@@ -82,7 +82,7 @@ const CompanyList = ({ isOpen, getCompanyName }) => {
               dispatch(toggleModal(false))
               navigate("/admin/company")
             }}
-            className='flex items-center gap-1 w-full rounded bg-blue-700 hover:bg-blue-600 active:bg-blue-700 text-white justify-center p-1'>
+            className='flex items-center gap-1 w-full rounded bg-[#003628] hover:bg-[#003628d7] active:bg-blue-700 text-white justify-center p-1'>
             <IoIosAddCircle />
             Create
           </button>

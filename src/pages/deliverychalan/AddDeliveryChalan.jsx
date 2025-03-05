@@ -15,15 +15,15 @@ import { useParams } from 'react-router-dom';
 
 
 
-document.title = "Quotation";
-const Quotation = ({ mode }) => {
+document.title = "Delivery Chalan";
+const DeliveryChalan = ({ mode }) => {
   const toast = useMyToaster();
   const { id } = useParams()
   const getBillPrefix = useBillPrefix("invoice");
   const { getApiData } = useApi();
   const itemRowSet = {
     QuotaionItem: 1, itemName: '', description: '', hsn: '', qun: '1',
-    unit: [], selectedUnit:'', price: '', discountPerAmount: '', discountPerPercentage: '',
+    unit: [], selectedUnit: '',  price: '', discountPerAmount: '', discountPerPercentage: '',
     tax: '', taxAmount: '', amount: '', perDiscountType: "", //for checking purpose only
   }
   const additionalRowSet = {
@@ -32,7 +32,7 @@ const Quotation = ({ mode }) => {
   const [ItemRows, setItemRows] = useState([itemRowSet]);
   const [additionalRows, setAdditionalRow] = useState([additionalRowSet]); //{ additionalRowsItem: 1 }
   const [formData, setFormData] = useState({
-    party: '', quotationNumber: '', estimateData: '', validDate: '', items: ItemRows,
+    party: '', chalanNumber: '', chalanDate: '', validDate: '', items: ItemRows,
     additionalCharge: additionalRows, note: '', terms: '',
     discountType: '', discountAmount: '', discountPercentage: '',
   })
@@ -64,7 +64,7 @@ const Quotation = ({ mode }) => {
   useEffect(() => {
     if (mode) {
       const get = async () => {
-        const url = process.env.REACT_APP_API_URL + "/quotation/get";
+        const url = process.env.REACT_APP_API_URL + "/deliverychalan/get";
         const cookie = Cookies.get("token");
 
         const req = await fetch(url, {
@@ -75,7 +75,6 @@ const Quotation = ({ mode }) => {
           body: JSON.stringify({ token: cookie, id: id })
         })
         const res = await req.json();
-        console.log(res.data.items)
         setFormData({ ...formData, ...res.data });
         setAdditionalRow([...res.data.additionalCharge])
         setItemRows([...res.data.items]);
@@ -125,7 +124,7 @@ const Quotation = ({ mode }) => {
 
 
   useEffect(() => {
-    setFormData({ ...formData, quotationNumber: getBillPrefix });
+    setFormData({ ...formData, chalanNumber: getBillPrefix });
   }, [getBillPrefix])
 
 
@@ -286,8 +285,6 @@ const Quotation = ({ mode }) => {
       })
       item[index].unit = [...currentUnit];
 
-      // console.log(item[index].unit)
-
       setItemRows(item);
     }
 
@@ -379,24 +376,6 @@ const Quotation = ({ mode }) => {
       const value = e.target.value || (0).toFixed(2);
       let per = ((value / subTotal()('amount')) * 100).toFixed(2) //Get percentage
       setFormData({ ...formData, discountAmount: e.target.value, discountPercentage: per });
-      console.log(per)
-      console.log("subtotal", subTotal()("amount"))
-
-      // if (formData.discountType === "before") {
-      //   let items = [...ItemRows];
-      //   items.forEach((i, _) => {
-      //     let amount = parseFloat(value) / parseFloat(items.length);
-      //     console.log(amount)
-      //     i.discountPerAmount = Number.isNaN(amount) ? (0).toFixed(2) : amount;
-      //     console.log(i.discountPerAmount)
-      //     // i.discountPerPercentage = Number.isNaN((amount / (i.price * i.qun)) * 100) ? 0 : (amount / (i.price * i.qun)) * 100;
-      //   })
-
-      //   console.log(items)
-
-      //   setItemRows([...items]);
-      // }
-
     }
 
   }
@@ -405,7 +384,7 @@ const Quotation = ({ mode }) => {
   // *Save bill
   const saveBill = async () => {
 
-    if ([formData.party, formData.quotationNumber, formData.estimateData, formData.validDate]
+    if ([formData.party, formData.chalanNumber, formData.chalanDate, formData.validDate]
       .some((field) => field === "")) {
       return toast("Fill the blank", "error");
     }
@@ -418,7 +397,7 @@ const Quotation = ({ mode }) => {
     }
 
     try {
-      const url = process.env.REACT_APP_API_URL + "/quotation/add";
+      const url = process.env.REACT_APP_API_URL + "/deliverychalan/add";
       const token = Cookies.get("token");
 
       const req = await fetch(url, {
@@ -434,11 +413,11 @@ const Quotation = ({ mode }) => {
       }
 
       if (mode) {
-        return toast('Quotation update successfully', 'success');
+        return toast('Deliver chalan update successfully', 'success');
       }
 
       clearForm();
-      return toast('Quotation add successfully', 'success');
+      return toast('Delivery chalan add successfully', 'success');
 
 
     } catch (error) {
@@ -454,7 +433,7 @@ const Quotation = ({ mode }) => {
     setItemRows([itemRowSet]);
     setAdditionalRow([additionalRowSet])
     setFormData({
-      party: '', quotationNumber: getBillPrefix, estimateData: '', validDate: '', items: ItemRows,
+      party: '', chalanNumber: '', chalanDate: '', validDate: '', items: ItemRows,
       additionalCharge: additionalRows, note: '', terms: '',
       discountType: '', discountAmount: '', discountPercentage: '',
     });
@@ -464,7 +443,7 @@ const Quotation = ({ mode }) => {
 
   return (
     <>
-      <Nav title={mode ? "Update Quotation" : "Add Quotation"} />
+      <Nav title={mode ? "Update Delivery Chalan" : "Add Delivery Chalan"} />
       <main id='main'>
         <SideNav />
         <div className='content__body'>
@@ -479,20 +458,20 @@ const Quotation = ({ mode }) => {
                 />
               </div>
               <div className='flex flex-col gap-2 w-full lg:w-1/3'>
-                <p className='text-xs'>Quotation / Estimate Number</p>
+                <p className='text-xs'>Deliver Chalan Number</p>
                 <input type="text"
-                  onChange={(e) => setFormData({ ...formData, quotationNumber: e.target.value })}
-                  value={formData.quotationNumber}
+                  onChange={(e) => setFormData({ ...formData, chalanNumber: e.target.value })}
+                  value={formData.chalanNumber}
                 />
               </div>
               <div className='flex flex-col gap-2 w-full lg:w-1/3'>
-                <p className='text-xs'>Quotation / Estimate Date</p>
+                <p className='text-xs'>Deliver Chalan Date</p>
                 <DatePicker className='text-xs'
                   onChange={(data) => {
                     let date = new Date(data);
-                    setFormData({ ...formData, estimateData: date.toDateString() })
+                    setFormData({ ...formData, chalanDate: date.toDateString() })
                   }}
-                  value={new Date(formData.estimateData)}
+                  value={new Date(formData.chalanDate)}
                 />
                 {/* <input type="date" name="" id="" /> */}
               </div>
@@ -893,4 +872,4 @@ const Quotation = ({ mode }) => {
   )
 }
 
-export default Quotation;
+export default DeliveryChalan;

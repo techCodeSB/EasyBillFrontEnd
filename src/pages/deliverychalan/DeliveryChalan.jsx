@@ -19,14 +19,12 @@ import useMyToaster from '../../hooks/useMyToaster';
 import Cookies from 'js-cookie';
 import downloadPdf from '../../helper/downloadPdf';
 import { GrFormNext, GrFormPrevious } from 'react-icons/gr';
-import { SiConvertio } from "react-icons/si";
 
 
 
-
-// Proforma page
-document.title = "Payment in"
-const PaymentIn = () => {
+// QuotationList page
+document.title = "Delivery Chalan";
+const DeliveryChalan = () => {
   const toast = useMyToaster();
   const { copyTable, downloadExcel, printTable, exportPdf } = useExportTable();
   const [activePage, setActivePage] = useState(1);
@@ -38,10 +36,11 @@ const PaymentIn = () => {
   const tableRef = useRef(null);
   const [tableStatusData, setTableStatusData] = useState('active');
   const exportData = useMemo(() => {
-    return billData && billData.map(({ paymentInDate, paymentInNumber, party }) => ({
-      "Payment In Date": paymentInDate,
-      "Payment In Number": paymentInNumber,
+    return billData && billData.map(({ chalanDate, chalanNumber, party, validDate }) => ({
+      "Estimate Data": chalanDate,
+      "Deliver Chalan Number": chalanNumber,
       "Party": party.name,
+      "Valid Date": validDate
     }));
   }, [billData]);
 
@@ -55,7 +54,7 @@ const PaymentIn = () => {
           trash: tableStatusData === "trash" ? true : false,
           all: tableStatusData === "all" ? true : false
         }
-        const url = process.env.REACT_APP_API_URL + `/paymentin/get?page=${activePage}&limit=${dataLimit}`;
+        const url = process.env.REACT_APP_API_URL + `/deliverychalan/get?page=${activePage}&limit=${dataLimit}`;
         const req = await fetch(url, {
           method: "POST",
           headers: {
@@ -123,13 +122,13 @@ const PaymentIn = () => {
       copyTable("listQuotation"); // Pass tableid
     }
     else if (whichType === "excel") {
-      downloadExcel(exportData, 'payment-in.xlsx') // Pass data and filename
+      downloadExcel(exportData, 'delivery-chalan.xlsx') // Pass data and filename
     }
     else if (whichType === "print") {
-      printTable(tableRef, "Payment In List"); // Pass table ref and title
+      printTable(tableRef, "Delivery chalan List"); // Pass table ref and title
     }
     else if (whichType === "pdf") {
-      let document = exportPdf('Payment In List', exportData);
+      let document = exportPdf('Delivery chalan List', exportData);
       downloadPdf(document)
     }
   }
@@ -138,7 +137,7 @@ const PaymentIn = () => {
     if (selected.length === 0 || tableStatusData !== 'active') {
       return;
     }
-    const url = process.env.REACT_APP_API_URL + "/paymentin/delete";
+    const url = process.env.REACT_APP_API_URL + "/deliverychalan/delete";
     try {
       const req = await fetch(url, {
         method: "DELETE",
@@ -173,7 +172,7 @@ const PaymentIn = () => {
       return;
     }
 
-    const url = process.env.REACT_APP_API_URL + "/paymentin/restore";
+    const url = process.env.REACT_APP_API_URL + "/deliverychalan/restore";
     try {
       const req = await fetch(url, {
         method: "POST",
@@ -206,10 +205,15 @@ const PaymentIn = () => {
 
   return (
     <>
-      <Nav title={"Payment in"} />
+      <Nav title={"Delivery Chalan"} />
       <main id='main'>
         <SideNav />
         <div className='content__body'>
+          {/* <MyBreadCrumb title={"Quotation"} links={[
+            { name: "Quotation ", link: "/admin/quatation" },
+            { name: "Estimate", link: "/admin/quatation" },
+            { name: "All list", link: null }
+          ]} /> */}
 
           <div className='content__body__main bg-white'>
             {/* First Row */}
@@ -247,7 +251,7 @@ const PaymentIn = () => {
 
             {/* Second Row */}
             <div className='list_buttons'>
-              <button className='bg-teal-500 hover:bg-teal-400' onClick={() => navigate('/admin/payment-in/add')}>
+              <button className='bg-teal-500 hover:bg-teal-400' onClick={() => navigate('/admin/delivery-chalan/add')}>
                 <MdAdd className='text-lg' />
                 Add New
               </button>
@@ -281,9 +285,10 @@ const PaymentIn = () => {
                       <input type='checkbox' onChange={selectAll} checked={billData.length > 0 && selected.length === billData.length} />
                     </th>
                     <th className='py-2 px-4 border-b'>Date</th>
-                    <th className='py-2 px-4 border-b'>Payment In Number</th>
+                    <th className='py-2 px-4 border-b'>Delivery Chalan Number</th>
                     <th className='py-2 px-4 border-b'>Party Name</th>
-                    <th className='py-2 px-4 border-b'>Amount</th>
+                    <th className='py-2 px-4 border-b'>Valid To</th>
+                    <th className='py-2 px-4 border-b'>Status</th>
                     <th className='py-2 px-4 border-b'>Action</th>
                   </tr>
                 </thead>
@@ -294,17 +299,26 @@ const PaymentIn = () => {
                         <td className='py-2 px-4 border-b max-w-[10px]'>
                           <input type='checkbox' checked={selected.includes(data._id)} onChange={() => handleCheckboxChange(data._id)} />
                         </td>
-                        <td className='px-4 border-b' align='center'>{data.paymentInDate}</td>
-                        <td className='px-4 border-b' align='center'>{data.paymentInNumber}</td>
+                        <td className='px-4 border-b' align='center'>{data.chalanDate}</td>
+                        <td className='px-4 border-b' align='center'>{data.chalanNumber}</td>
                         <td className='px-4 border-b' align='center'>{data.party.name}</td>
-                        <td className='px-4 border-b' align='center'>{data.amount}</td>
-                        <td className='px-4 border-b max-w-[90px]' align='center'>
-                          <div className='flex flex-col md:flex-row gap-2 mr-2 justify-center'>
+                        <td className='px-4 border-b' align='center'>{data.validDate}</td>
+                        <td className='px-4 border-b max-w-[20px]' align='center'>
+                          <span className='bg-green-500 px-2 text-white rounded-lg text-[12px] font-bold'>
+                            {new Date(Date.parse(new Date().toLocaleDateString())).toISOString() > new Date(Date.parse(data.validDate)).toISOString() ? "Expired" : "Valid"}
+                          </span>
+                        </td>
+                        <td className='px-4 border-b max-w-[70px]'>
+                          <div className='flex flex-col md:flex-row gap-2 mr-2'>
                             <button
-                              title='Edit '
-                              onClick={() => navigate(`/admin/payment-in/edit/${data._id}`)}
-                              className='bg-blue-400 text-white px-2 py-1 rounded w-[35px] text-[16px] felx justify-center'>
+                              onClick={() => navigate(`/admin/delivery-chalan/edit/${data._id}`)}
+                              className='bg-blue-400 text-white px-2 py-1 rounded w-full text-[16px]'>
                               <MdEditSquare />
+                            </button>
+                            <button
+                              onClick={() => navigate(`/admin/bill/details/${data._id}`)}
+                              className='bg-red-500 text-white px-2 py-1 rounded w-full text-lg'>
+                              <IoInformationCircle />
                             </button>
                           </div>
                         </td>
@@ -315,7 +329,7 @@ const PaymentIn = () => {
               </table>
               <p className='py-4'>Showing {billData.length} of {totalData} entries</p>
               {/* ----- Paginatin ----- */}
-              <div className='flex justify-end gap-2 pb-3'>
+              <div className='flex justify-end gap-2'>
                 {
                   activePage > 1 ? <div
                     onClick={() => setActivePage(activePage - 1)}
@@ -352,5 +366,4 @@ const PaymentIn = () => {
   )
 }
 
-export default PaymentIn;
-
+export default DeliveryChalan;

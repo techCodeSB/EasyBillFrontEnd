@@ -83,3 +83,10 @@ ol, ul{
 .rs-popover {
   padding: 8px !important;
 }
+
+.rs-modal-content{
+  background-color: #eff1f1 !important;
+}
+.rs-picker-default .rs-picker-toggle.rs-btn .rs-picker-toggle-indicator .rs-picker-clean{
+  /* display: none; */
+}

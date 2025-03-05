@@ -51,6 +51,10 @@ const SalesInvoice = React.lazy(()=>import("./pages/salesinvoice/SalesInvoice"))
 const AddSalesInvoice = React.lazy(()=>import("./pages/salesinvoice/AddSalesInvoice"));
 const SalesReturn = React.lazy(()=>import("./pages/salesreturn/SalesReturn"));
 const AddSalesReturn = React.lazy(()=>import("./pages/salesreturn/AddSalesReturn"));
+const CreditNote = React.lazy(()=>import("./pages/creditnote/CreditNote"));
+const AddCreditNote = React.lazy(()=>import("./pages/creditnote/AddCreditNote"));
+const DeliveryChalan = React.lazy(()=>import("./pages/deliverychalan/DeliveryChalan"));
+const AddDeliveryChalan = React.lazy(()=>import("./pages/deliverychalan/AddDeliveryChalan"));
 
 
 
@@ -126,11 +130,25 @@ const App = () => {
         <Route path="/admin/sales-return/add" element={<ProtectRoute><AddSalesReturn /></ProtectRoute>} />
         <Route path="/admin/sales-return/edit/:id" element={<ProtectRoute><AddSalesReturn mode={"edit"} /></ProtectRoute>} />
 
+
+        {/* Credit Note route */}
+        <Route path="/admin/credit-note" element={<ProtectRoute><CreditNote /></ProtectRoute>} />
+        <Route path="/admin/credit-note/add" element={<ProtectRoute><AddCreditNote /></ProtectRoute>} />
+        <Route path="/admin/credit-note/edit/:id" element={<ProtectRoute><AddCreditNote mode={"edit"} /></ProtectRoute>} />
+        
+
+        {/* Delivery Chalan route */}
+        <Route path="/admin/delivery-chalan" element={<ProtectRoute><DeliveryChalan /></ProtectRoute>} />
+        <Route path="/admin/delivery-chalan/add" element={<ProtectRoute><AddDeliveryChalan /></ProtectRoute>} />
+        <Route path="/admin/delivery-chalan/edit/:id" element={<ProtectRoute><AddDeliveryChalan mode={"edit"} /></ProtectRoute>} />
+        
         
 
         <Route path="/admin/profile" element={<ProtectRoute><Profile /></ProtectRoute>} />
+
+        {/* Account */}
         <Route path="/admin/account/add" element={<ProtectRoute><AddAccount /></ProtectRoute>} />
-        <Route path="/admin/account/edit" element={<ProtectRoute><AddAccount mode="edit" /></ProtectRoute>} />
+        <Route path="/admin/account/edit/:id" element={<ProtectRoute><AddAccount mode="edit" /></ProtectRoute>} />
         <Route path="admin/account" element={<ProtectRoute><Accounts /></ProtectRoute>} />
 
 
@@ -145,7 +163,7 @@ const App = () => {
         <Route path="admin/unit/add" element={<ProtectRoute>< UnitAdd /></ProtectRoute>} />
         <Route path="admin/unit/edit/:id" element={<ProtectRoute>< UnitAdd mode="edit" /></ProtectRoute>} />
 
-        <Route path="/admin/account" element={<ProtectRoute><Accounts /></ProtectRoute>} />
+
         <Route path="/admin/other-transaction/add" element={<ProtectRoute><TransactionAdd /></ProtectRoute>} />
         <Route path="/admin/other-transaction/edit" element={<ProtectRoute><TransactionAdd mode="edit" /></ProtectRoute>} />
         <Route path="/admin/other-transaction" element={<ProtectRoute><Transaction /></ProtectRoute>} />

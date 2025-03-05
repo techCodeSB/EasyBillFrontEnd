@@ -84,7 +84,7 @@ const Invoice = () => {
         <SideNav />
         <div className="content__body">
           <div id='invoice' className='content__body__main w-[100%] min-h-[100vh] bg-gray-100 flex justify-center'>
-            <div className='bg-white w-[190mm] h-[100vh] p-5'>
+            <div className='bg-white w-[190mm]  p-5'>
               {/* Action buttons */}
               <div id='invoiceBtn' className='flex gap-2 w-full justify-end'>
                 <button

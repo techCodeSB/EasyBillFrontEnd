@@ -287,7 +287,7 @@ const Proforma = () => {
                                             <input type='checkbox' onChange={selectAll} checked={billData.length > 0 && selected.length === billData.length} />
                                         </th>
                                         <th className='py-2 px-4 border-b'>Date</th>
-                                        <th className='py-2 px-4 border-b'>Quotation / Estimate Number</th>
+                                        <th className='py-2 px-4 border-b'>Proforma Number</th>
                                         <th className='py-2 px-4 border-b'>Party Name</th>
                                         <th className='py-2 px-4 border-b'>Valid To</th>
                                         <th className='py-2 px-4 border-b'>Status</th>
@@ -310,7 +310,7 @@ const Proforma = () => {
                                                         {new Date(Date.parse(new Date().toLocaleDateString())).toISOString() > new Date(Date.parse(data.validDate)).toISOString() ? "Expired" : "Valid"}
                                                     </span>
                                                 </td>
-                                                <td className='px-4 border-b max-w-[70px]'>
+                                                <td className='px-4 border-b max-w-[90px]'>
                                                     <div className='flex flex-col md:flex-row gap-2 mr-2'>
                                                         <button
                                                             title='Edit '

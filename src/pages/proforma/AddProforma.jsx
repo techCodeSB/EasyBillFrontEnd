@@ -23,7 +23,7 @@ const Proforma = ({ mode }) => {
   const { getApiData } = useApi();
   const itemRowSet = {
     QuotaionItem: 1, itemName: '', description: '', hsn: '', qun: '1',
-    unit: [], price: '', discountPerAmount: '', discountPerPercentage: '',
+    unit: [], selectedUnit:"", price: '', discountPerAmount: '', discountPerPercentage: '',
     tax: '', taxAmount: '', amount: '', perDiscountType: "", //for checking purpose only
   }
   const additionalRowSet = {
@@ -280,6 +280,7 @@ const Proforma = ({ mode }) => {
 
       item[index].hsn = selectedItem[0].category.hsn;
       item[index].unit = selectedItem[0].unit;
+      item[index].selectedUnit = selectedItem[0].unit[0].unit
       item[index].tax = getTax.gst;
       selectedItem[0].unit.forEach((u, _) => {
         currentUnit.push(u.unit);
@@ -553,10 +554,10 @@ const Proforma = ({ mode }) => {
                         <select className='input-style'
                           onChange={(e) => {
                             let item = [...ItemRows];
-                            item[index].unit = e.target.value;
+                            item[index].selectedUnit = e.target.value;
                             setItemRows(item);
                           }}
-                          value={ItemRows[index].unit}
+                          value={ItemRows[index].selectedUnit}
                         >
                           {
                             ItemRows[index].unit.map((u, _) => {

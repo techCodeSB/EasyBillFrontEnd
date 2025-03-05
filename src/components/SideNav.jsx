@@ -64,13 +64,13 @@ const SideNav = () => {
       {
         name: 'Credit Note',
         icon: <PiComputerTowerThin />,
-        link: '/admin/dashboard',
+        link: '/admin/credit-note',
         submenu: null
       },
       {
         name: 'Delivery Challan',
         icon: <PiComputerTowerThin />,
-        link: '/admin/dashboard',
+        link: '/admin/delivery-chalan',
         submenu: null
       },
     ],
