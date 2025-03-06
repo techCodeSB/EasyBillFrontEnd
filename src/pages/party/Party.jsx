@@ -18,6 +18,7 @@ import useMyToaster from '../../hooks/useMyToaster';
 import downloadPdf from '../../helper/downloadPdf';
 import { GrFormNext } from "react-icons/gr";
 import { GrFormPrevious } from "react-icons/gr";
+import { FaBook } from "react-icons/fa6";
 
 
 
@@ -100,7 +101,7 @@ const Party = () => {
       setSelected([]);
     }
   };
-  
+
 
   const handleCheckboxChange = (id) => {
     setSelected((prevSelected) => {
@@ -302,8 +303,10 @@ const Party = () => {
                               className='bg-blue-400 text-white px-2 py-1 rounded w-full text-[16px]'>
                               <MdEditSquare />
                             </button>
-                            <button className='bg-red-500 text-white px-2 py-1 rounded w-full text-lg'>
-                              <IoInformationCircle />
+                            <button
+                              onClick={() => navigate("/admin/party/ladger/" + data._id)}
+                              className='bg-red-500 text-white px-2 py-1 rounded w-full text-lg'>
+                              <FaBook />
                             </button>
                           </div>
                         </td>

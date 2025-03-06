@@ -1,5 +1,5 @@
-import React, { Suspense } from "react";
-import { Routes, Route } from "react-router-dom";
+import React, { Suspense, useEffect } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import { ProtectRoute, UnProtectRoute } from "./components/ProtectRoute";
 
 const Login = React.lazy(() => import("./pages/Auth/Login"));
@@ -37,29 +37,48 @@ const AddPaymentOut = React.lazy(() => import("./pages/paymentout/AddPayment"));
 const AddPaymentIn = React.lazy(() => import("./pages/paymentin/AddPayment"));
 const PaymentIn = React.lazy(() => import("./pages/paymentin/PaymentIn"));
 const PaymentOut = React.lazy(() => import("./pages/paymentout/PaymentOut"));
-const AddProforma = React.lazy(()=>import("./pages/proforma/AddProforma"));
-const Proforma = React.lazy(()=>import("./pages/proforma/Proforma"));
-const Po = React.lazy(()=>import("./pages/po/Po"));
-const AddPo = React.lazy(()=>import("./pages/po/AddPo"));
-const PurchaseInvoice = React.lazy(()=>import("./pages/purchaseinvoice/PurchaseInvoice"));
-const AddPurchaseInvoice = React.lazy(()=>import("./pages/purchaseinvoice/AddPurchaseInvoice"));
-const PurchaseReturn = React.lazy(()=>import("./pages/purchasereturn/PurchaseReturn"));
-const AddPurchaseReturn = React.lazy(()=>import("./pages/purchasereturn/AddPurchaseReturn"));
-const DebitNote = React.lazy(()=>import("./pages/debitnote/DebitNote"));
-const AddDebitNote = React.lazy(()=>import("./pages/debitnote/AddDebitNote"));
-const SalesInvoice = React.lazy(()=>import("./pages/salesinvoice/SalesInvoice"));
-const AddSalesInvoice = React.lazy(()=>import("./pages/salesinvoice/AddSalesInvoice"));
-const SalesReturn = React.lazy(()=>import("./pages/salesreturn/SalesReturn"));
-const AddSalesReturn = React.lazy(()=>import("./pages/salesreturn/AddSalesReturn"));
-const CreditNote = React.lazy(()=>import("./pages/creditnote/CreditNote"));
-const AddCreditNote = React.lazy(()=>import("./pages/creditnote/AddCreditNote"));
-const DeliveryChalan = React.lazy(()=>import("./pages/deliverychalan/DeliveryChalan"));
-const AddDeliveryChalan = React.lazy(()=>import("./pages/deliverychalan/AddDeliveryChalan"));
+const AddProforma = React.lazy(() => import("./pages/proforma/AddProforma"));
+const Proforma = React.lazy(() => import("./pages/proforma/Proforma"));
+const Po = React.lazy(() => import("./pages/po/Po"));
+const AddPo = React.lazy(() => import("./pages/po/AddPo"));
+const PurchaseInvoice = React.lazy(() => import("./pages/purchaseinvoice/PurchaseInvoice"));
+const AddPurchaseInvoice = React.lazy(() => import("./pages/purchaseinvoice/AddPurchaseInvoice"));
+const PurchaseReturn = React.lazy(() => import("./pages/purchasereturn/PurchaseReturn"));
+const AddPurchaseReturn = React.lazy(() => import("./pages/purchasereturn/AddPurchaseReturn"));
+const DebitNote = React.lazy(() => import("./pages/debitnote/DebitNote"));
+const AddDebitNote = React.lazy(() => import("./pages/debitnote/AddDebitNote"));
+const SalesInvoice = React.lazy(() => import("./pages/salesinvoice/SalesInvoice"));
+const AddSalesInvoice = React.lazy(() => import("./pages/salesinvoice/AddSalesInvoice"));
+const SalesReturn = React.lazy(() => import("./pages/salesreturn/SalesReturn"));
+const AddSalesReturn = React.lazy(() => import("./pages/salesreturn/AddSalesReturn"));
+const CreditNote = React.lazy(() => import("./pages/creditnote/CreditNote"));
+const AddCreditNote = React.lazy(() => import("./pages/creditnote/AddCreditNote"));
+const DeliveryChalan = React.lazy(() => import("./pages/deliverychalan/DeliveryChalan"));
+const AddDeliveryChalan = React.lazy(() => import("./pages/deliverychalan/AddDeliveryChalan"));
+const Ladger = React.lazy(()=>import("./pages/party/Ladger"));
 
 
 
 
 const App = () => {
+  const navigate = useNavigate();
+
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        navigate(-1); 
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [navigate]);
+
+  
+
   return (
 
     <Suspense fallback={<div className="grid place-items-center w-full min-h-[100vh]">
@@ -98,7 +117,7 @@ const App = () => {
         <Route path="/admin/purchase-order/add" element={<ProtectRoute><AddPo /></ProtectRoute>} />
         <Route path="/admin/purchase-order/edit/:id" element={<ProtectRoute><AddPo mode={"edit"} /></ProtectRoute>} />
 
-        
+
         {/* Purchase Invoice route */}
         <Route path="/admin/purchase-invoice" element={<ProtectRoute><PurchaseInvoice /></ProtectRoute>} />
         <Route path="/admin/purchase-invoice/add/" element={<ProtectRoute><AddPurchaseInvoice /></ProtectRoute>} />
@@ -135,14 +154,14 @@ const App = () => {
         <Route path="/admin/credit-note" element={<ProtectRoute><CreditNote /></ProtectRoute>} />
         <Route path="/admin/credit-note/add" element={<ProtectRoute><AddCreditNote /></ProtectRoute>} />
         <Route path="/admin/credit-note/edit/:id" element={<ProtectRoute><AddCreditNote mode={"edit"} /></ProtectRoute>} />
-        
+
 
         {/* Delivery Chalan route */}
         <Route path="/admin/delivery-chalan" element={<ProtectRoute><DeliveryChalan /></ProtectRoute>} />
         <Route path="/admin/delivery-chalan/add" element={<ProtectRoute><AddDeliveryChalan /></ProtectRoute>} />
         <Route path="/admin/delivery-chalan/edit/:id" element={<ProtectRoute><AddDeliveryChalan mode={"edit"} /></ProtectRoute>} />
-        
-        
+
+
 
         <Route path="/admin/profile" element={<ProtectRoute><Profile /></ProtectRoute>} />
 
@@ -155,6 +174,7 @@ const App = () => {
         <Route path="/admin/party" element={<ProtectRoute><Party /></ProtectRoute>} />
         <Route path="/admin/party/add" element={<ProtectRoute><AddParty /></ProtectRoute>} />
         <Route path="/admin/party/edit/:id" element={<ProtectRoute><AddParty mode={"edit"} /></ProtectRoute>} />
+        <Route path="/admin/party/ladger/:id" element={<ProtectRoute><Ladger /></ProtectRoute>} />
 
         <Route path="admin/other-transaction/add" element={<ProtectRoute><TransactionAdd /></ProtectRoute>} />
         <Route path="admin/other-transaction" element={<ProtectRoute><Transaction /></ProtectRoute>} />

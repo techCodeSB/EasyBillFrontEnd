@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import Nav from '../../components/Nav';
 import SideNav from '../../components/SideNav';
-import { Pagination } from 'rsuite';
 import { BiPrinter } from "react-icons/bi";
 import { FaRegCopy } from "react-icons/fa";
 import { MdEditSquare } from "react-icons/md";
@@ -14,14 +13,17 @@ import { MdOutlineRestorePage } from "react-icons/md";
 import { MdDeleteOutline } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import useExportTable from '../../hooks/useExportTable';
-import useMyToaster from '../../hooks/useMyToaster';
 import Cookies from 'js-cookie';
+import useMyToaster from '../../hooks/useMyToaster';
 import downloadPdf from '../../helper/downloadPdf';
-import { GrFormNext, GrFormPrevious } from 'react-icons/gr';
+import { GrFormNext } from "react-icons/gr";
+import { GrFormPrevious } from "react-icons/gr";
 
 
-document.title = "Items"
-const Item = ({ mode }) => {
+
+
+document.title = "Ladger";
+const Ladger = () => {
   const toast = useMyToaster();
   const { copyTable, downloadExcel, printTable, exportPdf } = useExportTable();
   const [activePage, setActivePage] = useState(1);
@@ -29,28 +31,28 @@ const Item = ({ mode }) => {
   const [totalData, setTotalData] = useState()
   const [selected, setSelected] = useState([]);
   const navigate = useNavigate();
-  const [tableStatusData, setTableStatusData] = useState('active');
-  const [itemData, setItemData] = useState([]);
+  const [partyData, setPartyData] = useState([]);
   const tableRef = useRef(null);
+  const [tableStatusData, setTableStatusData] = useState('active');
   const exportData = useMemo(() => {
-    return itemData && itemData.map(({ title, category }, _) => ({
-      Title: title,
-      HSN: category.hsn
+    return partyData && partyData.map(({ name, type, openingBalance }) => ({
+      Name: name,
+      Type: type,
+      OpeningBalance: openingBalance,
     }));
-  }, [itemData]);
-
+  }, [partyData]);
 
 
   // Get data;
   useEffect(() => {
-    const getCategory = async () => {
+    const getParty = async () => {
       try {
         const data = {
           token: Cookies.get("token"),
           trash: tableStatusData === "trash" ? true : false,
           all: tableStatusData === "all" ? true : false
         }
-        const url = process.env.REACT_APP_API_URL + `/item/get?page=${activePage}&limit=${dataLimit}`;
+        const url = process.env.REACT_APP_API_URL + `/party/get?page=${activePage}&limit=${dataLimit}`;
         const req = await fetch(url, {
           method: "POST",
           headers: {
@@ -60,20 +62,20 @@ const Item = ({ mode }) => {
         });
         const res = await req.json();
         setTotalData(res.totalData)
-        setItemData([...res.data])
-        console.log(res.data)
+        setPartyData([...res.data])
 
       } catch (error) {
         console.log(error)
       }
     }
-    getCategory();
+    getParty();
   }, [tableStatusData, dataLimit, activePage])
+
+
 
   const searchTable = (e) => {
     const value = e.target.value.toLowerCase();
     const rows = document.querySelectorAll('.list__table tbody tr');
-
     rows.forEach(row => {
       const cols = row.querySelectorAll('td');
       let found = false;
@@ -90,13 +92,15 @@ const Item = ({ mode }) => {
     });
   }
 
+
   const selectAll = (e) => {
     if (e.target.checked) {
-      setSelected(itemData.map((item, _) => item._id));
+      setSelected(partyData.map(party => party._id));
     } else {
       setSelected([]);
     }
   };
+
 
   const handleCheckboxChange = (id) => {
     setSelected((prevSelected) => {
@@ -111,16 +115,16 @@ const Item = ({ mode }) => {
 
   const exportTable = async (whichType) => {
     if (whichType === "copy") {
-      copyTable("itemTable"); // Pass tableid
+      copyTable("listOfPartys"); // Pass tableid
     }
     else if (whichType === "excel") {
-      downloadExcel(exportData, 'item-list.xlsx') // Pass data and filename
+      downloadExcel(exportData, 'party-list.xlsx') // Pass data and filename
     }
     else if (whichType === "print") {
-      printTable(tableRef, "Item List"); // Pass table ref and title
+      printTable(tableRef, "Party List"); // Pass table ref and title
     }
     else if (whichType === "pdf") {
-      let document = exportPdf('Item List', exportData);
+      let document = exportPdf('Party List', exportData);
       downloadPdf(document)
     }
   }
@@ -130,7 +134,7 @@ const Item = ({ mode }) => {
     if (selected.length === 0 || tableStatusData !== 'active') {
       return;
     }
-    const url = process.env.REACT_APP_API_URL + "/item/delete";
+    const url = process.env.REACT_APP_API_URL + "/party/delete";
     try {
       const req = await fetch(url, {
         method: "DELETE",
@@ -146,7 +150,7 @@ const Item = ({ mode }) => {
       }
 
       selected.forEach((id, _) => {
-        setItemData((prevData) => {
+        setPartyData((prevData) => {
           return prevData.filter((data, _) => data._id !== id)
         })
       });
@@ -160,12 +164,13 @@ const Item = ({ mode }) => {
     }
   }
 
+
   const restoreData = async () => {
     if (selected.length === 0 || tableStatusData !== "trash") {
       return;
     }
 
-    const url = process.env.REACT_APP_API_URL + "/item/restore";
+    const url = process.env.REACT_APP_API_URL + "/party/restore";
     try {
       const req = await fetch(url, {
         method: "POST",
@@ -181,7 +186,7 @@ const Item = ({ mode }) => {
       }
 
       selected.forEach((id, _) => {
-        setItemData((prevData) => {
+        setPartyData((prevData) => {
           return prevData.filter((data, _) => data._id !== id)
         })
       });
@@ -195,12 +200,16 @@ const Item = ({ mode }) => {
   }
 
 
+
   return (
     <>
-      <Nav title={"Item"} />
-      <main id='main'>
+      <Nav title={"Party"} />
+      <main id='main' >
         <SideNav />
-        <div className='content__body'>
+        {/* <PDFViewer width={'100%'}>
+          {exportPdf("Party List", exportData)}
+        </PDFViewer> */}
+        <div className="content__body">
           <div className='content__body__main bg-white'>
             {/* First Row */}
             <div className='flex justify-between items-center flex-col lg:flex-row gap-4'>
@@ -215,17 +224,17 @@ const Item = ({ mode }) => {
                   </select>
                 </div>
                 <div className='list__icons'>
-                  <div className='list__icon' title='Print' onClick={() => exportTable('print')}>
-                    <BiPrinter className='text-white text-[16px]' />
+                  <div className='list__icon' title='Print'>
+                    <BiPrinter className='text-white text-[16px]' onClick={() => exportTable('print')} />
                   </div>
-                  <div className='list__icon' title='Copy' onClick={() => exportTable('copy')}>
-                    <FaRegCopy className='text-white text-[16px]' />
+                  <div className='list__icon' title='Copy'>
+                    <FaRegCopy className='text-white text-[16px]' onClick={() => exportTable('copy')} />
                   </div>
                   <div className='list__icon' title='PDF' onClick={() => exportTable('pdf')}>
-                    <FaRegFilePdf className='text-white text-[16px]' />
+                    <FaRegFilePdf className="text-white text-[16px]" />
                   </div>
-                  <div className='list__icon' title='Excel' onClick={() => exportTable('excel')}>
-                    <FaRegFileExcel className='text-white text-[16px]' />
+                  <div className='list__icon' title='Excel'>
+                    <FaRegFileExcel className='text-white text-[16px]' onClick={() => exportTable('excel')} />
                   </div>
                 </div>
               </div>
@@ -235,85 +244,50 @@ const Item = ({ mode }) => {
               </div>
             </div>
 
-            {/* Second Row */}
-            <div className='list_buttons'>
-              <button className='bg-teal-500 hover:bg-teal-400' onClick={() => navigate('/admin/item/add')}>
-                <MdAdd className='text-lg' />
-                Add New
-              </button>
-              <button className='bg-orange-400 hover:bg-orange-300' onClick={() => removeData(true)}>
-                <MdOutlineCancel className='text-lg' />
-                Trash
-              </button>
-              <button className='bg-green-500 hover:bg-green-400' onClick={restoreData}>
-                <MdOutlineRestorePage className='text-lg' />
-                Restore
-              </button>
-              <button className='bg-red-600 hover:bg-red-500' onClick={() => removeData(false)}>
-                <MdDeleteOutline className='text-lg' />
-                Delete
-              </button>
-              <select value={tableStatusData}
-                onChange={(e) => setTableStatusData(e.target.value)}
-                className='bg-blue-500 text-white'>
-                <option value="all">All</option>
-                <option value="active">Active</option>
-                <option value="trash">Trash</option>
-              </select>
-            </div>
-
             {/* Table start */}
             <div className='overflow-x-auto mt-5 list__table'>
-              <table className='min-w-full bg-white' id='itemTable' ref={tableRef}>
+              <table className='min-w-full bg-white' id='listOfPartys' ref={tableRef}>
                 <thead className='bg-gray-100'>
                   <tr>
                     <th className='py-2 px-4 border-b w-[50px]'>
-                      <input type='checkbox' onChange={selectAll} checked={itemData.length > 0 && selected.length === itemData.length} />
+                      <input type='checkbox' onChange={selectAll} checked={partyData.length > 0 && selected.length === partyData.length} />
                     </th>
-                    <th className='py-2 px-4 border-b '>Title</th>
-                    <th className='py-2 px-4 border-b '>HSN</th>
-                    <th className='py-2 px-4 border-b '>STOCK</th>
-                    <th className='py-2 px-4 border-b w-[100px]'>Action</th>
+                    <th className='py-2 px-4 border-b'>Date</th>
+                    <th className='py-2 px-4 border-b'>Purpose</th>
+                    <th className='py-2 px-4 border-b'>Transaction No</th>
+                    <th className='py-2 px-4 border-b w-[100px]'>Remark</th>
+                    <th className='py-2 px-4 border-b w-[100px]'>Debit</th>
+                    <th className='py-2 px-4 border-b w-[100px]'>Credit</th>
                   </tr>
                 </thead>
-                <tbody>
+                {/* <tbody>
                   {
-                    itemData.map((data, i) => {
+                    partyData.map((data, i) => {
                       return <tr key={i}>
-                        <td className='py-2 px-4 border-b max-w-[10px]'>
+                        <td className='py-2 px-4 border-b'>
                           <input type='checkbox' checked={selected.includes(data._id)} onChange={() => handleCheckboxChange(data._id)} />
                         </td>
-                        <td className='px-4 border-b'>{data.title}</td>
-                        <td className='px-4 border-b' align='center'>{data.category.hsn}</td>
-                        <td className='px-4 border-b' align='center'>
-                          <div className='flex items-center justify-center gap-2'>
-                            {
-                              data.stock.map((stock, _) => {
-                                return stock.stock !== "" ? <p key={_}>
-                                  {stock.stock} <sub className='font-bold'>{stock.unit}</sub>
-                                </p> : "";
-                              })
-                            }
-                          </div>
-                        </td>
-
-                        <td className='px-4 border-b min-w-[70px]' align='center'>
-                          <div className='flex justify-center flex-col md:flex-row gap-2 mr-2'>
-                            <button className='bg-blue-400 text-white px-2 py-1 rounded  text-[16px]'
-                              onClick={() => navigate(`/admin/item/edit/${data._id}`)}>
+                        <td className='px-4 border-b'>{data.name}</td>
+                        <td className='px-4 border-b'>{data.type}</td>
+                        <td className='px-4 border-b'>{data.openingBalance}</td>
+                        <td className='px-4 border-b'>
+                          <div className='flex flex-col md:flex-row gap-2 mr-2'>
+                            <button
+                              onClick={() => navigate("/admin/party/edit/" + data._id)}
+                              className='bg-blue-400 text-white px-2 py-1 rounded w-full text-[16px]'>
                               <MdEditSquare />
                             </button>
-                            {/* <button className='bg-red-500 text-white px-2 py-1 rounded  text-lg'>
+                            <button className='bg-red-500 text-white px-2 py-1 rounded w-full text-lg'>
                               <IoInformationCircle />
-                            </button> */}
+                            </button>
                           </div>
                         </td>
                       </tr>
                     })
                   }
-                </tbody>
+                </tbody> */}
               </table>
-              <p className='py-4'>Showing {itemData.length} of {totalData} entries</p>
+              <p className='py-4'>Showing {partyData.length} of {totalData} entries</p>
               {/* ----- Paginatin ----- */}
               <div className='flex justify-end gap-2'>
                 {
@@ -346,9 +320,10 @@ const Item = ({ mode }) => {
             </div>
           </div>
         </div>
-      </main>
+      </main >
     </>
   )
 }
 
-export default Item
+export default Ladger;
+
