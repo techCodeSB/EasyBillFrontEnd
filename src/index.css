@@ -66,6 +66,9 @@ h6 {
 }
 
 /* Sidenav */
+.logo__area{
+  transition: 0.3s all;
+}
 .side__nav {
   transition: 0.3s all;
   overflow-y: auto;
@@ -91,6 +94,8 @@ h6 {
 
 .side__nav__links a {
   color: white;
+  text-decoration: none;
+
 }
 
 .side__nav__links a:hover,

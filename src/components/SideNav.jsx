@@ -3,6 +3,8 @@ import { HiOutlineHome } from "react-icons/hi2";
 // import { FaEarthAmericas } from "react-icons/fa6";
 // import { PiComputerTowerThin } from "react-icons/ci";
 import { PiComputerTowerThin } from "react-icons/pi";
+import { IoIosArrowForward } from "react-icons/io";
+
 
 import { IoSettingsOutline } from "react-icons/io5";
 import { TbUsersGroup } from "react-icons/tb";
@@ -14,6 +16,7 @@ import { Popover, Whisper } from 'rsuite';
 
 
 const SideNav = () => {
+  const [sideBar, setSideBar] = useState(true);
   const isSideBarOpen = localStorage.getItem("sideBarOpenStatus");
   const links = {
     "main": [
@@ -185,11 +188,42 @@ const SideNav = () => {
     })
   };
 
+  const toggleSideBar = () => {
+    // setSideBar((prev) => {
+    //   document.querySelector("#sideBar").style.marginLeft = prev ? "-250px" : "0px";
+    //   return !prev;
+    // });
+    convertToSmall();
+  }
+
+  const convertToSmall = () => {
+    setSideBar((prev) => {
+      const sideBar = document.querySelector("#sideBar");
+      prev ? localStorage.setItem("sideBarOpenStatus", false) : localStorage.setItem("sideBarOpenStatus", true);
+
+      sideBar.style.minWidth = prev ? "50px" : "175px";
+      sideBar.querySelectorAll("li").forEach(e => e.style.borderRadius = prev ? "0px" : "20px");
+      sideBar.querySelectorAll("li span:nth-child(2), li span:nth-child(3), h3").forEach(e => e.style.display = prev ? "none" : "");
+      sideBar.querySelectorAll("li .sub-menu").forEach(e => e.style.display = prev ? "none" : "");
+      sideBar.querySelectorAll("ul a, ul li").forEach(item => {
+        item.setAttribute("data-tooltip-content", prev ? item.querySelector("span:nth-child(2)").innerText : "");
+      });
+      sideBar.querySelectorAll("li svg").forEach(e => e.style.fontSize = prev ? "18px" : "14px");
+
+      document.querySelector("#toggler").style.transform = prev ? "rotate(180deg)" : "rotate(0deg)";
+      document.querySelector(".logo__area").style.width = prev ? "50px" : "175px";
+      document.querySelector("#NavLogo").style.width = prev ? "140px" : "70px";
+
+
+      return !prev;
+    })
+  }
+
   return (
-    <aside className='side__nav min-w-[175px] h-[calc(100vh-50px)] bg-[#003e32] text-white' id='sideBar'>
+    <aside className='side__nav  min-w-[175px] h-[calc(100vh-50px)] bg-[#003e32] text-white' id='sideBar'>
       <div className="side__nav__logo flex justify-center items-center">
       </div>
-      <div className="side__nav__links">
+      <div className="side__nav__links pb-3">
         <div className="side__nav__link__group">
           <ul>
             {links.main.map((link, index) => (
@@ -377,6 +411,13 @@ const SideNav = () => {
         </div>
       </div>
       <Tooltip id='sideBarItemToolTip' />
+      {/* <div
+        onClick={toggleSideBar}
+        className='cursor-pointer flex justify-center items-center p-2 text-center bg-[#003628] w-full sticky bottom-0 text-xl'>
+        <IoIosArrowForward
+          className='transition-all'
+          id='toggler' />
+      </div> */}
     </aside>
   );
 }

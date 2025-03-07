@@ -23,7 +23,7 @@ const PurchaseInvoice = ({ mode }) => {
   const { getApiData } = useApi();
   const itemRowSet = {
     rowItem: 1, itemName: '', description: '', hsn: '', qun: '1', itemId: '',
-    unit: [], selectedUnit:"", price: '', discountPerAmount: '', discountPerPercentage: '',
+    unit: [], selectedUnit: "", price: '', discountPerAmount: '', discountPerPercentage: '',
     tax: '', taxAmount: '', amount: '', perDiscountType: "", //for checking purpose only
   }
   const additionalRowSet = {
@@ -34,7 +34,7 @@ const PurchaseInvoice = ({ mode }) => {
   const [formData, setFormData] = useState({
     party: '', purchaseInvoiceNumber: '', originalInvoiceNumber: '', estimateData: '', validDate: '',
     items: ItemRows, additionalCharge: additionalRows, note: '', terms: '',
-    discountType: '', discountAmount: '', discountPercentage: '',
+    discountType: '', discountAmount: '', discountPercentage: '', paymentStatus: '0', finalAmount: '',
   })
 
   const [perPrice, setPerPrice] = useState(null);
@@ -53,6 +53,8 @@ const PurchaseInvoice = ({ mode }) => {
   const [tax, setTax] = useState([]);
   // Store party
   const [party, setParty] = useState([]);
+  // Account
+  const [account, setAccount] = useState([])
 
 
   // store label and value pair for dropdown
@@ -98,7 +100,6 @@ const PurchaseInvoice = ({ mode }) => {
       {
         const data = await getApiData("item");
         setItems([...data.data]);
-        console.log(data.data);
 
         const newItemData = data.data.map(d => ({ label: d.title, value: d.title }));
         setItemData(newItemData);
@@ -118,6 +119,10 @@ const PurchaseInvoice = ({ mode }) => {
         const data = await getApiData("party");
         const party = data.data.map(d => ({ label: d.name, value: d._id }));
         setParty([...party]);
+      }
+      {
+        const data = await getApiData("account")
+        setAccount([...data.data])
       }
     }
 
@@ -338,6 +343,14 @@ const PurchaseInvoice = ({ mode }) => {
 
   }
 
+  useEffect(() => {
+    const finalAmount = calculateFinalAmount();
+    setFormData((prevData) => ({
+      ...prevData,
+      finalAmount
+    }));
+  }, [ItemRows, additionalRows]);
+
 
 
   // Return Sub-Total
@@ -435,7 +448,7 @@ const PurchaseInvoice = ({ mode }) => {
     setAdditionalRow([additionalRowSet])
     setFormData({
       party: '', purchaseInvoiceNumber: getBillPrefix, estimateData: '', validDate: '', items: ItemRows,
-      additionalCharge: additionalRows, note: '', terms: '',
+      additionalCharge: additionalRows, note: '', terms: '', paymentStatus: '',
       discountType: '', discountAmount: '', discountPercentage: '', originalInvoiceNumber: ''
     });
 
@@ -790,6 +803,34 @@ const PurchaseInvoice = ({ mode }) => {
                     onChange={(e) => setFormData({ ...formData, terms: e.target.value })}
                     value={formData.terms}
                   />
+                </div>
+                <div>
+                  <p>Payment Status:</p>
+                  <select name="" id=""
+                    onChange={(e) => {
+                      setFormData({ ...formData, paymentStatus: e.target.value })
+                    }}
+                    value={formData.paymentStatus}
+                  >
+                    <option value="0">Not Paid</option>
+                    <option value="1">Paid</option>
+                  </select>
+                </div>
+                <div>
+                  <p>Select Account:</p>
+                  <select
+                    onChange={(e) => {
+                      setFormData({ ...formData, paymentAccount: e.target.value })
+                    }}
+                    value={formData.paymentAccount}
+                  >
+                    <option value="">--Select Account--</option>
+                    {
+                      account.map((a, _) => {
+                        return <option value={a._id} key={_}>{a.title}</option>
+                      })
+                    }
+                  </select>
                 </div>
               </div>
               <div className='w-full'>

@@ -67,7 +67,7 @@ const Nav = ({ title }) => {
       <nav className='w-full text-white h-[50px] bg-white shadow-lg flex justify-between'>
         <div className="logo__area w-[175px]  h-[100%] bg-[#003628] px-3 flex justify-between items-center">
           {/* <div className='nav__logo bg-[#003e32] w-[90px] rounded-md'> */}
-            <img src={Logo} alt="" width={70} className='shadow-lg' />
+          <img src={Logo} alt="" width={70} className='shadow-lg' id='NavLogo' />
           {/* </div> */}
           <TbMenuDeep className='text-white text-xl cursor-pointer' onClick={toggleSideBar} />
         </div>

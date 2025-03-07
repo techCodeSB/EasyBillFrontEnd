@@ -170,7 +170,7 @@ const PurchaseInvoice = () => {
             toast("Something went wrong", "error")
         }
     }
-    
+
 
     const restoreData = async () => {
         if (selected.length === 0 || tableStatusData !== "trash") {
@@ -310,16 +310,18 @@ const PurchaseInvoice = () => {
                                                 <td className='px-4 border-b' align='center'>{data.originalInvoiceNumber}</td>
                                                 <td className='px-4 border-b' align='center'>{data.party.name}</td>
                                                 <td className='px-4 border-b' align='center'>{data.validDate}</td>
-                                                <td className='px-4 border-b max-w-[20px]' align='center'>
-                                                    <span className='bg-green-500 px-2 text-white rounded-lg text-[12px] font-bold'>
-                                                        {new Date(Date.parse(new Date().toLocaleDateString())).toISOString() > new Date(Date.parse(data.validDate)).toISOString() ? "Expired" : "Valid"}
+                                                <td className='px-4 border-b max-w-[150px]' align='center'>
+                                                    <span className={`${data.paymentStatus === "1" ? 'bg-green-500' : 'bg-red-500'} px-2 text-white rounded-lg text-[11px] font-bold`}>
+                                                        {data.paymentStatus === "1" ? "Paid" : "Not Paid"}
                                                     </span>
                                                 </td>
                                                 <td className='px-4 border-b max-w-[70px]'>
                                                     <div className='flex flex-col md:flex-row gap-2 mr-2'>
                                                         <button
                                                             title='Edit'
-                                                            onClick={() => navigate(`/admin/purchase-invoice/edit/${data._id}`)}
+                                                            onClick={
+                                                                data.paymentStatus === "0" ? () => navigate(`/admin/purchase-invoice/edit/${data._id}`) : null
+                                                            }
                                                             className='bg-blue-400 text-white px-2 py-1 rounded w-full text-[16px]'>
                                                             <MdEditSquare />
                                                         </button>
