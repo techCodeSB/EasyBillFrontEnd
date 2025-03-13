@@ -854,7 +854,7 @@ const Proforma = ({ mode }) => {
                 onClick={saveBill}
                 className='add-bill-btn'>
                 <FaRegCheckCircle />
-                {!mode ? "Save" : "Upadte"}
+                {!mode ? "Save" : "Update"}
               </button>
               <button className='reset-bill-btn' onClick={clearForm}>
                 <BiReset />

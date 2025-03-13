@@ -838,7 +838,7 @@ const SalesReturn = ({ mode }) => {
                 onClick={saveBill}
                 className='add-bill-btn'>
                 <FaRegCheckCircle />
-                {!mode || mode === "convert" ? "Save" : "Upadte"}
+                {!mode || mode === "convert" ? "Save" : "Update"}
               </button>
               <button className='reset-bill-btn' onClick={clearForm}>
                 <BiReset />

@@ -324,7 +324,7 @@ const SalesInvoice = () => {
                             </button>
                             <button
                               title='Details'
-                              onClick={() => navigate(`/admin/bill/details/${data._id}`)}
+                              onClick={() => navigate(`/admin/bill/details/salesinvoice/${data._id}`)}
                               className='bg-red-500 text-white px-2 py-1 rounded w-full text-lg'>
                               <IoInformationCircle />
                             </button>

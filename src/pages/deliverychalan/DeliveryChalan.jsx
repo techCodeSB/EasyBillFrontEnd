@@ -316,7 +316,7 @@ const DeliveryChalan = () => {
                               <MdEditSquare />
                             </button>
                             <button
-                              onClick={() => navigate(`/admin/bill/details/${data._id}`)}
+                              onClick={() => navigate(`/admin/bill/details/deliverychalan/${data._id}`)}
                               className='bg-red-500 text-white px-2 py-1 rounded w-full text-lg'>
                               <IoInformationCircle />
                             </button>

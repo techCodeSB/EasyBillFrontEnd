@@ -311,7 +311,7 @@ const CreditNote = () => {
                             </button>
                             <button
                               title='Details'
-                              onClick={() => navigate(`/admin/bill/details/${data._id}`)}
+                              onClick={() => navigate(`/admin/bill/details/creditnote/${data._id}`)}
                               className='bg-red-500 text-white px-2 py-1 rounded text-lg flex justify-center w-[40px]'>
                               <IoInformationCircle />
                             </button>

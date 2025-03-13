@@ -98,7 +98,9 @@ const App = () => {
         <Route path="/admin/site" element={<ProtectRoute><Setting /></ProtectRoute>} />
         <Route path="/admin/company" element={<ProtectRoute><AddCompany /></ProtectRoute>} />
         <Route path="admin/dashboard" element={<ProtectRoute><Dashboard /></ProtectRoute>} />
-        <Route path="admin/bill/details/:id" element={<ProtectRoute><Invoice /></ProtectRoute>} />
+
+        {/* Print part */}
+        <Route path="/admin/bill/details/:bill/:id" element={<ProtectRoute><Invoice /></ProtectRoute>} />
 
 
         <Route path="/admin/quotation-estimate" element={<ProtectRoute><Quotation /></ProtectRoute>} />

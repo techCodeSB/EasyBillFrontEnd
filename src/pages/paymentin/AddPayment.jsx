@@ -150,7 +150,7 @@ const AddPayment = ({ mode }) => {
                     value={new Date(formData.paymentInDate)}
                     onChange={(v) => {
                       let date = new Date(v);
-                      setFormData({ ...formData, paymentInDate: date.toDateString() })
+                      setFormData({ ...formData, paymentInDate: date.toLocaleDateString() })
                     }}
                     className='w-full'
                   />

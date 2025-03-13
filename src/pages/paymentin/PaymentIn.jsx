@@ -294,7 +294,7 @@ const PaymentIn = () => {
                         <td className='py-2 px-4 border-b max-w-[10px]'>
                           <input type='checkbox' checked={selected.includes(data._id)} onChange={() => handleCheckboxChange(data._id)} />
                         </td>
-                        <td className='px-4 border-b' align='center'>{data.paymentInDate}</td>
+                        <td className='px-4 border-b' align='center'>{new Date(data.paymentInDate).toLocaleDateString()}</td>
                         <td className='px-4 border-b' align='center'>{data.paymentInNumber}</td>
                         <td className='px-4 border-b' align='center'>{data.party.name}</td>
                         <td className='px-4 border-b' align='center'>{data.amount}</td>
