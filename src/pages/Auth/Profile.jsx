@@ -20,13 +20,15 @@ const Profile = () => {
     name: '', email: '', profile: '', password: ''
   });
   const [cPassword, setCPassword] = useState({ currentPassword: '', newPassword: '' });
-  const userData = useSelector((state) => state.userDetail)
+  const userData = useSelector((state) => state.userDetail);
+  const [visible, setVisible] = useState(1); // 1=profile | 2=password;
+
 
 
   useEffect(() => {
-    const image = Object.keys(userData).length > 0 ? userData.profile.split('\\')[userData.profile.split("\\").length - 1] : "";
+    const image = Object.keys(userData).length > 0 ? userData.profile?.split('\\')[userData.profile.split("\\").length - 1] : "";
     setData({ name: userData.name, email: userData.email, profile: image })
-  }, [userData])
+  }, [userData]);
 
 
   const setFile = async (e) => {
@@ -113,10 +115,18 @@ const Profile = () => {
       <Nav title={"Profile"} />
       <main id="main">
         <SideNav />
-        <div className='content__body '>
-          <div className='content__body__main bg-white' >
-            <p className='font-bold'>Profile details</p>
-            <hr />
+        <div className='content__body'>
+          <div className='flex gap-4 items-center py-4'>
+            <div className={`profile-switch-button ${visible === 1 ? 'profile-switch-button-active' : null}`}
+              onClick={() => setVisible(1)}>
+              Profile details
+            </div>
+            <div className={`profile-switch-button ${visible === 2 ? 'profile-switch-button-active' : null}`}
+              onClick={() => setVisible(2)}>
+              Change password
+            </div>
+          </div>
+          {visible == 1 && <div className='content__body__main' >
             <div className='flex justify-between gap-5  flex-col lg:flex-row'>
               <div className='w-full'>
                 <div>
@@ -171,12 +181,10 @@ const Profile = () => {
                 <button className='p-2'>Back</button>
                 </div> */}
             </div>
-          </div>
+          </div>}
 
           {/* Change password */}
-          <div className='bg-white mt-5 content__body__main'>
-            <p className='font-bold'>Change password</p>
-            <hr />
+          {visible === 2 && <div className='content__body__main'>
             <p className='ml-1 mb-3'> Current password</p>
             <div className='relative  '>
               <input type={currentPasswordField ? "text" : "password"}
@@ -184,7 +192,7 @@ const Profile = () => {
                 value={cPassword.currentPassword} />
               <div className='absolute top-2 right-3' onClick={() => setCurrentPasswordField(!currentPasswordField)} >
 
-                <div className='absolute right-3 cursor-pointer  ' onClick={() => setCurrentPasswordField(!currentPasswordField)} >
+                <div className='absolute right-1 cursor-pointer  ' onClick={() => setCurrentPasswordField(!currentPasswordField)} >
                   {currentPasswordField ? <MdOutlineRemoveRedEye /> : <FaRegEyeSlash />}
                 </div>
               </div>
@@ -196,7 +204,7 @@ const Profile = () => {
                   value={cPassword.newPassword} />
 
                 <div className='absolute top-2 right-3' onClick={() => setNewPasswordField(!newPasswordField)} >
-                  <div className='absolute top-2 right-3  cursor-pointer ' onClick={() => setNewPasswordField(!newPasswordField)} >
+                  <div className='absolute right-1  cursor-pointer ' onClick={() => setNewPasswordField(!newPasswordField)} >
                     {newPasswordField ? <MdOutlineRemoveRedEye /> : <FaRegEyeSlash />}
                   </div>
                 </div>
@@ -212,7 +220,7 @@ const Profile = () => {
                 </div>
               </div >
             </div >
-          </div>
+          </div>}
 
         </div>
       </main >

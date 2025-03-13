@@ -1,7 +1,7 @@
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 import useMyToaster from '../hooks/useMyToaster';
-import { use, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 
 const ProtectRoute = ({ children }) => {

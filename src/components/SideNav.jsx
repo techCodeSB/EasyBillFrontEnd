@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { HiOutlineHome } from "react-icons/hi2";
 // import { FaEarthAmericas } from "react-icons/fa6";
 // import { PiComputerTowerThin } from "react-icons/ci";
@@ -13,12 +13,14 @@ import { Link } from 'react-router-dom';
 // import { IoIosArrowDown } from "react-icons/io";
 import { Tooltip } from 'react-tooltip';
 import { Popover, Whisper } from 'rsuite';
+import { useSelector } from 'react-redux';
 
 
 const SideNav = () => {
+  const userData = useSelector((store) => store.userDetail)
   const [sideBar, setSideBar] = useState(true);
   const isSideBarOpen = localStorage.getItem("sideBarOpenStatus");
-  const links = {
+  const [links, setLinks] = useState({
     "main": [
       {
         name: 'Dashboard',
@@ -174,8 +176,41 @@ const SideNav = () => {
         submenu: null
       },
     ]
-  }
+  })
   const [openSubmenus, setOpenSubmenus] = useState([]);
+
+
+
+  /** if user have not any company so visible only company creation page */
+  // =====================================================================
+  useEffect(() => {
+    let valid = true;
+
+    if(userData.companies && userData.companies.length < 1){
+      valid = false;
+    }else{
+      valid = true;
+    }
+
+    setLinks(prevLinks =>
+      Object.fromEntries(
+        Object.entries(prevLinks).map(([category, items]) => [
+          category,
+          items.map(item => ({
+            ...item,
+            link: !valid ? "/admin/company" : item.link,
+            submenu: item.submenu
+              ? item.submenu.map(sub => ({
+                ...sub,
+                link: !valid ? "/admin/company" : sub.link,
+              }))
+              : null,
+          })),
+        ])
+      )
+    );
+  }, [userData])
+  
 
 
   const toggleSubmenu = (name) => {

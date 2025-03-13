@@ -177,6 +177,7 @@ const App = () => {
         <Route path="/admin/party/ladger/:id" element={<ProtectRoute><Ladger /></ProtectRoute>} />
 
         <Route path="admin/other-transaction/add" element={<ProtectRoute><TransactionAdd /></ProtectRoute>} />
+        <Route path="admin/other-transaction/edit/:id" element={<ProtectRoute><TransactionAdd mode="edit"/></ProtectRoute>} />
         <Route path="admin/other-transaction" element={<ProtectRoute><Transaction /></ProtectRoute>} />
 
         <Route path="/admin/unit" element={<ProtectRoute>< Unit /></ProtectRoute>} />

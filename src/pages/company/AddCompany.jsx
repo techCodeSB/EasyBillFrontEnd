@@ -70,14 +70,42 @@ const AddCompany = () => {
         return toast(res.err, "error")
       }
 
-      console.log(res)
-
       dispatch(addCompany(res));
-      return toast("Company create successfully", 'success')
+      toast("Company create successfully", 'success')
+      switchCompany(res._id);
+      return;
 
     } catch (error) {
       console.log(error)
       return toast("something went wrong", 'error')
+    }
+
+  }
+
+
+  const switchCompany = async (id) => {
+    try {
+      const token = Cookies.get("token");
+      const url = process.env.REACT_APP_API_URL + "/company/switch-company";
+      const req = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ token, companyId: id })
+      })
+      const res = await req.json();
+
+      if (req.status !== 200 || !res.msg) {
+        return toast(res.err, 'error');
+      }
+
+      toast(res.msg, 'success');
+      document.location = "/admin/dashboard";
+
+    } catch (error) {
+      console.log(error);
+      return toast("Something went wrong", 'error')
     }
 
   }

@@ -45,6 +45,7 @@
   border-radius: 5px;
   box-shadow: 0px 0px 5px lightgrey;
   font-size: 13px !important;
+  background-color: white;
 }
 
 h1,
@@ -99,7 +100,7 @@ h6 {
 }
 
 .side__nav__links a:hover,
-.side__nav__links a:focus-within {
+.side__nav__links:focus {
   text-decoration: none;
   /* color: white; */
   color: #003628;
@@ -117,6 +118,7 @@ h6 {
 .side__nav__links li:hover {
   /* background-color: rgb(108, 108, 193); */
   background-color: white;
+  color: #003628;
 }
 
 .side__nav__links li:hover svg {
@@ -300,4 +302,19 @@ select {
 
 #dashboard table th {
   color: #003628 !important;
+}
+
+.profile-switch-button{
+  padding: 5px 10px ;
+  color: black;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 1px solid rgb(0 62 50 / var(--tw-bg-opacity, 1));
+  font-weight: 500;
+}
+.profile-switch-button-active{
+  background-color: rgb(0 62 50 / var(--tw-bg-opacity, 1));
+  color: white;
+  font-weight: normal;
+  border: none;
 }

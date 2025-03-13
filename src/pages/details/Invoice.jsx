@@ -8,6 +8,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import Nav from '../../components/Nav';
 import SideNav from '../../components/SideNav';
+import {toWords} from 'number-to-words'
 
 
 
@@ -17,6 +18,10 @@ const Invoice = () => {
   const { id } = useParams();
   const [billData, setBillData] = useState(null);
   const [companyDetails, setCompanyDetails] = useState(null);
+  const [hsnData, setHsnData] = useState([]);
+  const [billDetails, setBillDetails] = useState({})
+  const [totalAmountInText, setTotalAmountInText] = useState("");
+
 
   const printBill = () => {
     const btnGroup = document.querySelector("#invoiceBtn");
@@ -38,7 +43,6 @@ const Invoice = () => {
         });
         const res = await req.json();
         setBillData(res.data)
-        // console.log(res.data)
         return res;
 
       } catch (error) {
@@ -68,11 +72,75 @@ const Invoice = () => {
       }
     }
 
-
     getCompanyDetails()
     getData();
 
   }, [])
+
+
+  useEffect(() => {
+    let data = [];
+
+    billData && billData.items.forEach((b, _) => {
+      let obj = {};
+
+      obj['hsn'] = b.hsn;
+      obj['rate'] = b.tax;
+
+      if (data.length > 0) {
+        for (let i = 0; i < data.length; i++) {
+          if (obj.hsn == data[i].hsn) {
+            data[i]['price'] += parseInt(b.price);
+            obj['price'] = parseInt(data[i].price);
+
+            data[i]['taxAmount'] += (parseInt(b.qun) * parseInt(b.price)) / 100 * parseInt(b.tax);
+            obj['taxAmount'] = parseInt(data[i]['taxAmount']);
+
+            break;
+          } else {
+            obj['price'] = parseInt(b.price);
+            obj['taxAmount'] = (parseInt(b.qun) * parseInt(b.price)) / 100 * parseInt(b.tax);
+          }
+
+        }
+
+      } else {
+        obj['price'] = parseInt(b.price);
+        obj['taxAmount'] = (parseInt(b.qun) * parseInt(b.price)) / 100 * parseInt(b.tax)
+      }
+
+      data.push(obj)
+    })
+
+    setHsnData([...data]);
+
+  }, [billData]);
+
+
+
+  useEffect(() => {
+    let qun = 0;
+    let taxAmount = 0;
+    let discount = 0;
+    let amount = 0;
+
+    billData && billData.items.map((b, _)=>{
+      qun += parseInt(b.qun)
+      taxAmount += (parseInt(b.qun) * parseInt(b.price)) / 100 * b.tax;
+      discount += parseInt(b.discountPerAmount);
+      
+      let a = ((parseInt(b.qun) * parseInt(b.price)) + (parseInt(b.qun) * parseInt(b.price)) / 100 * b.tax);
+      amount += a - parseInt(b.discountPerAmount)
+
+    })
+
+    setBillDetails({
+      ...billDetails, qun, taxAmount: (taxAmount).toFixed(2), discount, amount: (amount).toFixed(2)
+    })
+
+    setTotalAmountInText(toWords(amount));
+
+  }, [billData])
 
 
 
@@ -192,13 +260,13 @@ const Invoice = () => {
                     }
                   </tbody>
                   <tfoot>
-                    <tr>
+                    <tr className='font-bold'>
                       <td colSpan={3} align='right'>TOTAL</td>
-                      <td>1</td>
+                      <td>{billDetails.qun}</td>
                       <td></td>
-                      <td>INR. 0</td>
-                      <td>INR.84.6</td>
-                      <td>INR. 554.6</td>
+                      <td>INR. {billDetails.discount}</td>
+                      <td>INR. {billDetails.taxAmount}</td>
+                      <td>INR. {billDetails.amount}</td>
                     </tr>
                   </tfoot>
                 </table>
@@ -214,27 +282,25 @@ const Invoice = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {billData &&
-                      billData.items.map((data, i, arr) => {
-                        // Check if the previous item has the same HSN (to avoid duplicate rowspan)
-                        const isFirstOccurrence = i === 0 || arr[i - 1].hsn !== data.hsn;
-
-                        // Count occurrences for rowspan
-                        const rowSpan = isFirstOccurrence
-                          ? arr.filter(item => item.hsn === data.hsn).length
-                          : 0;
-
-                        return (
-                          <tr key={i}>
-                            {/* Apply rowSpan only for the first occurrence of an HSN */}
-                            {isFirstOccurrence && <td rowSpan={rowSpan}>{data.hsn}</td>}
-                            <td>{data.taxType}</td>
-                            <td>{data.rate}</td>
-                            <td>{data.amount}</td>
-                            <td>{data.totalTaxAmount}</td>
+                    {hsnData && (
+                      [...new Map(hsnData.map(item => [item.hsn, item]))].map(([hsn, data], i) => {
+                        return <>
+                          <tr key={`${i}-sgst`}>
+                            <td rowSpan={2}>{data.hsn}</td>
+                            <td>SGST</td>
+                            <td>{data.rate / 2}%</td>
+                            <td>{data.price}</td>
+                            <td>{(data.taxAmount).toFixed(2)}</td>
                           </tr>
-                        );
-                      })}
+                          <tr key={`${i}-cgst`}>
+                            <td>CGST</td>
+                            <td>{data.rate / 2}%</td>
+                            <td>{data.price}</td>
+                            <td>{(data.taxAmount).toFixed(2)}</td>
+                          </tr>
+                        </>
+                      })
+                    )}
                   </tbody>
 
                 </table>
@@ -243,7 +309,8 @@ const Invoice = () => {
                   <div className='w-full border-b border-black'>
                     <p className='text-[12px] p-1'>
                       <span className='font-bold '>Total Amount (in words) : </span>
-                      five hundred and fifty four Rupees .six Paise
+                      {/* five hundred and fifty four Rupees .six Paise */}
+                      {totalAmountInText}
                     </p>
                   </div>
                   <div className='w-full flex'>

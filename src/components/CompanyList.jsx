@@ -28,7 +28,7 @@ const CompanyList = ({ isOpen, getCompanyName }) => {
     });
   }, [companies])
 
-  const switchCompan = async (id) => {
+  const switchCompany = async (id) => {
     try {
       const token = Cookies.get("token");
       const url = process.env.REACT_APP_API_URL + "/company/switch-company";
@@ -65,7 +65,7 @@ const CompanyList = ({ isOpen, getCompanyName }) => {
           {
             companies.map((v, index) => (
               <div key={index}
-                onClick={() => switchCompan(v._id)}
+                onClick={() => switchCompany(v._id)}
                 className='flex items-center justify-between w-full hover:bg-gray-100 p-1 rounded cursor-pointer'>
                 <p className='text-[12px]'>{v.name}</p>
                 {

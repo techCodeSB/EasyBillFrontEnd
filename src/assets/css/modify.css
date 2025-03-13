@@ -90,3 +90,7 @@ ol, ul{
 .rs-picker-default .rs-picker-toggle.rs-btn .rs-picker-toggle-indicator .rs-picker-clean{
   /* display: none; */
 }
+a:active, a:focus, a:hover{
+  text-decoration: none !important;
+  color: white !important;
+}

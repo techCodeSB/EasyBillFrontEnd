@@ -30,11 +30,6 @@ const Dashboard = () => {
       <main id='main'>
         <SideNav />
         <div className='content__body'>
-          {/* <MyBreadCrumb title={"Dashboard"} links={[
-            { name: "Dashboard", link: "/admin/dashboard" },
-            { name: "Analytics", link: null }
-          ]} /> */}
-
           <div className='flex justify-between gap-6 w-[100%]  flex-col lg:flex-row' id='dashboard'>
             <div className='w-[100%] lg:w-[30%] flex flex-col justify-between'>
               <div>

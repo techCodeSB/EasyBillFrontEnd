@@ -16,8 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import useExportTable from '../../hooks/useExportTable';
 
 const UserProfile = () => {
-
-    const copyTable = useExportTable()
+  const copyTable = useExportTable()
   const [activePage, setActivePage] = useState(1);
   const [selected, setSelected] = useState([]);
   const navigate = useNavigate();
@@ -63,7 +62,7 @@ const UserProfile = () => {
 
   return (
     <>
-     <Nav title={"User Profile"} />
+      <Nav title={"User Profile"} />
       <main id='main'>
         <SideNav />
         <div className='content__body'>
@@ -147,7 +146,7 @@ const UserProfile = () => {
                     <th className='py-2 px-4 border-b '>Role</th>
                     <th className='py-2 px-4 border-b '>Status</th>
                     <th className='py-2 px-4 border-b '>Action</th>
-                  
+
                   </tr>
                 </thead>
                 <tbody>
@@ -161,12 +160,12 @@ const UserProfile = () => {
                         <td className='px-4 border-b'>info@test.com</td>
                         <td className='px-4 border-b'>Admin</td>
                         <td className='px-4 border-b'>Ative</td>
-                      
+
                         <td className='px-4 border-b min-w-[70px]'>
                           <div className='flex  justify-center flex-col md:flex-row gap-2 mr-2'>
                             <button className='bg-blue-400 text-white px-2 py-1 rounded  text-[16px] '
                               onClick={() => navigate('/admin/user-profile/edit')}>
-                              <MdEditSquare  className=' flex justify-between items-center ml-2'/>
+                              <MdEditSquare className=' flex justify-between items-center ml-2' />
                             </button>
                             <button className='bg-red-500 text-white px-2 py-1 rounded  text-lg'>
                               <IoInformationCircle className='flex justify-between items-center ml-2' />
