@@ -384,7 +384,7 @@ const DebitNote = ({ mode }) => {
   // *Save bill
   const saveBill = async () => {
 
-    if ([formData.party, formData.debitNoteNumber, formData.debitNoteDate, formData.validDate]
+    if ([formData.party, formData.debitNoteNumber, formData.debitNoteDate]
       .some((field) => field === "")) {
       return toast("Fill the blank", "error");
     }

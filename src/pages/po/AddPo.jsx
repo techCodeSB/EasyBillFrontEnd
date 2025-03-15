@@ -383,7 +383,7 @@ const PO = ({ mode }) => {
   // *Save bill
   const saveBill = async () => {
 
-    if ([formData.party, formData.poNumber, formData.estimateData, formData.validDate]
+    if ([formData.party, formData.poNumber, formData.estimateData]
       .some((field) => field === "")) {
       return toast("Fill the blank", "error");
     }

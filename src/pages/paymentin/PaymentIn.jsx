@@ -301,7 +301,7 @@ const PaymentIn = () => {
                         <td className='px-4 border-b max-w-[90px]' align='center'>
                           <div className='flex flex-col md:flex-row gap-2 mr-2 justify-center'>
                             <button
-                              title='Edit '
+                              title='Edit'
                               onClick={() => navigate(`/admin/payment-in/edit/${data._id}`)}
                               className='bg-blue-400 text-white px-2 py-1 rounded w-[35px] text-[16px] felx justify-center'>
                               <MdEditSquare />

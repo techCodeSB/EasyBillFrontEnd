@@ -384,7 +384,7 @@ const DeliveryChalan = ({ mode }) => {
   // *Save bill
   const saveBill = async () => {
 
-    if ([formData.party, formData.chalanNumber, formData.chalanDate, formData.validDate]
+    if ([formData.party, formData.chalanNumber, formData.chalanDate]
       .some((field) => field === "")) {
       return toast("Fill the blank", "error");
     }

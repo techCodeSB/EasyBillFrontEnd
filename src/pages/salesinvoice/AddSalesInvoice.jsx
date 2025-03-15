@@ -399,7 +399,7 @@ const SalesInvoice = ({ mode }) => {
   // *Save bill
   const saveBill = async () => {
 
-    if ([formData.party, formData.salesInvoiceNumber, formData.invoiceDate, formData.DueDate]
+    if ([formData.party, formData.salesInvoiceNumber, formData.invoiceDate]
       .some((field) => field === "")) {
       return toast("Fill the blank", "error");
     }

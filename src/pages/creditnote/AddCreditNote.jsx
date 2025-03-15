@@ -379,7 +379,7 @@ const CreditNote = ({ mode }) => {
   // *Save bill
   const saveBill = async () => {
 
-    if ([formData.party, formData.creditNoteNumber, formData.creditNoteDate, formData.validDate]
+    if ([formData.party, formData.creditNoteNumber, formData.creditNoteDate]
       .some((field) => field === "")) {
       return toast("Fill the blank", "error");
     }

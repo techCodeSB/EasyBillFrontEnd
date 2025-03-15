@@ -383,7 +383,7 @@ const Proforma = ({ mode }) => {
   // *Save bill
   const saveBill = async () => {
 
-    if ([formData.party, formData.proformaNumber, formData.estimateData, formData.validDate]
+    if ([formData.party, formData.proformaNumber, formData.estimateData]
       .some((field) => field === "")) {
       return toast("Fill the blank", "error");
     }

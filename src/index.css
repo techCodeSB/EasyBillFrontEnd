@@ -318,3 +318,22 @@ select {
   font-weight: normal;
   border: none;
 }
+
+.top__btn__grp{
+  @apply flex justify-between w-full mb-4;
+}
+
+.add__btns, .extra__btns{
+  @apply flex items-center gap-2;
+}
+
+.add__btns button{
+  @apply text-[13px] bg-blue-500 text-white px-2 py-[3px]  flex items-center gap-1 rounded-[5px];
+}
+
+.extra__btns button{
+  @apply text-[13px] bg-blue-500 text-white px-2 py-[3px]  flex items-center gap-1 rounded-[5px];
+}
+.extra__btns button:last-child{
+  @apply bg-green-400;
+}

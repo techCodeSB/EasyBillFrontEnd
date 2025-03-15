@@ -379,7 +379,7 @@ const SalesReturn = ({ mode }) => {
   // *Save bill
   const saveBill = async () => {
 
-    if ([formData.party, formData.salesReturnNumber, formData.returnData, formData.validDate]
+    if ([formData.party, formData.salesReturnNumber, formData.returnData]
       .some((field) => field === "")) {
       return toast("Fill the blank", "error");
     }

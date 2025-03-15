@@ -103,8 +103,9 @@ const App = () => {
         <Route path="/admin/bill/details/:bill/:id" element={<ProtectRoute><Invoice /></ProtectRoute>} />
 
 
+        {/* Quotatin route */}
         <Route path="/admin/quotation-estimate" element={<ProtectRoute><Quotation /></ProtectRoute>} />
-        <Route path="/admin/quotation-estimate/add" element={<ProtectRoute><AddQutation /></ProtectRoute>} />
+        <Route path="/admin/quotation-estimate/add/:id?" element={<ProtectRoute><AddQutation /></ProtectRoute>} />
         <Route path="/admin/quotation-estimate/edit/:id" element={<ProtectRoute><AddQutation mode={"edit"} /></ProtectRoute>} />
 
 
