@@ -3,7 +3,7 @@ import { SelectPicker, DatePicker, Button } from 'rsuite';
 import Nav from '../../components/Nav';
 import SideNav from '../../components/SideNav';
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { MdCurrencyRupee } from "react-icons/md";
+import { MdCurrencyRupee, MdOutlineAdd } from "react-icons/md";
 import { MdOutlinePlaylistAdd } from "react-icons/md";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { BiReset } from "react-icons/bi";
@@ -11,19 +11,29 @@ import useMyToaster from '../../hooks/useMyToaster';
 import useApi from '../../hooks/useApi';
 import useBillPrefix from '../../hooks/useBillPrefix';
 import Cookies from 'js-cookie';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { toggle } from '../../store/partyModalSlice';
+import { toggle as itemToggle } from '../../store/itemModalSlice';
+import swal from 'sweetalert';
+import { HiOutlineDocumentDuplicate } from 'react-icons/hi';
+
 
 
 
 document.title = "Purchase Order";
 const PO = ({ mode }) => {
+  const getPartyModalState = useSelector((store) => store.partyModalSlice.show);
+  const getItemModalState = useSelector((store) => store.itemModalSlice.show);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const toast = useMyToaster();
   const { id } = useParams()
   const getBillPrefix = useBillPrefix("po");
   const { getApiData } = useApi();
   const itemRowSet = {
     QuotaionItem: 1, itemName: '', description: '', hsn: '', qun: '1',
-    unit: [], selectedUnit:'', price: '', discountPerAmount: '', discountPerPercentage: '',
+    unit: [], selectedUnit: '', price: '', discountPerAmount: '', discountPerPercentage: '',
     tax: '', taxAmount: '', amount: '', perDiscountType: "", //for checking purpose only
   }
   const additionalRowSet = {
@@ -61,34 +71,43 @@ const PO = ({ mode }) => {
 
 
 
-  // Get data for update mode
+  // Get data for update mode;
+  const get = async () => {
+    const url = process.env.REACT_APP_API_URL + "/po/get";
+    const cookie = Cookies.get("token");
+
+    const req = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": 'application/json'
+      },
+      body: JSON.stringify({ token: cookie, id: id })
+    })
+    const res = await req.json();
+    console.log(res)
+    setFormData({ ...formData, ...res.data });
+    setAdditionalRow([...res.data.additionalCharge])
+    setItemRows([...res.data.items]);
+
+    if (res.data.discountType != "no") {
+      setDiscountToggler(false);
+    }
+  }
   useEffect(() => {
     if (mode) {
-      const get = async () => {
-        const url = process.env.REACT_APP_API_URL + "/po/get";
-        const cookie = Cookies.get("token");
-
-        const req = await fetch(url, {
-          method: "POST",
-          headers: {
-            "Content-Type": 'application/json'
-          },
-          body: JSON.stringify({ token: cookie, id: id })
-        })
-        const res = await req.json();
-        console.log(res)
-        setFormData({ ...formData, ...res.data });
-        setAdditionalRow([...res.data.additionalCharge])
-        setItemRows([...res.data.items]);
-
-        if (res.data.discountType != "no") {
-          setDiscountToggler(false);
-        }
-      }
-
       get();
     }
   }, [mode])
+
+
+  // Set PO number
+  useEffect(() => {
+    if (getBillPrefix && !mode) {
+      setFormData({ ...formData, quotationNumber: getBillPrefix[0] + getBillPrefix[1] });
+    } else {
+      get();
+    }
+  }, [getBillPrefix, mode])
 
 
 
@@ -124,11 +143,6 @@ const PO = ({ mode }) => {
 
   }, [])
 
-
-  // Set PO number
-  useEffect(() => {
-    setFormData({ ...formData, poNumber: getBillPrefix });
-  }, [getBillPrefix])
 
 
 
@@ -447,6 +461,40 @@ const PO = ({ mode }) => {
         <SideNav />
         <div className='content__body'>
           <div className='content__body__main bg-white' id='addQuotationTable'>
+
+            <div className='top__btn__grp'>
+              <div className='add__btns'>
+                <button onClick={() => {
+                  dispatch(toggle(!getPartyModalState))
+                }}><MdOutlineAdd /> Add Party</button>
+
+                <button onClick={() => {
+                  dispatch(itemToggle(!getItemModalState))
+                }}><MdOutlineAdd /> Add Item</button>
+              </div>
+
+              {
+                mode && <div className='extra__btns'>
+                  <button onClick={() => {
+                    swal({
+                      title: "Are you sure?",
+                      icon: "warning",
+                      buttons: true,
+                    })
+                      .then((cnv) => {
+                        if (cnv) {
+                          swal("Quotation successfully duplicate", {
+                            icon: "success",
+                          });
+                          navigate(`/admin/quotation-estimate/add/${id}`)
+                        }
+                      });
+                  }}><HiOutlineDocumentDuplicate />Duplicate invoice</button>
+                  <button onClick={saveBill}><FaRegCheckCircle />Update</button>
+                </div>
+              }
+            </div>
+hellowo
             <div className='flex flex-col lg:flex-row items-center justify-around gap-4'>
               <div className='flex flex-col gap-2 w-full'>
                 <p className='text-xs'>Select Party</p>

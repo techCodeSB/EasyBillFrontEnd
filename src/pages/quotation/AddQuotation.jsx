@@ -11,7 +11,7 @@ import useMyToaster from '../../hooks/useMyToaster';
 import useApi from '../../hooks/useApi';
 import useBillPrefix from '../../hooks/useBillPrefix';
 import Cookies from 'js-cookie';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import AddPartyModal from '../../components/AddPartyModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggle } from '../../store/partyModalSlice';
@@ -74,38 +74,47 @@ const Quotation = ({ mode }) => {
 
 
 
-  useEffect(() => {
-    console.log("id is-->", id)
-    if (id) {
-      const get = async () => {
-        const url = process.env.REACT_APP_API_URL + "/quotation/get";
-        const cookie = Cookies.get("token");
 
-        try {
-          const req = await fetch(url, {
-            method: "POST",
-            headers: {
-              "Content-Type": 'application/json'
-            },
-            body: JSON.stringify({ token: cookie, id: id })
-          })
-          const res = await req.json();
-          console.log(res.data.items)
-          setFormData({ ...formData, ...res.data });
-          setAdditionalRow([...res.data.additionalCharge])
-          setItemRows([...res.data.items]);
+  const get = async () => {
+    const url = process.env.REACT_APP_API_URL + "/quotation/get";
+    const cookie = Cookies.get("token");
 
-          if (res.data.discountType != "no") {
-            setDiscountToggler(false);
-          }
-        } catch (error) {
-          toast("Something went wrong to get data", 'error')
-        }
+    try {
+      const req = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": 'application/json'
+        },
+        body: JSON.stringify({ token: cookie, id: id })
+      })
+      const res = await req.json();
+      setFormData({ ...formData, ...res.data });
+      setAdditionalRow([...res.data.additionalCharge])
+      setItemRows([...res.data.items]);
+
+      if (res.data.discountType != "no") {
+        setDiscountToggler(false);
       }
+    } catch (error) {
+      toast("Something went wrong to get data", 'error')
+    }
+  }
+  useEffect(() => {
+    if (id) {
 
       get();
     }
   }, [id])
+
+
+
+  useEffect(() => {
+    if (getBillPrefix && !mode) {
+      setFormData({ ...formData, quotationNumber: getBillPrefix[0] + getBillPrefix[1] });
+    }else{
+      get();
+    }
+  }, [getBillPrefix, mode])
 
 
 
@@ -141,10 +150,6 @@ const Quotation = ({ mode }) => {
 
   }, [])
 
-
-  useEffect(() => {
-    setFormData({ ...formData, quotationNumber: getBillPrefix });
-  }, [getBillPrefix])
 
 
 
@@ -472,7 +477,7 @@ const Quotation = ({ mode }) => {
     setItemRows([itemRowSet]);
     setAdditionalRow([additionalRowSet])
     setFormData({
-      party: '', quotationNumber: getBillPrefix, estimateData: '', validDate: '', items: ItemRows,
+      party: '', quotationNumber: '', estimateData: '', validDate: '', items: ItemRows,
       additionalCharge: additionalRows, note: '', terms: '',
       discountType: '', discountAmount: '', discountPercentage: '',
     });
@@ -503,24 +508,26 @@ const Quotation = ({ mode }) => {
                 }}><MdOutlineAdd /> Add Item</button>
               </div>
 
-              <div className='extra__btns'>
-                <button onClick={() => {
-                  swal({
-                    title: "Are you sure?",
-                    icon: "warning",
-                    buttons: true,
-                  })
-                    .then((cnv) => {
-                      if (cnv) {
-                        swal("Quotation successfully duplicate", {
-                          icon: "success",
-                        });
-                        navigate(`/admin/quotation-estimate/add/${id}`)
-                      }
-                    });
-                }}><HiOutlineDocumentDuplicate />Duplicate invoice</button>
-                <button onClick={saveBill}><FaRegCheckCircle />Update</button>
-              </div>
+              {
+                mode && <div className='extra__btns'>
+                  <button onClick={() => {
+                    swal({
+                      title: "Are you sure?",
+                      icon: "warning",
+                      buttons: true,
+                    })
+                      .then((cnv) => {
+                        if (cnv) {
+                          swal("Quotation successfully duplicate", {
+                            icon: "success",
+                          });
+                          navigate(`/admin/quotation-estimate/add/${id}`)
+                        }
+                      });
+                  }}><HiOutlineDocumentDuplicate />Duplicate invoice</button>
+                  <button onClick={saveBill}><FaRegCheckCircle />Update</button>
+                </div>
+              }
             </div>
 
             <div className='flex flex-col lg:flex-row items-center justify-around gap-4'>
