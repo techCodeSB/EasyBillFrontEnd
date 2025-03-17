@@ -3,7 +3,7 @@ import { SelectPicker, DatePicker, Button } from 'rsuite';
 import Nav from '../../components/Nav';
 import SideNav from '../../components/SideNav';
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { MdCurrencyRupee } from "react-icons/md";
+import { MdCurrencyRupee, MdOutlineAdd } from "react-icons/md";
 import { MdOutlinePlaylistAdd } from "react-icons/md";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { BiReset } from "react-icons/bi";
@@ -11,7 +11,14 @@ import useMyToaster from '../../hooks/useMyToaster';
 import useApi from '../../hooks/useApi';
 import useBillPrefix from '../../hooks/useBillPrefix';
 import Cookies from 'js-cookie';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { toggle } from '../../store/partyModalSlice';
+import { toggle as itemToggle } from '../../store/itemModalSlice';
+import swal from 'sweetalert';
+import { HiOutlineDocumentDuplicate } from 'react-icons/hi';
+import AddPartyModal from '../../components/AddPartyModal';
+import AddItemModal from '../../components/AddItemModal';
 
 
 
@@ -21,6 +28,10 @@ const PurchaseInvoice = ({ mode }) => {
   const { id } = useParams()
   const getBillPrefix = useBillPrefix("invoice");
   const { getApiData } = useApi();
+  const getPartyModalState = useSelector((store) => store.partyModalSlice.show);
+  const getItemModalState = useSelector((store) => store.itemModalSlice.show);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const itemRowSet = {
     rowItem: 1, itemName: '', description: '', hsn: '', qun: '1', itemId: '',
     unit: [], selectedUnit: "", price: '', discountPerAmount: '', discountPerPercentage: '',
@@ -65,33 +76,49 @@ const PurchaseInvoice = ({ mode }) => {
 
   // Get data for update mode
   useEffect(() => {
-    if (mode) {
+    if (id) {
       const get = async () => {
-        const url = `${process.env.REACT_APP_API_URL}${mode == 'edit' ? "/purchaseinvoice/get" : "/po/get"}`;
-        console.log(url)
-        const cookie = Cookies.get("token");
+        try {
+          let url;
+          if (mode === 'edit' || !mode) {
+            url = `${process.env.REACT_APP_API_URL}${"/purchaseinvoice/get"}`
+          }
+          else if (mode === "convert") {
+            url = `${process.env.REACT_APP_API_URL}${"/po/get"}`
+          }
 
-        const req = await fetch(url, {
-          method: "POST",
-          headers: {
-            "Content-Type": 'application/json'
-          },
-          body: JSON.stringify({ token: cookie, id: id })
-        })
-        const res = await req.json();
-        setFormData({ ...formData, ...res.data });
-        setAdditionalRow([...res.data.additionalCharge])
-        setItemRows([...res.data.items]);
+          const cookie = Cookies.get("token");
 
-        if (res.data.discountType != "no") {
-          setDiscountToggler(false);
+          const req = await fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": 'application/json'
+            },
+            body: JSON.stringify({ token: cookie, id: id })
+          })
+          const res = await req.json();
+          setFormData({ ...formData, ...res.data });
+          setAdditionalRow([...res.data.additionalCharge])
+          setItemRows([...res.data.items]);
+
+          if (res.data.discountType != "no") {
+            setDiscountToggler(false);
+          }
+        } catch (error) {
+          console.log(error);
+          toast("Something went wrong for get data", 'error')
         }
       }
 
       get();
     }
-  }, [mode])
+  }, [id])
 
+
+  //set Invoice number
+  // useEffect(() => {
+  //   setFormData({ ...formData, purchaseInvoiceNumber: getBillPrefix });
+  // }, [getBillPrefix])
 
 
   // Get all data from api
@@ -131,10 +158,6 @@ const PurchaseInvoice = ({ mode }) => {
   }, [])
 
 
-  //set Invoice number
-  // useEffect(() => {
-  //   setFormData({ ...formData, purchaseInvoiceNumber: getBillPrefix });
-  // }, [getBillPrefix])
 
 
 
@@ -460,8 +483,45 @@ const PurchaseInvoice = ({ mode }) => {
       <Nav title={mode == "edit" ? "Update Purchase Invoice" : "Add Purchase Invoice"} />
       <main id='main'>
         <SideNav />
+        <AddPartyModal open={getPartyModalState} />
+        <AddItemModal open={getItemModalState} />
+
         <div className='content__body'>
           <div className='content__body__main bg-white' id='addQuotationTable'>
+
+            <div className='top__btn__grp'>
+              <div className='add__btns'>
+                <button onClick={() => {
+                  dispatch(toggle(!getPartyModalState))
+                }}><MdOutlineAdd /> Add Party</button>
+
+                <button onClick={() => {
+                  dispatch(itemToggle(!getItemModalState))
+                }}><MdOutlineAdd /> Add Item</button>
+              </div>
+
+              {
+                mode === "edit" && <div className='extra__btns'>
+                  <button onClick={() => {
+                    swal({
+                      title: "Are you sure?",
+                      icon: "warning",
+                      buttons: true,
+                    })
+                      .then((cnv) => {
+                        if (cnv) {
+                          swal("Invoice successfully duplicate", {
+                            icon: "success",
+                          });
+                          navigate(`/admin/purchase-invoice/add/${id}`)
+                        }
+                      });
+                  }}><HiOutlineDocumentDuplicate />Duplicate invoice</button>
+                  <button onClick={saveBill}><FaRegCheckCircle />Update</button>
+                </div>
+              }
+            </div>
+
             <div className='flex flex-col lg:flex-row items-center justify-around gap-4'>
               <div className='flex flex-col gap-2 w-full'>
                 <p className='text-xs'>Select Party</p>

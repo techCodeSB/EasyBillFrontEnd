@@ -11,7 +11,18 @@ import useMyToaster from '../../hooks/useMyToaster';
 import useApi from '../../hooks/useApi';
 import useBillPrefix from '../../hooks/useBillPrefix';
 import Cookies from 'js-cookie';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import swal from 'sweetalert';
+import { useDispatch, useSelector } from 'react-redux';
+import { toggle } from '../../store/partyModalSlice';
+import { toggle as itemToggle } from '../../store/itemModalSlice'
+import { MdOutlineAdd } from "react-icons/md";
+import { HiOutlineDocumentDuplicate } from "react-icons/hi";
+import AddPartyModal from '../../components/AddPartyModal';
+import AddItemModal from '../../components/AddItemModal';
+
+
+
 
 
 
@@ -21,9 +32,13 @@ const Proforma = ({ mode }) => {
   const { id } = useParams()
   const getBillPrefix = useBillPrefix("proforma");
   const { getApiData } = useApi();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const getPartyModalState = useSelector((store) => store.partyModalSlice.show);
+  const getItemModalState = useSelector((store) => store.itemModalSlice.show);
   const itemRowSet = {
     QuotaionItem: 1, itemName: '', description: '', hsn: '', qun: '1',
-    unit: [], selectedUnit:"", price: '', discountPerAmount: '', discountPerPercentage: '',
+    unit: [], selectedUnit: "", price: '', discountPerAmount: '', discountPerPercentage: '',
     tax: '', taxAmount: '', amount: '', perDiscountType: "", //for checking purpose only
   }
   const additionalRowSet = {
@@ -62,34 +77,41 @@ const Proforma = ({ mode }) => {
 
 
   // Get data for update mode
+  const get = async () => {
+    const url = process.env.REACT_APP_API_URL + "/proforma/get";
+    const cookie = Cookies.get("token");
+
+    const req = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": 'application/json'
+      },
+      body: JSON.stringify({ token: cookie, id: id })
+    })
+    const res = await req.json();
+    console.log(res)
+    setFormData({ ...formData, ...res.data });
+    setAdditionalRow([...res.data.additionalCharge])
+    setItemRows([...res.data.items]);
+
+    if (res.data.discountType != "no") {
+      setDiscountToggler(false);
+    }
+  }
   useEffect(() => {
-    if (mode) {
-      const get = async () => {
-        const url = process.env.REACT_APP_API_URL + "/proforma/get";
-        const cookie = Cookies.get("token");
-
-        const req = await fetch(url, {
-          method: "POST",
-          headers: {
-            "Content-Type": 'application/json'
-          },
-          body: JSON.stringify({ token: cookie, id: id })
-        })
-        const res = await req.json();
-        console.log(res)
-        setFormData({ ...formData, ...res.data });
-        setAdditionalRow([...res.data.additionalCharge])
-        setItemRows([...res.data.items]);
-
-        if (res.data.discountType != "no") {
-          setDiscountToggler(false);
-        }
-      }
-
+    if (id) {
       get();
     }
-  }, [mode])
+  }, [id])
 
+
+  useEffect(() => {
+    if (getBillPrefix && !mode) {
+      setFormData(prev => ({ ...prev, proformaNumber: getBillPrefix[0] + getBillPrefix[1] }));
+    } else if (getBillPrefix && mode) {
+      get();
+    }
+  }, [getBillPrefix?.length, mode]);
 
 
   // Get all data from api
@@ -125,10 +147,7 @@ const Proforma = ({ mode }) => {
   }, [])
 
 
-  // Set proforma number
-  useEffect(() => {
-    setFormData({ ...formData, proformaNumber: getBillPrefix });
-  }, [getBillPrefix])
+
 
 
 
@@ -445,8 +464,45 @@ const Proforma = ({ mode }) => {
       <Nav title={mode ? "Update Proforma" : "Add Proforma"} />
       <main id='main'>
         <SideNav />
+        <AddPartyModal open={getPartyModalState} />
+        <AddItemModal open={getItemModalState} />
+
         <div className='content__body'>
           <div className='content__body__main bg-white' id='addQuotationTable'>
+
+            <div className='top__btn__grp'>
+              <div className='add__btns'>
+                <button onClick={() => {
+                  dispatch(toggle(!getPartyModalState))
+                }}><MdOutlineAdd /> Add Party</button>
+
+                <button onClick={() => {
+                  dispatch(itemToggle(!getItemModalState))
+                }}><MdOutlineAdd /> Add Item</button>
+              </div>
+
+              {
+                mode && <div className='extra__btns'>
+                  <button onClick={() => {
+                    swal({
+                      title: "Are you sure?",
+                      icon: "warning",
+                      buttons: true,
+                    })
+                      .then((cnv) => {
+                        if (cnv) {
+                          swal("Proforma successfully duplicate", {
+                            icon: "success",
+                          });
+                          navigate(`/admin/proforma-invoice/add/${id}`)
+                        }
+                      });
+                  }}><HiOutlineDocumentDuplicate />Duplicate invoice</button>
+                  <button onClick={saveBill}><FaRegCheckCircle />Update</button>
+                </div>
+              }
+            </div>
+
             <div className='flex flex-col lg:flex-row items-center justify-around gap-4'>
               <div className='flex flex-col gap-2 w-full'>
                 <p className='text-xs'>Select Party</p>

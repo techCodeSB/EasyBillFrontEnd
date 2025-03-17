@@ -3,7 +3,6 @@ import { SelectPicker, DatePicker, Button } from 'rsuite';
 import Nav from '../../components/Nav';
 import SideNav from '../../components/SideNav';
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { MdCurrencyRupee } from "react-icons/md";
 import { MdOutlinePlaylistAdd } from "react-icons/md";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { BiReset } from "react-icons/bi";
@@ -11,7 +10,17 @@ import useMyToaster from '../../hooks/useMyToaster';
 import useApi from '../../hooks/useApi';
 import useBillPrefix from '../../hooks/useBillPrefix';
 import Cookies from 'js-cookie';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { toggle } from '../../store/partyModalSlice';
+import { toggle as itemToggle } from '../../store/itemModalSlice';
+import swal from 'sweetalert';
+import { HiOutlineDocumentDuplicate } from 'react-icons/hi';
+import AddPartyModal from '../../components/AddPartyModal';
+import AddItemModal from '../../components/AddItemModal';
+import { MdCurrencyRupee, MdOutlineAdd } from "react-icons/md";
+
+
 
 
 
@@ -19,11 +28,15 @@ document.title = "Delivery Chalan";
 const DeliveryChalan = ({ mode }) => {
   const toast = useMyToaster();
   const { id } = useParams()
-  const getBillPrefix = useBillPrefix("invoice");
+  const getBillPrefix = useBillPrefix("deliverychalan");
   const { getApiData } = useApi();
+  const getPartyModalState = useSelector((store) => store.partyModalSlice.show);
+  const getItemModalState = useSelector((store) => store.itemModalSlice.show);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const itemRowSet = {
     QuotaionItem: 1, itemName: '', description: '', hsn: '', qun: '1',
-    unit: [], selectedUnit: '',  price: '', discountPerAmount: '', discountPerPercentage: '',
+    unit: [], selectedUnit: '', price: '', discountPerAmount: '', discountPerPercentage: '',
     tax: '', taxAmount: '', amount: '', perDiscountType: "", //for checking purpose only
   }
   const additionalRowSet = {
@@ -61,32 +74,44 @@ const DeliveryChalan = ({ mode }) => {
 
 
 
-  useEffect(() => {
-    if (mode) {
-      const get = async () => {
-        const url = process.env.REACT_APP_API_URL + "/deliverychalan/get";
-        const cookie = Cookies.get("token");
+  const get = async () => {
+    try {
+      const url = process.env.REACT_APP_API_URL + "/deliverychalan/get";
+      const cookie = Cookies.get("token");
 
-        const req = await fetch(url, {
-          method: "POST",
-          headers: {
-            "Content-Type": 'application/json'
-          },
-          body: JSON.stringify({ token: cookie, id: id })
-        })
-        const res = await req.json();
-        setFormData({ ...formData, ...res.data });
-        setAdditionalRow([...res.data.additionalCharge])
-        setItemRows([...res.data.items]);
+      const req = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": 'application/json'
+        },
+        body: JSON.stringify({ token: cookie, id: id })
+      })
+      const res = await req.json();
+      setFormData({ ...formData, ...res.data });
+      setAdditionalRow([...res.data.additionalCharge])
+      setItemRows([...res.data.items]);
 
-        if (res.data.discountType != "no") {
-          setDiscountToggler(false);
-        }
+      if (res.data.discountType != "no") {
+        setDiscountToggler(false);
       }
-
+    } catch (error) {
+      toast("Something went wrong to get data", 'error')
+    }
+  }
+  useEffect(() => {
+    if (id) {
       get();
     }
-  }, [mode])
+  }, [id])
+
+
+  useEffect(() => {
+    if (getBillPrefix && !mode) {
+      setFormData({ ...formData, chalanNumber: getBillPrefix[0] + getBillPrefix[1] });
+    } else if (mode) {
+      get();
+    }
+  }, [getBillPrefix?.length, mode])
 
 
 
@@ -123,9 +148,6 @@ const DeliveryChalan = ({ mode }) => {
   }, [])
 
 
-  useEffect(() => {
-    setFormData({ ...formData, chalanNumber: getBillPrefix });
-  }, [getBillPrefix])
 
 
 
@@ -446,8 +468,44 @@ const DeliveryChalan = ({ mode }) => {
       <Nav title={mode ? "Update Delivery Chalan" : "Add Delivery Chalan"} />
       <main id='main'>
         <SideNav />
+        <AddPartyModal open={getPartyModalState} />
+        <AddItemModal open={getItemModalState} />
         <div className='content__body'>
           <div className='content__body__main bg-white' id='addQuotationTable'>
+
+            <div className='top__btn__grp'>
+              <div className='add__btns'>
+                <button onClick={() => {
+                  dispatch(toggle(!getPartyModalState))
+                }}><MdOutlineAdd /> Add Party</button>
+
+                <button onClick={() => {
+                  dispatch(itemToggle(!getItemModalState))
+                }}><MdOutlineAdd /> Add Item</button>
+              </div>
+
+              {
+                mode === "edit" && <div className='extra__btns'>
+                  <button onClick={() => {
+                    swal({
+                      title: "Are you sure?",
+                      icon: "warning",
+                      buttons: true,
+                    })
+                      .then((cnv) => {
+                        if (cnv) {
+                          swal("Invoice successfully duplicate", {
+                            icon: "success",
+                          });
+                          navigate(`/admin/delivery-chalan/add/${id}`)
+                        }
+                      });
+                  }}><HiOutlineDocumentDuplicate />Duplicate invoice</button>
+                  <button onClick={saveBill}><FaRegCheckCircle />Update</button>
+                </div>
+              }
+            </div>
+
             <div className='flex flex-col lg:flex-row items-center justify-around gap-4'>
               <div className='flex flex-col gap-2 w-full'>
                 <p className='text-xs'>Select Party</p>

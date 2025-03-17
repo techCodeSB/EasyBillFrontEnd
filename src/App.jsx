@@ -111,57 +111,57 @@ const App = () => {
 
         {/* Proforma route */}
         <Route path="/admin/proforma-invoice" element={<ProtectRoute><Proforma /></ProtectRoute>} />
-        <Route path="/admin/proforma-invoice/add" element={<ProtectRoute><AddProforma /></ProtectRoute>} />
+        <Route path="/admin/proforma-invoice/add/:id?" element={<ProtectRoute><AddProforma /></ProtectRoute>} />
         <Route path="/admin/proforma-invoice/edit/:id" element={<ProtectRoute><AddProforma mode={"edit"} /></ProtectRoute>} />
 
 
         {/* PO route */}
         <Route path="/admin/purchase-order" element={<ProtectRoute><Po /></ProtectRoute>} />
-        <Route path="/admin/purchase-order/add" element={<ProtectRoute><AddPo /></ProtectRoute>} />
+        <Route path="/admin/purchase-order/add/:id?" element={<ProtectRoute><AddPo /></ProtectRoute>} />
         <Route path="/admin/purchase-order/edit/:id" element={<ProtectRoute><AddPo mode={"edit"} /></ProtectRoute>} />
 
 
         {/* Purchase Invoice route */}
         <Route path="/admin/purchase-invoice" element={<ProtectRoute><PurchaseInvoice /></ProtectRoute>} />
-        <Route path="/admin/purchase-invoice/add/" element={<ProtectRoute><AddPurchaseInvoice /></ProtectRoute>} />
-        <Route path="/admin/purchase-invoice/add/:id" element={<ProtectRoute><AddPurchaseInvoice mode={"convert"} /></ProtectRoute>} />
+        <Route path="/admin/purchase-invoice/add/:id?" element={<ProtectRoute><AddPurchaseInvoice /></ProtectRoute>} />
+        <Route path="/admin/purchase-invoice/convert/add/:id" element={<ProtectRoute><AddPurchaseInvoice mode={"convert"} /></ProtectRoute>} />
         <Route path="/admin/purchase-invoice/edit/:id" element={<ProtectRoute><AddPurchaseInvoice mode={"edit"} /></ProtectRoute>} />
 
 
         {/* Purchase Return route */}
         <Route path="/admin/purchase-return" element={<ProtectRoute><PurchaseReturn /></ProtectRoute>} />
-        <Route path="/admin/purchase-return/add" element={<ProtectRoute><AddPurchaseReturn /></ProtectRoute>} />
+        <Route path="/admin/purchase-return/add/:id?" element={<ProtectRoute><AddPurchaseReturn /></ProtectRoute>} />
         <Route path="/admin/purchase-return/edit/:id" element={<ProtectRoute><AddPurchaseReturn mode={"edit"} /></ProtectRoute>} />
 
 
         {/* Debit Note route */}
         <Route path="/admin/debit-note" element={<ProtectRoute><DebitNote /></ProtectRoute>} />
-        <Route path="/admin/debit-note/add" element={<ProtectRoute><AddDebitNote /></ProtectRoute>} />
+        <Route path="/admin/debit-note/add/:id?" element={<ProtectRoute><AddDebitNote /></ProtectRoute>} />
         <Route path="/admin/debit-note/edit/:id" element={<ProtectRoute><AddDebitNote mode={"edit"} /></ProtectRoute>} />
 
 
         {/* Sales Invoice route */}
         <Route path="/admin/sales-invoice" element={<ProtectRoute><SalesInvoice /></ProtectRoute>} />
-        <Route path="/admin/sales-invoice/add" element={<ProtectRoute><AddSalesInvoice /></ProtectRoute>} />
-        <Route path="/admin/sales-invoice/add/:id" element={<ProtectRoute><AddSalesInvoice mode={"convert"} /></ProtectRoute>} />
+        <Route path="/admin/sales-invoice/add/:id?" element={<ProtectRoute><AddSalesInvoice /></ProtectRoute>} />
+        <Route path="/admin/sales-invoice/convert/add/:id" element={<ProtectRoute><AddSalesInvoice mode={"convert"} /></ProtectRoute>} />
         <Route path="/admin/sales-invoice/edit/:id" element={<ProtectRoute><AddSalesInvoice mode={"edit"} /></ProtectRoute>} />
 
 
         {/* Sales Return route */}
         <Route path="/admin/sales-return" element={<ProtectRoute><SalesReturn /></ProtectRoute>} />
-        <Route path="/admin/sales-return/add" element={<ProtectRoute><AddSalesReturn /></ProtectRoute>} />
+        <Route path="/admin/sales-return/add/:id?" element={<ProtectRoute><AddSalesReturn /></ProtectRoute>} />
         <Route path="/admin/sales-return/edit/:id" element={<ProtectRoute><AddSalesReturn mode={"edit"} /></ProtectRoute>} />
 
 
         {/* Credit Note route */}
         <Route path="/admin/credit-note" element={<ProtectRoute><CreditNote /></ProtectRoute>} />
-        <Route path="/admin/credit-note/add" element={<ProtectRoute><AddCreditNote /></ProtectRoute>} />
+        <Route path="/admin/credit-note/add/:id?" element={<ProtectRoute><AddCreditNote /></ProtectRoute>} />
         <Route path="/admin/credit-note/edit/:id" element={<ProtectRoute><AddCreditNote mode={"edit"} /></ProtectRoute>} />
 
 
         {/* Delivery Chalan route */}
         <Route path="/admin/delivery-chalan" element={<ProtectRoute><DeliveryChalan /></ProtectRoute>} />
-        <Route path="/admin/delivery-chalan/add" element={<ProtectRoute><AddDeliveryChalan /></ProtectRoute>} />
+        <Route path="/admin/delivery-chalan/add/:id?" element={<ProtectRoute><AddDeliveryChalan /></ProtectRoute>} />
         <Route path="/admin/delivery-chalan/edit/:id" element={<ProtectRoute><AddDeliveryChalan mode={"edit"} /></ProtectRoute>} />
 
 

@@ -28,7 +28,9 @@ const Setting = () => {
     name: '', phone: '', email: '', gst: '', pan: '', invoiceLogo: '', signature: '',
     address: '', country: '', state: '', poInitial: '', invoiceInitial: '',
     proformaInitial: '', poNextCount: '', invoiceNextCount: '', proformaNextCount: '',
-    salesReminder: '', purchaseReminder: ''
+    salesReminder: '', purchaseReminder: '', quotationInitial: '', creditNoteInitial: '',
+    deliverChalanInitial: '', salesReturnInitial: '', quotationCount: '', creditNoteCount: '',
+    salesReturnCount: '', deliveryChalanCount: ''
   })
 
   useEffect(() => {
@@ -98,7 +100,10 @@ const Setting = () => {
 
   const updateCompany = async () => {
     console.log(companyData)
-    if (Object.values(companyData).some((field) => field === "")) {
+    if ([companyData.name, companyData.address, companyData.phone,
+      companyData.email, companyData.gst, companyData.pan, companyData.state,
+      companyData.country, companyData.signature, companyData.invoiceLogo
+    ].some((field) => field === "")) {
       return toast("fill the blank.", "error")
     }
 
@@ -175,6 +180,7 @@ const Setting = () => {
                     onCreate={(value, item) => {
                       console.log(value, item);
                     }}
+                    placeholder={"Separate using space or , (coma)"}
                   />
                 </div>
                 <div>
@@ -286,7 +292,10 @@ const Setting = () => {
                       <label htmlFor="siteLogo" className='file__upload' title='Upload'>
                         <MdUploadFile />
                       </label>
-                      <LuFileX2 className='remove__upload ' title='Remove upload' onClick={() => removeUpload('siteLogo')} />
+                      {
+                        siteData.siteLogo && <LuFileX2 className='remove__upload ' title='Remove upload'
+                          onClick={() => removeUpload('siteLogo')} />
+                      }
                     </div>
                   </div>
                 </div>
@@ -300,7 +309,10 @@ const Setting = () => {
                       <label htmlFor="siteLogoReverse" className='file__upload' title='Upload'>
                         <MdUploadFile />
                       </label>
-                      <LuFileX2 className='remove__upload ' title='Remove upload' onClick={() => removeUpload('logoReverse')} />
+                      {
+                        siteData.siteLogoReverse && <LuFileX2 className='remove__upload ' title='Remove upload'
+                          onClick={() => removeUpload('logoReverse')} />
+                      }
                     </div>
                   </div>
                 </div>
@@ -314,7 +326,10 @@ const Setting = () => {
                       <label htmlFor="favIcon" className='file__upload' title='Upload'>
                         <MdUploadFile />
                       </label>
-                      <LuFileX2 className='remove__upload ' title='Remove upload' onClick={() => removeUpload('favIcon')} />
+                      {
+                        siteData.favIcon && <LuFileX2 className='remove__upload ' title='Remove upload'
+                          onClick={() => removeUpload('favIcon')} />
+                      }
                     </div>
                   </div>
                 </div>
@@ -429,7 +444,10 @@ const Setting = () => {
                         <label htmlFor="invoiceLogo" className='file__upload' title='Upload'>
                           <MdUploadFile />
                         </label>
-                        <LuFileX2 className='remove__upload ' title='Remove upload' onClick={() => removeUpload('invoiceLogo')} />
+                        {
+                          companyData.invoiceLogo && <LuFileX2 className='remove__upload ' title='Remove upload'
+                            onClick={() => removeUpload('invoiceLogo')} />
+                        }
                       </div>
                     </div>
                   </div>
@@ -442,7 +460,10 @@ const Setting = () => {
                         <label htmlFor="signutre" className='file__upload' title='Upload'>
                           <MdUploadFile />
                         </label>
-                        <LuFileX2 className='remove__upload' title='Remove upload' onClick={() => removeUpload('signutre')} />
+                        {
+                          companyData.signature && <LuFileX2 className='remove__upload' title='Remove upload'
+                            onClick={() => removeUpload('signutre')} />
+                        }
                       </div>
                     </div>
                   </div>
@@ -473,6 +494,10 @@ const Setting = () => {
                       <th>PO Initial</th>
                       <th>Invoice Initial</th>
                       <th>Proforma Initial</th>
+                      <th>Quotation Initial</th>
+                      <th>Credit Note Initial</th>
+                      <th>Sales Return Initial</th>
+                      <th>Deliver Chalan Initial</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -489,10 +514,30 @@ const Setting = () => {
                         <input type="text" onChange={(e) => setCompanyData({ ...companyData, proformaInitial: e.target.value })}
                           value={companyData.proformaInitial} />
                       </td>
+                      <td className='min-w-[150px]'>
+                        <input type="text" onChange={(e) => setCompanyData({ ...companyData, quotationInitial: e.target.value })}
+                          value={companyData.quotationInitial} />
+                      </td>
+                      <td className='min-w-[150px]'>
+                        <input type="text" onChange={(e) => setCompanyData({ ...companyData, creditNoteInitial: e.target.value })}
+                          value={companyData.creditNoteInitial} />
+                      </td>
+                      <td className='min-w-[150px]'>
+                        <input type="text" onChange={(e) => setCompanyData({ ...companyData, salesReturnInitial: e.target.value })}
+                          value={companyData.salesReturnInitial} />
+                      </td>
+                      <td className='min-w-[150px]'>
+                        <input type="text" onChange={(e) => setCompanyData({ ...companyData, deliverChalanInitial: e.target.value })}
+                          value={companyData.deliverChalanInitial} />
+                      </td>
                     </tr>
                   </tbody>
                   <tfoot>
                     <tr className='bg-gray-200 h-[30px]'>
+                      <th>Next Count</th>
+                      <th>Next Count</th>
+                      <th>Next Count</th>
+                      <th>Next Count</th>
                       <th>Next Count</th>
                       <th>Next Count</th>
                       <th>Next Count</th>
@@ -509,6 +554,22 @@ const Setting = () => {
                       <td className='min-w-[150px]'>
                         <input type="text" onChange={(e) => setCompanyData({ ...companyData, proformaNextCount: e.target.value })}
                           value={companyData.proformaNextCount} />
+                      </td>
+                      <td className='min-w-[150px]'>
+                        <input type="text" onChange={(e) => setCompanyData({ ...companyData, quotationCount: e.target.value })}
+                          value={companyData.quotationCount} />
+                      </td>
+                      <td className='min-w-[150px]'>
+                        <input type="text" onChange={(e) => setCompanyData({ ...companyData, creditNoteCount: e.target.value })}
+                          value={companyData.creditNoteCount} />
+                      </td>
+                      <td className='min-w-[150px]'>
+                        <input type="text" onChange={(e) => setCompanyData({ ...companyData, salesReturnCount: e.target.value })}
+                          value={companyData.salesReturnCount} />
+                      </td>
+                      <td className='min-w-[150px]'>
+                        <input type="text" onChange={(e) => setCompanyData({ ...companyData, deliveryChalanCount: e.target.value })}
+                          value={companyData.deliveryChalanCount} />
                       </td>
                     </tr>
                   </tfoot>

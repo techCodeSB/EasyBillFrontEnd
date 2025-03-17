@@ -184,7 +184,7 @@ const Invoice = () => {
                 <button
                   onClick={() => {
                     downloadPdf(
-                      InvoicePdf({ companyDetails, billData, billDetails, hsnData, totalAmountInText })
+                      InvoicePdf({ companyDetails, billData, billDetails, hsnData, totalAmountInText, billname: urlRoute.toUpperCase() })
                     );
                   }}
                   title='PDF'
@@ -370,7 +370,7 @@ const Invoice = () => {
 
 
 
-const InvoicePdf = ({ companyDetails, billData, billDetails, hsnData, totalAmountInText }) => {
+const InvoicePdf = ({ companyDetails, billData, billDetails, hsnData, totalAmountInText, billname }) => {
 
   const styles = StyleSheet.create({
     page: { padding: 20 },
@@ -381,7 +381,11 @@ const InvoicePdf = ({ companyDetails, billData, billDetails, hsnData, totalAmoun
     border: { border: '1px solid black' },
     table: { display: 'table', width: 'auto' },
     tableRow: { flexDirection: 'row' },
-    tableCol: { borderBottom: '1px solid black', padding: 2, borderRight: '0px solid black', borderLeft: '1px solid black', },
+    tableCol: {
+      borderBottom: '1px solid black', padding: 2,
+      borderRight: '0px solid black', 
+      borderLeft: '1px solid black',
+    },
     header: { backgroundColor: '#f0f0f0' },
     textSmall: { fontSize: 10 },
     textXSmall: { fontSize: 5 },
@@ -393,7 +397,7 @@ const InvoicePdf = ({ companyDetails, billData, billDetails, hsnData, totalAmoun
       <Page size="A4" style={styles.page}>
         {/* Header */}
         <View style={styles.section}>
-          <Text style={[styles.bold, { marginBottom: 10 }]}>Proforma Invoice</Text>
+          <Text style={[styles.bold, { marginBottom: 10 }]}>{billname}</Text>
           <View style={[styles.border, { borderBottomWidth: 0 }]}>
             <View style={[styles.flexRow, { borderBottom: '1px solid black', height: 90 }]}>
               <View style={{ width: '60%', padding: 10, flexDirection: 'row', borderRight: '1px solid black' }}>

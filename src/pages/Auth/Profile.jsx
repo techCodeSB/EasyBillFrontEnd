@@ -152,9 +152,11 @@ const Profile = () => {
                       <label htmlFor="invoiceLogo" className='file__upload' title='Upload'>
                         <MdUploadFile />
                       </label>
-                      <LuFileX2 className='remove__upload ' title='Remove upload' onClick={() => {
-                        setData({ ...data, profile: "" });
-                      }} />
+                      {
+                        data.profile && <LuFileX2 className='remove__upload ' title='Remove upload' onClick={() => {
+                          setData({ ...data, profile: "" });
+                        }} />
+                      }
                     </div>
                   </div>
                 </div>

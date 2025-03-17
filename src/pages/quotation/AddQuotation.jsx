@@ -32,7 +32,7 @@ const Quotation = ({ mode }) => {
   const getItemModalState = useSelector((store) => store.itemModalSlice.show);
   const navigate = useNavigate();
   const { id } = useParams()
-  const getBillPrefix = useBillPrefix("invoice");
+  const getBillPrefix = useBillPrefix("quotation");
   const { getApiData } = useApi();
   const itemRowSet = {
     QuotaionItem: 1, itemName: '', description: '', hsn: '', qun: '1',
@@ -101,7 +101,6 @@ const Quotation = ({ mode }) => {
   }
   useEffect(() => {
     if (id) {
-
       get();
     }
   }, [id])
@@ -111,10 +110,10 @@ const Quotation = ({ mode }) => {
   useEffect(() => {
     if (getBillPrefix && !mode) {
       setFormData({ ...formData, quotationNumber: getBillPrefix[0] + getBillPrefix[1] });
-    }else{
+    } else if (mode) {
       get();
     }
-  }, [getBillPrefix, mode])
+  }, [getBillPrefix?.length, mode])
 
 
 
@@ -245,6 +244,7 @@ const Quotation = ({ mode }) => {
   const changeDiscountType = (e) => {
     setFormData({ ...formData, discountType: e.target.value });
     if (e.target.value !== "no") {
+      
       setDiscountToggler(false);
 
     } else {

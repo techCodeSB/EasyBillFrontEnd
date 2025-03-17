@@ -17,6 +17,8 @@ import { toggle } from '../../store/partyModalSlice';
 import { toggle as itemToggle } from '../../store/itemModalSlice';
 import swal from 'sweetalert';
 import { HiOutlineDocumentDuplicate } from 'react-icons/hi';
+import AddPartyModal from '../../components/AddPartyModal';
+import AddItemModal from '../../components/AddItemModal';
 
 
 
@@ -94,20 +96,20 @@ const PO = ({ mode }) => {
     }
   }
   useEffect(() => {
-    if (mode) {
+    if (id) {
       get();
     }
-  }, [mode])
+  }, [id])
 
 
   // Set PO number
   useEffect(() => {
     if (getBillPrefix && !mode) {
-      setFormData({ ...formData, quotationNumber: getBillPrefix[0] + getBillPrefix[1] });
-    } else {
+      setFormData(prev => ({ ...prev, poNumber: getBillPrefix[0] + getBillPrefix[1] }));
+    } else if (getBillPrefix && mode) {
       get();
     }
-  }, [getBillPrefix, mode])
+  }, [getBillPrefix?.length, mode]);
 
 
 
@@ -459,6 +461,9 @@ const PO = ({ mode }) => {
       <Nav title={mode ? "Update Purchase Order" : "Add Purchase Order"} />
       <main id='main'>
         <SideNav />
+        <AddPartyModal open={getPartyModalState} />
+        <AddItemModal open={getItemModalState} />
+
         <div className='content__body'>
           <div className='content__body__main bg-white' id='addQuotationTable'>
 
@@ -486,7 +491,7 @@ const PO = ({ mode }) => {
                           swal("Quotation successfully duplicate", {
                             icon: "success",
                           });
-                          navigate(`/admin/quotation-estimate/add/${id}`)
+                          navigate(`/admin/purchase-order/add/${id}`)
                         }
                       });
                   }}><HiOutlineDocumentDuplicate />Duplicate invoice</button>
@@ -494,7 +499,7 @@ const PO = ({ mode }) => {
                 </div>
               }
             </div>
-hellowo
+
             <div className='flex flex-col lg:flex-row items-center justify-around gap-4'>
               <div className='flex flex-col gap-2 w-full'>
                 <p className='text-xs'>Select Party</p>

@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Nav from '../../components/Nav';
 import SideNav from '../../components/SideNav';
 // import MyBreadCrumb from '../../components/BreadCrumb';
-import { Pagination } from 'rsuite';
 import { BiPrinter } from "react-icons/bi";
 import { FaRegCopy } from "react-icons/fa";
 import { MdEditSquare } from "react-icons/md";
@@ -308,7 +307,7 @@ const SalesInvoice = () => {
                         <td className='px-4 border-b' align='center'>{data.party.name}</td>
                         <td className='px-4 border-b' align='center'>{data.DueDate}</td>
                         <td className='px-4 border-b max-w-[20px]' align='center'>
-                          <span className={`${data.paymentStatus === "1" ?'bg-green-500': 'bg-red-500'} px-2 text-white rounded-lg text-[11px] font-bold`}>
+                          <span className={`${data.paymentStatus === "1" ? 'bg-green-500' : 'bg-red-500'} px-2 text-white rounded-lg text-[11px] font-bold`}>
                             {data.paymentStatus === "1" ? "Paid" : "Not Paid"}
                           </span>
                         </td>
@@ -348,6 +347,7 @@ const SalesInvoice = () => {
                 {
                   Array.from({ length: Math.ceil((totalData / dataLimit)) }).map((_, i) => {
                     return <div
+                      key={i}
                       onClick={() => setActivePage(i + 1)}
                       className='border-blue-400 border w-[20px] h-[20px] text-center rounded cursor-pointer'
                       style={activePage === i + 1 ? { border: "1px solid blue" } : {}}

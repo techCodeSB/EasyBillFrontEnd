@@ -325,7 +325,7 @@ const PO = () => {
                                                             <IoInformationCircle />
                                                         </button>
                                                         <button
-                                                            onClick={() => navigate(`/admin/purchase-invoice/add/${data._id}`)}
+                                                            onClick={() => navigate(`/admin/purchase-invoice/convert/add/${data._id}`)}
                                                             title='Convert to Invoice'
                                                             className='bg-green-500 text-white px-2 py-1 rounded w-full text-lg'>
                                                             <SiConvertio />

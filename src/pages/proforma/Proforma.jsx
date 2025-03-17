@@ -325,7 +325,7 @@ const Proforma = () => {
                                                             <IoInformationCircle />
                                                         </button>
                                                         <button
-                                                            onClick={() => navigate(`/admin/sales-invoice/add/${data._id}`)}
+                                                            onClick={() => navigate(`/admin/sales-invoice/convert/add/${data._id}`)}
                                                             title='Convert to final invoice'
                                                             className='bg-green-500 text-white px-2 py-1 rounded w-full text-lg'>
                                                             <SiConvertio />

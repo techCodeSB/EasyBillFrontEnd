@@ -162,7 +162,10 @@ const AddCompany = () => {
                         <label htmlFor="invoiceLogo" className='file__upload' title='Upload'>
                           <MdUploadFile />
                         </label>
-                        <LuFileX2 className='remove__upload ' title='Remove upload' onClick={() => removeUpload('invoiceLogo')} />
+                        {
+                          companyData.invoiceLogo && <LuFileX2 className='remove__upload ' title='Remove upload'
+                            onClick={() => removeUpload('invoiceLogo')} />
+                        }
                       </div>
                     </div>
                   </div>
@@ -175,7 +178,10 @@ const AddCompany = () => {
                         <label htmlFor="signutre" className='file__upload' title='Upload'>
                           <MdUploadFile />
                         </label>
-                        <LuFileX2 className='remove__upload' title='Remove upload' onClick={() => removeUpload('signutre')} />
+                        {
+                          companyData.signature && <LuFileX2 className='remove__upload' title='Remove upload'
+                            onClick={() => removeUpload('signutre')} />
+                        }
                       </div>
                     </div>
                   </div>
