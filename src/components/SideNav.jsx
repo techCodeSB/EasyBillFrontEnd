@@ -1,25 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import { HiOutlineHome } from "react-icons/hi2";
-// import { FaEarthAmericas } from "react-icons/fa6";
-// import { PiComputerTowerThin } from "react-icons/ci";
 import { PiComputerTowerThin } from "react-icons/pi";
-import { IoIosArrowForward } from "react-icons/io";
-
-
 import { IoSettingsOutline } from "react-icons/io5";
 import { TbUsersGroup } from "react-icons/tb";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { Link } from 'react-router-dom';
-// import { IoIosArrowDown } from "react-icons/io";
 import { Tooltip } from 'react-tooltip';
 import { Popover, Whisper } from 'rsuite';
 import { useSelector } from 'react-redux';
+
 
 
 const SideNav = () => {
   const userData = useSelector((store) => store.userDetail)
   const [sideBar, setSideBar] = useState(true);
   const isSideBarOpen = localStorage.getItem("sideBarOpenStatus");
+  const activePath = window.location.pathname;
+
   const [links, setLinks] = useState({
     "main": [
       {
@@ -186,9 +183,9 @@ const SideNav = () => {
   useEffect(() => {
     let valid = true;
 
-    if(userData.companies && userData.companies.length < 1){
+    if (userData.companies && userData.companies.length < 1) {
       valid = false;
-    }else{
+    } else {
       valid = true;
     }
 
@@ -210,7 +207,7 @@ const SideNav = () => {
       )
     );
   }, [userData])
-  
+
 
 
   const toggleSubmenu = (name) => {
@@ -237,7 +234,7 @@ const SideNav = () => {
       prev ? localStorage.setItem("sideBarOpenStatus", false) : localStorage.setItem("sideBarOpenStatus", true);
 
       sideBar.style.minWidth = prev ? "50px" : "175px";
-      sideBar.querySelectorAll("li").forEach(e => e.style.borderRadius = prev ? "0px" : "20px");
+      sideBar.querySelectorAll("li").forEach(e => e.style.borderRadius = prev ? "0px" : "0px");
       sideBar.querySelectorAll("li span:nth-child(2), li span:nth-child(3), h3").forEach(e => e.style.display = prev ? "none" : "");
       sideBar.querySelectorAll("li .sub-menu").forEach(e => e.style.display = prev ? "none" : "");
       sideBar.querySelectorAll("ul a, ul li").forEach(item => {
@@ -263,7 +260,7 @@ const SideNav = () => {
           <ul>
             {links.main.map((link, index) => (
               <Link key={index} to={link.link} data-tooltip-id="sideBarItemToolTip">
-                <li className='flex items-center'>
+                <li className={`flex items-center ${link.link === activePath ? 'active__link' : ''}`} >
                   <span className='mr-3'>{link.icon}</span>
                   <span>{link.name}</span>
                 </li>
@@ -276,7 +273,7 @@ const SideNav = () => {
           <ul className=''>
             {links.sales.map((link, index) => (
               <Link key={index} to={link.link} data-tooltip-id="sideBarItemToolTip">
-                <li className='flex items-center'>
+                <li className={`flex items-center ${link.link === activePath ? 'active__link' : ''}`}>
                   <span className='mr-3'>{link.icon}</span>
                   <span>{link.name}</span>
                 </li>
@@ -289,7 +286,7 @@ const SideNav = () => {
           <ul className=''>
             {links.Purshase.map((link, index) => (
               <Link key={index} to={link.link} data-tooltip-id="sideBarItemToolTip">
-                <li className='flex items-center'>
+                <li className={`flex items-center ${link.link === activePath ? 'active__link' : ''}`}>
                   <span className='mr-3'>{link.icon}</span>
                   <span >{link.name}</span>
                 </li>
@@ -302,7 +299,7 @@ const SideNav = () => {
           <ul className=''>
             {links.Accounting.map((link, index) => (
               <Link key={index} to={link.link} data-tooltip-id="sideBarItemToolTip">
-                <li className='flex items-center'>
+                <li className={`flex items-center ${link.link === activePath ? 'active__link' : ''}`}>
                   <span className='mr-3'>{link.icon}</span>
                   <span >{link.name}</span>
                 </li>
@@ -314,13 +311,13 @@ const SideNav = () => {
         <div className="side__nav__link__group">
           <h3 className='text-[16px] my-5'>Setup</h3>
           <ul>
-            <Link data-tooltip-id="sideBarItemToolTip">
-              <li className='flex items-center'>
+            <Link to={"/admin/site"} data-tooltip-id="sideBarItemToolTip">
+              <li className={`flex items-center ${"/admin/site" === activePath ? 'active__link' : ''}`}>
                 <span className='mr-3'><IoSettingsOutline /></span>
                 <span>Site/Business Settings</span>
               </li>
             </Link>
-            <Whisper enterable trigger={'hover'} speaker={
+            {/* <Whisper enterable trigger={'hover'} speaker={
               openSubmenus.includes('unit') ?
                 <Popover className='p-0 w-[100px]'>
                   <ul>
@@ -342,8 +339,8 @@ const SideNav = () => {
                     </Link>
                   </ul>
                 </Popover> : <div></div>
-            }>
-              <li onClick={() => toggleSubmenu('unit')} className='cursor-pointer'>
+            }> */}
+            {/* <li onClick={() => toggleSubmenu('unit')} className='cursor-pointer'>
                 <div className='flex items-center justify-between'>
                   <span> <TbUsersGroup /></span>
                   <span>User Management</span>
@@ -365,84 +362,39 @@ const SideNav = () => {
                     </li>
                   </Link>
                 </ul>
-              </li>
-            </Whisper>
+              </li> */}
+            {/* </Whisper> */}
             <Link to={"/admin/unit"} data-tooltip-id="sideBarItemToolTip">
-              <li className='flex items-center'>
+              <li className={`flex items-center ${"/admin/unit" === activePath ? 'active__link' : ''}`}>
                 <span className='mr-3'><PiComputerTowerThin /></span>
                 <span>Unit</span>
               </li>
             </Link>
             <Link to={"/admin/tax"} data-tooltip-id="sideBarItemToolTip">
-              <li className='flex items-center'>
+              <li className={`flex items-center ${"/admin/tax" === activePath ? 'active__link' : ''}`}>
                 <span className='mr-3'><PiComputerTowerThin /></span>
                 <span>Tax</span>
               </li>
             </Link>
             <Link to={"/admin/item"} data-tooltip-id="sideBarItemToolTip">
-              <li className='flex items-center'>
+              <li className={`flex items-center ${"/admin/item" === activePath ? 'active__link' : ''}`}>
                 <span className='mr-3'><PiComputerTowerThin /></span>
                 <span>Item</span>
               </li>
             </Link>
             <Link to={"/admin/item-category"} data-tooltip-id="sideBarItemToolTip">
-              <li className='flex items-center'>
+              <li className={`flex items-center ${"/admin/item-category" === activePath ? 'active__link' : ''}`}>
                 <span className='mr-3'><PiComputerTowerThin /></span>
                 <span>Category</span>
               </li>
             </Link>
             <Link to={"/admin/party"} data-tooltip-id="sideBarItemToolTip">
-              <li className='flex items-center'>
+              <li className={`flex items-center ${"/admin/party" === activePath ? 'active__link' : ''}`}>
                 <span className='mr-3'><PiComputerTowerThin /></span>
                 <span>Party</span>
               </li>
             </Link>
           </ul>
-          {/* <ul className=''>
-            {links.Setup.map((link, index) => (
-              <Whisper key={index} enterable trigger={'hover'} speaker={
-                index === 4 ? <Popover className='p-0'>
-                  <ul>
-                    {links.Setup[4].submenu.map((sublink, subIndex) => (
-                      <Link className='focus-within:no-underline hover:no-underline text-blue-900'>
-                        <li  className='flex items-center'>
-                          <span className='mr-2 text-[15px]'>{sublink.icon}</span>
-                          <Link to={sublink.link} className='focus-within:no-underline hover:no-underline text-blue-900 text-[13px]'>
-                            {sublink.name}
-                          </Link>
-                        </li>
-                      </Link>
-                    ))}
-                  </ul>
-                </Popover> : <div className='this-div-is-bekar'></div>
-              }>
-                <li key={index} className='flex flex-col' data-tooltip-id="sideBarItemToolTip">
-                  <div className='flex items-center justify-between' onClick={() => toggleSubmenu(link.name)}>
-                    <Link to={link.link} className='flex items-center'>
-                      <span className='mr-3'>{link.icon}</span>
-                      <span>{link.name}</span>
-                    </Link>
-                    {link.submenu && <span className={`ml-2 transform transition-transform ${openSubmenus[link.name] ? 'rotate-180' : ''}`}>
-                      <IoIosArrowDown size={"12px"} />
-                    </span>}
-                  </div>
-                  {link.submenu && openSubmenus[link.name] && (
-                    <ul className='ml-2 mt-2'>
-                      {link.submenu.map((sublink, subIndex) => (
-                        <Link key={subIndex} to={sublink.link}>
-                          <li className='flex items-center'>
-                            <span className='mr-3'>{sublink.icon}</span>
-                            <Link >{sublink.name}</Link>
-                          </li>
-                        </Link>
-                      ))}
-                    </ul>
-                  )}
-                </li>
-              </Whisper>
-            ))}
-          </ul> */}
-
         </div>
       </div>
       <Tooltip id='sideBarItemToolTip' />

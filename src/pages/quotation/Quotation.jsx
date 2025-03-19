@@ -19,6 +19,10 @@ import useMyToaster from '../../hooks/useMyToaster';
 import Cookies from 'js-cookie';
 import downloadPdf from '../../helper/downloadPdf';
 import { GrFormNext, GrFormPrevious } from 'react-icons/gr';
+import DataShimmer from '../../components/DataShimmer';
+import { IoSettingsOutline } from "react-icons/io5";
+import { Tooltip } from 'react-tooltip';
+
 
 
 
@@ -32,7 +36,7 @@ const Quotation = () => {
   const [totalData, setTotalData] = useState();
   const [selected, setSelected] = useState([]);
   const navigate = useNavigate();
-  const [billData, setBillData] = useState([]);
+  const [billData, setBillData] = useState(null);
   const tableRef = useRef(null);
   const [tableStatusData, setTableStatusData] = useState('active');
   const exportData = useMemo(() => {
@@ -43,11 +47,14 @@ const Quotation = () => {
       "Valid Date": validDate
     }));
   }, [billData]);
+  const [loading, setLoading] = useState(true);
+
+
 
 
   // Get data;
   useEffect(() => {
-    const getParty = async () => {
+    const getData = async () => {
       try {
         const data = {
           token: Cookies.get("token"),
@@ -66,12 +73,13 @@ const Quotation = () => {
         console.log(res)
         setTotalData(res.totalData)
         setBillData([...res.data])
+        setLoading(false);
 
       } catch (error) {
         console.log(error)
       }
     }
-    getParty();
+    getData();
   }, [tableStatusData, dataLimit, activePage])
 
 
@@ -208,6 +216,7 @@ const Quotation = () => {
       <Nav title={"Quotation"} />
       <main id='main'>
         <SideNav />
+        <Tooltip id='dataTooltip' />
         <div className='content__body'>
           {/* <MyBreadCrumb title={"Quotation"} links={[
             { name: "Quotation ", link: "/admin/quatation" },
@@ -215,150 +224,158 @@ const Quotation = () => {
             { name: "All list", link: null }
           ]} /> */}
 
-          <div className='content__body__main bg-white'>
-            {/* First Row */}
-            <div className='flex justify-between items-center flex-col lg:flex-row gap-4'>
-              <div className='flex items-center gap-4 justify-between w-full lg:justify-start'>
-                <div className='flex flex-col'>
-                  <p>Show</p>
-                  <select value={dataLimit} onChange={(e) => setDataLimit(e.target.value)}>
-                    <option value={10}>10</option>
-                    <option value={25}>25</option>
-                    <option value={50}>50</option>
-                    <option value={100}>100</option>
-                  </select>
+          {
+            !loading ? <div className='content__body__main'>
+              {/* First Row */}
+              <div className='flex justify-between items-center flex-col lg:flex-row gap-4'>
+                <div className='flex items-center gap-4 justify-between w-full lg:justify-start'>
+                  <div className='flex flex-col'>
+                    <p>Show</p>
+                    <select value={dataLimit} onChange={(e) => setDataLimit(e.target.value)}>
+                      <option value={10}>10</option>
+                      <option value={25}>25</option>
+                      <option value={50}>50</option>
+                      <option value={100}>100</option>
+                    </select>
+                  </div>
+                  <div className='list__icons'>
+                    <div className='list__icon' data-tooltip-id="dataTooltip" data-tooltip-content="Print"
+                      onClick={() => exportTable('print')}>
+                      <BiPrinter className='text-white text-[16px]' />
+                    </div>
+                    <div className='list__icon' data-tooltip-id="dataTooltip" data-tooltip-content="Copy Table"
+                      onClick={() => exportTable('copy')}
+                    >
+                      <FaRegCopy className='text-white text-[16px]' />
+                    </div>
+                    <div className='list__icon' data-tooltip-id="dataTooltip" data-tooltip-content="Download PDF"
+                      onClick={() => exportTable('pdf')}>
+                      <FaRegFilePdf className="text-white text-[16px]" />
+                    </div>
+                    <div className='list__icon' data-tooltip-id="dataTooltip" data-tooltip-content="Download Excel">
+                      <FaRegFileExcel className='text-white text-[16px]' onClick={() => exportTable('excel')} />
+                    </div>
+                  </div>
                 </div>
-                <div className='list__icons'>
-                  <div className='list__icon' title='Print'>
-                    <BiPrinter className='text-white text-[16px]' onClick={() => exportTable('print')} />
-                  </div>
-                  <div className='list__icon' title='Copy'>
-                    <FaRegCopy className='text-white text-[16px]' onClick={() => exportTable('copy')} />
-                  </div>
-                  <div className='list__icon' title='PDF' onClick={() => exportTable('pdf')}>
-                    <FaRegFilePdf className="text-white text-[16px]" />
-                  </div>
-                  <div className='list__icon' title='Excel'>
-                    <FaRegFileExcel className='text-white text-[16px]' onClick={() => exportTable('excel')} />
-                  </div>
+                <div className='flex w-full flex-col lg:w-[300px]'>
+                  <p>Search</p>
+                  <input type='text' onChange={searchTable} />
                 </div>
               </div>
-              <div className='flex w-full flex-col lg:w-[300px]'>
-                <p>Search</p>
-                <input type='text' onChange={searchTable} />
+
+              {/* Second Row */}
+              <div className='list_buttons'>
+                <button className='bg-teal-500 hover:bg-teal-400' onClick={() => navigate('/admin/quotation-estimate/add')}>
+                  <MdAdd className='text-lg' />
+                  Add New
+                </button>
+                <button className='bg-orange-400 hover:bg-orange-300' onClick={() => removeData(true)}>
+                  <MdOutlineCancel className='text-lg' />
+                  Trash
+                </button>
+                <button onClick={restoreData} className='bg-green-500 hover:bg-green-400'>
+                  <MdOutlineRestorePage className='text-lg' />
+                  Restore
+                </button>
+                <button onClick={() => removeData(false)} className='bg-red-600 hover:bg-red-500'>
+                  <MdDeleteOutline className='text-lg' />
+                  Delete
+                </button>
+                <select value={tableStatusData}
+                  onChange={(e) => setTableStatusData(e.target.value)}
+                  className='bg-blue-500 text-white'>
+                  <option value="all">All</option>
+                  <option value="active">Active</option>
+                  <option value="trash">Trash</option>
+                </select>
               </div>
-            </div>
 
-            {/* Second Row */}
-            <div className='list_buttons'>
-              <button className='bg-teal-500 hover:bg-teal-400' onClick={() => navigate('/admin/quotation-estimate/add')}>
-                <MdAdd className='text-lg' />
-                Add New
-              </button>
-              <button className='bg-orange-400 hover:bg-orange-300' onClick={() => removeData(true)}>
-                <MdOutlineCancel className='text-lg' />
-                Trash
-              </button>
-              <button onClick={restoreData} className='bg-green-500 hover:bg-green-400'>
-                <MdOutlineRestorePage className='text-lg' />
-                Restore
-              </button>
-              <button onClick={() => removeData(false)} className='bg-red-600 hover:bg-red-500'>
-                <MdDeleteOutline className='text-lg' />
-                Delete
-              </button>
-              <select value={tableStatusData}
-                onChange={(e) => setTableStatusData(e.target.value)}
-                className='bg-blue-500 text-white'>
-                <option value="all">All</option>
-                <option value="active">Active</option>
-                <option value="trash">Trash</option>
-              </select>
-            </div>
-
-            {/* Table start */}
-            <div className='overflow-x-auto mt-5 list__table'>
-              <table className='min-w-full bg-white' id='listQuotation' ref={tableRef}>
-                <thead className='bg-gray-100'>
-                  <tr>
-                    <th className='py-2 px-4 border-b'>
-                      <input type='checkbox' onChange={selectAll} checked={billData.length > 0 && selected.length === billData.length} />
-                    </th>
-                    <th className='py-2 px-4 border-b'>Date</th>
-                    <th className='py-2 px-4 border-b'>Quotation / Estimate Number</th>
-                    <th className='py-2 px-4 border-b'>Party Name</th>
-                    <th className='py-2 px-4 border-b'>Valid To</th>
-                    <th className='py-2 px-4 border-b'>Status</th>
-                    <th className='py-2 px-4 border-b'>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
+              {/* Table start */}
+              <div className='overflow-x-auto mt-5 list__table'>
+                <table className='min-w-full bg-white' id='listQuotation' ref={tableRef}>
+                  <thead className='bg-gray-100'>
+                    <tr>
+                      <th className='py-2 px-4 border-b'>
+                        <input type='checkbox' onChange={selectAll} checked={billData.length > 0 && selected.length === billData.length} />
+                      </th>
+                      <th className='py-2 px-4 border-b'>Date</th>
+                      <th className='py-2 px-4 border-b'>Quotation / Estimate Number</th>
+                      <th className='py-2 px-4 border-b'>Party Name</th>
+                      <th className='py-2 px-4 border-b'>Valid To</th>
+                      <th className='py-2 px-4 border-b'>Status</th>
+                      <th className='py-2 px-4 border-b'>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {
+                      billData.map((data, i) => {
+                        return <tr key={i}>
+                          <td className='py-2 px-4 border-b max-w-[10px]'>
+                            <input type='checkbox' checked={selected.includes(data._id)} onChange={() => handleCheckboxChange(data._id)} />
+                          </td>
+                          <td className='px-4 border-b' align='center'>{data.estimateData}</td>
+                          <td className='px-4 border-b' align='center'>{data.quotationNumber}</td>
+                          <td className='px-4 border-b' align='center'>{data.party.name}</td>
+                          <td className='px-4 border-b' align='center'>{data.validDate}</td>
+                          <td className='px-4 border-b max-w-[20px]' align='center'>
+                            <span className='bg-green-500 px-2 text-white rounded-lg text-[12px] font-bold'>
+                              {new Date(Date.parse(new Date().toLocaleDateString())).toISOString() > new Date(Date.parse(data.validDate)).toISOString() ? "Expired" : "Valid"}
+                            </span>
+                          </td>
+                          <td className='px-4 border-b max-w-[70px]'>
+                            <div className='flex flex-col md:flex-row gap-2 mr-2'>
+                              <button
+                                data-tooltip-id="dataTooltip" data-tooltip-content="Edit"
+                                onClick={() => navigate(`/admin/quotation-estimate/edit/${data._id}`)}
+                                className='bg-blue-400 text-white px-2 py-1 rounded w-full text-[16px]'>
+                                <MdEditSquare />
+                              </button>
+                              <button
+                                data-tooltip-id="dataTooltip" data-tooltip-content="Details"
+                                onClick={() => navigate(`/admin/bill/details/quotation/${data._id}`)}
+                                className='bg-red-500 text-white px-2 py-1 rounded w-full text-lg'>
+                                <IoInformationCircle />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      })
+                    }
+                  </tbody>
+                </table>
+                <p className='py-4'>Showing {billData.length} of {totalData} entries</p>
+                {/* ----- Paginatin ----- */}
+                <div className='flex justify-end gap-2'>
                   {
-                    billData.map((data, i) => {
-                      return <tr key={i}>
-                        <td className='py-2 px-4 border-b max-w-[10px]'>
-                          <input type='checkbox' checked={selected.includes(data._id)} onChange={() => handleCheckboxChange(data._id)} />
-                        </td>
-                        <td className='px-4 border-b' align='center'>{data.estimateData}</td>
-                        <td className='px-4 border-b' align='center'>{data.quotationNumber}</td>
-                        <td className='px-4 border-b' align='center'>{data.party.name}</td>
-                        <td className='px-4 border-b' align='center'>{data.validDate}</td>
-                        <td className='px-4 border-b max-w-[20px]' align='center'>
-                          <span className='bg-green-500 px-2 text-white rounded-lg text-[12px] font-bold'>
-                            {new Date(Date.parse(new Date().toLocaleDateString())).toISOString() > new Date(Date.parse(data.validDate)).toISOString() ? "Expired" : "Valid"}
-                          </span>
-                        </td>
-                        <td className='px-4 border-b max-w-[70px]'>
-                          <div className='flex flex-col md:flex-row gap-2 mr-2'>
-                            <button
-                              onClick={() => navigate(`/admin/quotation-estimate/edit/${data._id}`)}
-                              className='bg-blue-400 text-white px-2 py-1 rounded w-full text-[16px]'>
-                              <MdEditSquare />
-                            </button>
-                            <button
-                              onClick={() => navigate(`/admin/bill/details/quotation/${data._id}`)}
-                              className='bg-red-500 text-white px-2 py-1 rounded w-full text-lg'>
-                              <IoInformationCircle />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
+                    activePage > 1 ? <div
+                      onClick={() => setActivePage(activePage - 1)}
+                      className='border bg-blue-600 text-white w-[20px] h-[20px] grid place-items-center rounded cursor-pointer'>
+                      <GrFormPrevious />
+                    </div> : null
+                  }
+                  {
+                    Array.from({ length: Math.ceil((totalData / dataLimit)) }).map((_, i) => {
+                      return <div
+                        onClick={() => setActivePage(i + 1)}
+                        className='border-blue-400 border w-[20px] h-[20px] text-center rounded cursor-pointer'
+                        style={activePage === i + 1 ? { border: "1px solid blue" } : {}}
+                      >
+                        {i + 1}
+                      </div>
                     })
                   }
-                </tbody>
-              </table>
-              <p className='py-4'>Showing {billData.length} of {totalData} entries</p>
-              {/* ----- Paginatin ----- */}
-              <div className='flex justify-end gap-2'>
-                {
-                  activePage > 1 ? <div
-                    onClick={() => setActivePage(activePage - 1)}
-                    className='border bg-blue-600 text-white w-[20px] h-[20px] grid place-items-center rounded cursor-pointer'>
-                    <GrFormPrevious />
-                  </div> : null
-                }
-                {
-                  Array.from({ length: Math.ceil((totalData / dataLimit)) }).map((_, i) => {
-                    return <div
-                      onClick={() => setActivePage(i + 1)}
-                      className='border-blue-400 border w-[20px] h-[20px] text-center rounded cursor-pointer'
-                      style={activePage === i + 1 ? { border: "1px solid blue" } : {}}
-                    >
-                      {i + 1}
-                    </div>
-                  })
-                }
-                {
-                  (totalData / dataLimit) > activePage ? <div
-                    onClick={() => setActivePage(activePage + 1)}
-                    className='border bg-blue-600 text-white w-[20px] h-[20px] flex items-center justify-center rounded cursor-pointer'>
-                    <GrFormNext />
-                  </div> : null
-                }
+                  {
+                    (totalData / dataLimit) > activePage ? <div
+                      onClick={() => setActivePage(activePage + 1)}
+                      className='border bg-blue-600 text-white w-[20px] h-[20px] flex items-center justify-center rounded cursor-pointer'>
+                      <GrFormNext />
+                    </div> : null
+                  }
+                </div>
+                {/* pagination end */}
               </div>
-              {/* pagination end */}
             </div>
-          </div>
+              : <DataShimmer />}
         </div>
       </main>
 

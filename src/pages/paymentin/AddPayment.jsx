@@ -146,12 +146,11 @@ const AddPayment = ({ mode }) => {
                 </div>
                 <div>
                   <p className='mb-1'>Payment in Date</p>
-                  <DatePicker
-                    value={new Date(formData.paymentInDate)}
-                    onChange={(v) => {
-                      let date = new Date(v);
-                      setFormData({ ...formData, paymentInDate: date.toLocaleDateString() })
+                  <input type="date"
+                    onChange={(e)=>{
+                      setFormData({ ...formData, paymentInDate: e.target.value })
                     }}
+                    value={formData.paymentInDate}
                     className='w-full'
                   />
                 </div>

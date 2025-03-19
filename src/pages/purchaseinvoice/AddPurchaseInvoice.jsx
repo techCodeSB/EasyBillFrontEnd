@@ -43,7 +43,7 @@ const PurchaseInvoice = ({ mode }) => {
   const [ItemRows, setItemRows] = useState([itemRowSet]);
   const [additionalRows, setAdditionalRow] = useState([additionalRowSet]); //{ additionalRowsItem: 1 }
   const [formData, setFormData] = useState({
-    party: '', purchaseInvoiceNumber: '', originalInvoiceNumber: '', estimateData: '', validDate: '',
+    party: '', purchaseInvoiceNumber: '', originalInvoiceNumber: '', invoiceDate: '', validDate: '',
     items: ItemRows, additionalCharge: additionalRows, note: '', terms: '',
     discountType: '', discountAmount: '', discountPercentage: '', paymentStatus: '0', finalAmount: '',
   })
@@ -251,10 +251,19 @@ const PurchaseInvoice = ({ mode }) => {
 
   // When change discount type `before` `after` `no`;
   const changeDiscountType = (e) => {
-    setFormData({ ...formData, discountType: e.target.value });
     if (e.target.value !== "no") {
+      if (e.target.value === "before") {
+        if (ItemRows.some((field) => parseInt(field.discountPerAmount) > 0)) {
+          toast("To apply discount before tax, remove discount on item", 'warning')
+          return;
+        }
+
+      }
+
+      setFormData({ ...formData, discountType: e.target.value });
       setDiscountToggler(false);
     } else {
+      setFormData({ ...formData, discountType: e.target.value });
       setFormData((pv) => ({
         ...pv,
         discountAmount: (0).toFixed(2),
@@ -421,7 +430,7 @@ const PurchaseInvoice = ({ mode }) => {
   // *Save bill
   const saveBill = async () => {
 
-    if ([formData.party, formData.purchaseInvoiceNumber, formData.estimateData]
+    if ([formData.party, formData.purchaseInvoiceNumber, formData.invoiceDate]
       .some((field) => field === "")) {
       return toast("Fill the blank", "error");
     }
@@ -470,7 +479,7 @@ const PurchaseInvoice = ({ mode }) => {
     setItemRows([itemRowSet]);
     setAdditionalRow([additionalRowSet])
     setFormData({
-      party: '', purchaseInvoiceNumber: getBillPrefix, estimateData: '', validDate: '', items: ItemRows,
+      party: '', purchaseInvoiceNumber: getBillPrefix, invoiceDate: '', validDate: '', items: ItemRows,
       additionalCharge: additionalRows, note: '', terms: '', paymentStatus: '',
       discountType: '', discountAmount: '', discountPercentage: '', originalInvoiceNumber: ''
     });
@@ -547,25 +556,22 @@ const PurchaseInvoice = ({ mode }) => {
               </div>
               <div className='flex flex-col gap-2 w-full lg:w-1/3'>
                 <p className='text-xs'>Invoice Date</p>
-                <DatePicker className='text-xs'
-                  onChange={(data) => {
-                    let date = new Date(data);
-                    setFormData({ ...formData, estimateData: date.toDateString() })
+                <input type="date"
+                  className='text-xs'
+                  onChange={(e) => {
+                    setFormData({ ...formData, invoiceDate: e.target.value })
                   }}
-                  value={new Date(formData.estimateData)}
+                  value={formData.invoiceDate}
                 />
-                {/* <input type="date" name="" id="" /> */}
               </div>
               <div className='flex flex-col gap-2 w-full lg:w-1/3'>
                 <p className='text-xs'>Due Date</p>
-                <DatePicker
-                  placement='bottomEnd'
+                <input type="date"
                   className='text-xs'
-                  onChange={(data) => {
-                    let date = new Date(data);
-                    setFormData({ ...formData, validDate: date.toDateString() })
+                  onChange={(e) => {
+                    setFormData({ ...formData, validDate: e.target.value })
                   }}
-                  value={new Date(formData.validDate)}
+                  value={formData.validDate}
                 />
               </div>
             </div>

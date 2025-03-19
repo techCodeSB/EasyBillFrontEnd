@@ -11,9 +11,11 @@
   width: 5px;
   height: 5px;
 }
-::-webkit-scrollbar-thumb:hover{
+
+::-webkit-scrollbar-thumb:hover {
   cursor: s-resize;
 }
+
 ::-webkit-scrollbar-track {
   /* border-radius: 30px; */
   background-color: #EDF2F1;
@@ -67,9 +69,10 @@ h6 {
 }
 
 /* Sidenav */
-.logo__area{
+.logo__area {
   transition: 0.3s all;
 }
+
 .side__nav {
   transition: 0.3s all;
   overflow-y: auto;
@@ -107,16 +110,24 @@ h6 {
   font-weight: 600;
 }
 
+.side__nav .active__link{
+  background-color: white;
+  color: #003628;
+  font-weight: 600;
+}
+.side__nav .active__link svg{
+  color: #003628;
+}
+
 .side__nav__links li {
   padding: 8px;
   font-size: 12px;
   padding-left: 15px;
-  /* transition: 1s all; */
-  border-radius: 10px;
+  transition: 0.5s all;
+  border-radius: 0px;
 }
 
 .side__nav__links li:hover {
-  /* background-color: rgb(108, 108, 193); */
   background-color: white;
   color: #003628;
 }
@@ -281,22 +292,23 @@ select {
 }
 
 .add-bill-btn {
-  @apply bg-green-500 hover:bg-green-400 text-white rounded w-[70px] ;
+  @apply bg-green-500 hover:bg-green-400 text-white rounded w-[70px];
   @apply flex items-center justify-center gap-1 py-2;
 }
-.reset-bill-btn{
-  @apply bg-blue-800 hover:bg-blue-700  text-white ;
+
+.reset-bill-btn {
+  @apply bg-blue-800 hover:bg-blue-700 text-white;
   @apply rounded w-[60px] flex items-center justify-center gap-1 py-2;
 }
 
-#invoice tr td{
+#invoice tr td {
   border: 1px solid black;
   padding: 3px;
   color: black;
   font-size: 11px;
 }
 
-#invoice thead td{
+#invoice thead td {
   font-weight: bold;
 }
 
@@ -304,36 +316,62 @@ select {
   color: #003628 !important;
 }
 
-.profile-switch-button{
-  padding: 5px 10px ;
+.profile-switch-button {
+  padding: 5px 10px;
   color: black;
   border-radius: 4px;
   cursor: pointer;
   border: 1px solid rgb(0 62 50 / var(--tw-bg-opacity, 1));
   font-weight: 500;
 }
-.profile-switch-button-active{
+
+.profile-switch-button-active {
   background-color: rgb(0 62 50 / var(--tw-bg-opacity, 1));
   color: white;
   font-weight: normal;
   border: none;
 }
 
-.top__btn__grp{
+.top__btn__grp {
   @apply flex justify-between w-full mb-4;
 }
 
-.add__btns, .extra__btns{
+.add__btns,
+.extra__btns {
   @apply flex items-center gap-2;
 }
 
-.add__btns button{
-  @apply text-[13px] bg-blue-500 text-white px-2 py-[3px]  flex items-center gap-1 rounded-[5px];
+.add__btns button {
+  @apply text-[13px] bg-blue-500 text-white px-2 py-[3px] flex items-center gap-1 rounded-[5px];
 }
 
-.extra__btns button{
-  @apply text-[13px] bg-blue-500 text-white px-2 py-[3px]  flex items-center gap-1 rounded-[5px];
+.extra__btns button {
+  @apply text-[13px] bg-blue-500 text-white px-2 py-[3px] flex items-center gap-1 rounded-[5px];
 }
-.extra__btns button:last-child{
+
+.extra__btns button:last-child {
   @apply bg-green-400;
+}
+
+.shimmer__parent {
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 13px !important;
+  background-color: rgba(235, 234, 234, 0.678);
+}
+
+.shimmer__parent .animate {
+  background: linear-gradient(90deg, #e0e0e0 25%, #f7f3f3 50%, #e0e0e0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
 }

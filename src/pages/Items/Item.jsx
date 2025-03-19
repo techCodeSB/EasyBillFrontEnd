@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import Nav from '../../components/Nav';
 import SideNav from '../../components/SideNav';
-import { Pagination } from 'rsuite';
 import { BiPrinter } from "react-icons/bi";
 import { FaRegCopy } from "react-icons/fa";
 import { MdEditSquare } from "react-icons/md";
@@ -18,6 +17,8 @@ import useMyToaster from '../../hooks/useMyToaster';
 import Cookies from 'js-cookie';
 import downloadPdf from '../../helper/downloadPdf';
 import { GrFormNext, GrFormPrevious } from 'react-icons/gr';
+import DataShimmer from '../../components/DataShimmer';
+import { Tooltip } from 'react-tooltip';
 
 
 document.title = "Items"
@@ -38,6 +39,7 @@ const Item = ({ mode }) => {
       HSN: category.hsn
     }));
   }, [itemData]);
+  const [loading, setLoading] = useState(true);
 
 
 
@@ -61,7 +63,7 @@ const Item = ({ mode }) => {
         const res = await req.json();
         setTotalData(res.totalData)
         setItemData([...res.data])
-        console.log(res.data)
+        setLoading(false);
 
       } catch (error) {
         console.log(error)
@@ -200,151 +202,160 @@ const Item = ({ mode }) => {
       <Nav title={"Item"} />
       <main id='main'>
         <SideNav />
+        <Tooltip id='itemTooltip' />
         <div className='content__body'>
-          <div className='content__body__main bg-white'>
-            {/* First Row */}
-            <div className='flex justify-between items-center flex-col lg:flex-row gap-4'>
-              <div className='flex items-center gap-4 justify-between w-full lg:justify-start'>
-                <div className='flex flex-col'>
-                  <p>Show</p>
-                  <select value={dataLimit} onChange={(e) => setDataLimit(e.target.value)}>
-                    <option value={10}>10</option>
-                    <option value={25}>25</option>
-                    <option value={50}>50</option>
-                    <option value={100}>100</option>
-                  </select>
+          {
+            !loading ? <div className='content__body__main'>
+              {/* First Row */}
+              <div className='flex justify-between items-center flex-col lg:flex-row gap-4'>
+                <div className='flex items-center gap-4 justify-between w-full lg:justify-start'>
+                  <div className='flex flex-col'>
+                    <p>Show</p>
+                    <select value={dataLimit} onChange={(e) => setDataLimit(e.target.value)}>
+                      <option value={10}>10</option>
+                      <option value={25}>25</option>
+                      <option value={50}>50</option>
+                      <option value={100}>100</option>
+                    </select>
+                  </div>
+                  <div className='list__icons'>
+                    <div className='list__icon' data-tooltip-id="itemTooltip" data-tooltip-content="Print"
+                      onClick={() => exportTable('print')}>
+                      <BiPrinter className='text-white text-[16px]' />
+                    </div>
+                    <div className='list__icon' data-tooltip-id="itemTooltip" data-tooltip-content="Copy Table"
+                      onClick={() => exportTable('copy')}>
+                      <FaRegCopy className='text-white text-[16px]' />
+                    </div>
+                    <div className='list__icon' data-tooltip-id="itemTooltip" data-tooltip-content="Download PDF"
+                      onClick={() => exportTable('pdf')}>
+                      <FaRegFilePdf className='text-white text-[16px]' />
+                    </div>
+                    <div className='list__icon' data-tooltip-id="itemTooltip" data-tooltip-content="Download Excel"
+                      onClick={() => exportTable('excel')}>
+                      <FaRegFileExcel className='text-white text-[16px]' />
+                    </div>
+                  </div>
                 </div>
-                <div className='list__icons'>
-                  <div className='list__icon' title='Print' onClick={() => exportTable('print')}>
-                    <BiPrinter className='text-white text-[16px]' />
-                  </div>
-                  <div className='list__icon' title='Copy' onClick={() => exportTable('copy')}>
-                    <FaRegCopy className='text-white text-[16px]' />
-                  </div>
-                  <div className='list__icon' title='PDF' onClick={() => exportTable('pdf')}>
-                    <FaRegFilePdf className='text-white text-[16px]' />
-                  </div>
-                  <div className='list__icon' title='Excel' onClick={() => exportTable('excel')}>
-                    <FaRegFileExcel className='text-white text-[16px]' />
-                  </div>
+                <div className='flex w-full flex-col lg:w-[300px]'>
+                  <p>Search</p>
+                  <input type='text' onChange={searchTable} />
                 </div>
               </div>
-              <div className='flex w-full flex-col lg:w-[300px]'>
-                <p>Search</p>
-                <input type='text' onChange={searchTable} />
+
+              {/* Second Row */}
+              <div className='list_buttons'>
+                <button className='bg-teal-500 hover:bg-teal-400' onClick={() => navigate('/admin/item/add')}>
+                  <MdAdd className='text-lg' />
+                  Add New
+                </button>
+                <button className='bg-orange-400 hover:bg-orange-300' onClick={() => removeData(true)}>
+                  <MdOutlineCancel className='text-lg' />
+                  Trash
+                </button>
+                <button className='bg-green-500 hover:bg-green-400' onClick={restoreData}>
+                  <MdOutlineRestorePage className='text-lg' />
+                  Restore
+                </button>
+                <button className='bg-red-600 hover:bg-red-500' onClick={() => removeData(false)}>
+                  <MdDeleteOutline className='text-lg' />
+                  Delete
+                </button>
+                <select value={tableStatusData}
+                  onChange={(e) => setTableStatusData(e.target.value)}
+                  className='bg-blue-500 text-white'>
+                  <option value="all">All</option>
+                  <option value="active">Active</option>
+                  <option value="trash">Trash</option>
+                </select>
               </div>
-            </div>
 
-            {/* Second Row */}
-            <div className='list_buttons'>
-              <button className='bg-teal-500 hover:bg-teal-400' onClick={() => navigate('/admin/item/add')}>
-                <MdAdd className='text-lg' />
-                Add New
-              </button>
-              <button className='bg-orange-400 hover:bg-orange-300' onClick={() => removeData(true)}>
-                <MdOutlineCancel className='text-lg' />
-                Trash
-              </button>
-              <button className='bg-green-500 hover:bg-green-400' onClick={restoreData}>
-                <MdOutlineRestorePage className='text-lg' />
-                Restore
-              </button>
-              <button className='bg-red-600 hover:bg-red-500' onClick={() => removeData(false)}>
-                <MdDeleteOutline className='text-lg' />
-                Delete
-              </button>
-              <select value={tableStatusData}
-                onChange={(e) => setTableStatusData(e.target.value)}
-                className='bg-blue-500 text-white'>
-                <option value="all">All</option>
-                <option value="active">Active</option>
-                <option value="trash">Trash</option>
-              </select>
-            </div>
+              {/* Table start */}
+              <div className='overflow-x-auto mt-5 list__table'>
+                <table className='min-w-full bg-white' id='itemTable' ref={tableRef}>
+                  <thead className='bg-gray-100'>
+                    <tr>
+                      <th className='py-2 px-4 border-b w-[50px]'>
+                        <input type='checkbox' onChange={selectAll} checked={itemData.length > 0 && selected.length === itemData.length} />
+                      </th>
+                      <th className='py-2 px-4 border-b '>Title</th>
+                      <th className='py-2 px-4 border-b '>HSN</th>
+                      <th className='py-2 px-4 border-b '>STOCK</th>
+                      <th className='py-2 px-4 border-b w-[100px]'>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {
+                      itemData.map((data, i) => {
+                        return <tr key={i}>
+                          <td className='py-2 px-4 border-b max-w-[10px]'>
+                            <input type='checkbox' checked={selected.includes(data._id)} onChange={() => handleCheckboxChange(data._id)} />
+                          </td>
+                          <td className='px-4 border-b'>{data.title}</td>
+                          <td className='px-4 border-b' align='center'>{data.category.hsn}</td>
+                          <td className='px-4 border-b' align='center'>
+                            <div className='flex items-center justify-center gap-2'>
+                              {
+                                data.stock.map((stock, _) => {
+                                  return stock.stock !== "" ? <p key={_}>
+                                    {stock.stock} <sub className='font-bold'>{stock.unit}</sub>
+                                  </p> : "";
+                                })
+                              }
+                            </div>
+                          </td>
 
-            {/* Table start */}
-            <div className='overflow-x-auto mt-5 list__table'>
-              <table className='min-w-full bg-white' id='itemTable' ref={tableRef}>
-                <thead className='bg-gray-100'>
-                  <tr>
-                    <th className='py-2 px-4 border-b w-[50px]'>
-                      <input type='checkbox' onChange={selectAll} checked={itemData.length > 0 && selected.length === itemData.length} />
-                    </th>
-                    <th className='py-2 px-4 border-b '>Title</th>
-                    <th className='py-2 px-4 border-b '>HSN</th>
-                    <th className='py-2 px-4 border-b '>STOCK</th>
-                    <th className='py-2 px-4 border-b w-[100px]'>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {
-                    itemData.map((data, i) => {
-                      return <tr key={i}>
-                        <td className='py-2 px-4 border-b max-w-[10px]'>
-                          <input type='checkbox' checked={selected.includes(data._id)} onChange={() => handleCheckboxChange(data._id)} />
-                        </td>
-                        <td className='px-4 border-b'>{data.title}</td>
-                        <td className='px-4 border-b' align='center'>{data.category.hsn}</td>
-                        <td className='px-4 border-b' align='center'>
-                          <div className='flex items-center justify-center gap-2'>
-                            {
-                              data.stock.map((stock, _) => {
-                                return stock.stock !== "" ? <p key={_}>
-                                  {stock.stock} <sub className='font-bold'>{stock.unit}</sub>
-                                </p> : "";
-                              })
-                            }
-                          </div>
-                        </td>
-
-                        <td className='px-4 border-b min-w-[70px]' align='center'>
-                          <div className='flex justify-center flex-col md:flex-row gap-2 mr-2'>
-                            <button className='bg-blue-400 text-white px-2 py-1 rounded  text-[16px]'
-                              onClick={() => navigate(`/admin/item/edit/${data._id}`)}>
-                              <MdEditSquare />
-                            </button>
-                            {/* <button className='bg-red-500 text-white px-2 py-1 rounded  text-lg'>
+                          <td className='px-4 border-b min-w-[70px]' align='center'>
+                            <div className='flex justify-center flex-col md:flex-row gap-2 mr-2'>
+                              <button
+                                data-tooltip-id="itemTooltip" data-tooltip-content="Edit"
+                                className='bg-blue-400 text-white px-2 py-1 rounded  text-[16px]'
+                                onClick={() => navigate(`/admin/item/edit/${data._id}`)}>
+                                <MdEditSquare />
+                              </button>
+                              {/* <button className='bg-red-500 text-white px-2 py-1 rounded  text-lg'>
                               <IoInformationCircle />
                             </button> */}
-                          </div>
-                        </td>
-                      </tr>
+                            </div>
+                          </td>
+                        </tr>
+                      })
+                    }
+                  </tbody>
+                </table>
+                <p className='py-4'>Showing {itemData.length} of {totalData} entries</p>
+                {/* ----- Paginatin ----- */}
+                <div className='flex justify-end gap-2'>
+                  {
+                    activePage > 1 ? <div
+                      onClick={() => setActivePage(activePage - 1)}
+                      className='border bg-blue-600 text-white w-[20px] h-[20px] grid place-items-center rounded cursor-pointer'>
+                      <GrFormPrevious />
+                    </div> : null
+                  }
+                  {
+                    Array.from({ length: Math.ceil((totalData / dataLimit)) }).map((_, i) => {
+                      return <div
+                        onClick={() => setActivePage(i + 1)}
+                        className='border-blue-400 border w-[20px] h-[20px] text-center rounded cursor-pointer'
+                        style={activePage === i + 1 ? { border: "1px solid blue" } : {}}
+                      >
+                        {i + 1}
+                      </div>
                     })
                   }
-                </tbody>
-              </table>
-              <p className='py-4'>Showing {itemData.length} of {totalData} entries</p>
-              {/* ----- Paginatin ----- */}
-              <div className='flex justify-end gap-2'>
-                {
-                  activePage > 1 ? <div
-                    onClick={() => setActivePage(activePage - 1)}
-                    className='border bg-blue-600 text-white w-[20px] h-[20px] grid place-items-center rounded cursor-pointer'>
-                    <GrFormPrevious />
-                  </div> : null
-                }
-                {
-                  Array.from({ length: Math.ceil((totalData / dataLimit)) }).map((_, i) => {
-                    return <div
-                      onClick={() => setActivePage(i + 1)}
-                      className='border-blue-400 border w-[20px] h-[20px] text-center rounded cursor-pointer'
-                      style={activePage === i + 1 ? { border: "1px solid blue" } : {}}
-                    >
-                      {i + 1}
-                    </div>
-                  })
-                }
-                {
-                  (totalData / dataLimit) > activePage ? <div
-                    onClick={() => setActivePage(activePage + 1)}
-                    className='border bg-blue-600 text-white w-[20px] h-[20px] flex items-center justify-center rounded cursor-pointer'>
-                    <GrFormNext />
-                  </div> : null
-                }
+                  {
+                    (totalData / dataLimit) > activePage ? <div
+                      onClick={() => setActivePage(activePage + 1)}
+                      className='border bg-blue-600 text-white w-[20px] h-[20px] flex items-center justify-center rounded cursor-pointer'>
+                      <GrFormNext />
+                    </div> : null
+                  }
+                </div>
+                {/* pagination end */}
               </div>
-              {/* pagination end */}
-            </div>
-          </div>
+            </div> : <DataShimmer />
+          }
         </div>
       </main>
     </>

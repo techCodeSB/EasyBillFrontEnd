@@ -20,6 +20,7 @@ import { MdOutlineAdd } from "react-icons/md";
 import { HiOutlineDocumentDuplicate } from "react-icons/hi";
 import AddItemModal from '../../components/AddItemModal';
 import swal from 'sweetalert';
+import { IoSettingsOutline } from 'react-icons/io5';
 
 
 
@@ -71,6 +72,49 @@ const Quotation = ({ mode }) => {
   // store item label and value pair for dropdown
   const [itemData, setItemData] = useState([])
   const [taxData, setTaxData] = useState([]);
+
+
+  // Get data from localStorage and set;
+  useEffect(() => {
+    if (!mode) {
+      let data = localStorage.getItem("quotationKey");
+
+      if (data) {
+        data = JSON.parse(data);
+        console.log(data)
+
+        setFormData({ ...formData, ...data.data.formData })
+        getApiData("party").then((d) => {
+          d.data.forEach((p) => {
+            if (p._id == data.data.formData.party) {
+              setFormData({ ...formData, party: p })
+            }
+          })
+        })
+
+        setItemRows([...data.data.ItemRows])
+        setAdditionalRow([...data.data.additionalRows])
+
+        
+      }
+    }
+  }, [])
+
+  // Store data to locaStoreage
+  useEffect(() => {
+    let local = {
+      data: {
+        formData,
+        ItemRows,
+        additionalRows
+      }
+    }
+
+    if (!mode) {
+      localStorage.setItem("quotationKey", JSON.stringify(local))
+    }
+
+  }, [formData, ItemRows, additionalRows])
 
 
 
@@ -242,12 +286,21 @@ const Quotation = ({ mode }) => {
 
   // When change discount type `before` `after` `no`;
   const changeDiscountType = (e) => {
-    setFormData({ ...formData, discountType: e.target.value });
+
     if (e.target.value !== "no") {
-      
+      if (e.target.value === "before") {
+        if (ItemRows.some((field) => parseInt(field.discountPerAmount) > 0)) {
+          toast("To apply discount before tax, remove discount on item", 'warning')
+          return;
+        }
+
+      }
+
+      setFormData({ ...formData, discountType: e.target.value });
       setDiscountToggler(false);
 
     } else {
+      setFormData({ ...formData, discountType: e.target.value });
       setFormData((pv) => ({
         ...pv,
         discountAmount: (0).toFixed(2),
@@ -402,8 +455,8 @@ const Quotation = ({ mode }) => {
       const value = e.target.value || (0).toFixed(2);
       let per = ((value / subTotal()('amount')) * 100).toFixed(2) //Get percentage
       setFormData({ ...formData, discountAmount: e.target.value, discountPercentage: per });
-      console.log(per)
-      console.log("subtotal", subTotal()("amount"))
+      // console.log(per)
+      // console.log("subtotal", subTotal()("amount"))
 
       // if (formData.discountType === "before") {
       //   let items = [...ItemRows];
@@ -485,6 +538,7 @@ const Quotation = ({ mode }) => {
   }
 
 
+
   return (
     <>
       <Nav title={mode ? "Update Quotation" : "Add Quotation"} />
@@ -528,6 +582,9 @@ const Quotation = ({ mode }) => {
                   <button onClick={saveBill}><FaRegCheckCircle />Update</button>
                 </div>
               }
+              {/* <div>
+                <IoSettingsOutline />
+              </div> */}
             </div>
 
             <div className='flex flex-col lg:flex-row items-center justify-around gap-4'>
@@ -536,7 +593,7 @@ const Quotation = ({ mode }) => {
                 <SelectPicker
                   onChange={(data) => setFormData({ ...formData, party: data })}
                   data={party}
-                  value={formData.party._id}
+                  value={formData.party._id || formData.party}
                 />
               </div>
               <div className='flex flex-col gap-2 w-full lg:w-1/3'>
@@ -548,25 +605,29 @@ const Quotation = ({ mode }) => {
               </div>
               <div className='flex flex-col gap-2 w-full lg:w-1/3'>
                 <p className='text-xs'>Quotation / Estimate Date</p>
-                <DatePicker className='text-xs'
+                {/* <DatePicker className='text-xs'
                   onChange={(data) => {
                     let date = new Date(data);
-                    setFormData({ ...formData, estimateData: date.toDateString() })
+                    setFormData({ ...formData, estimateData: date.toLocaleDateString() })
                   }}
                   value={new Date(formData.estimateData)}
+                /> */}
+                <input
+                  type='date'
+                  onChange={(e) => {
+                    setFormData({ ...formData, estimateData: e.target.value })
+                  }}
+                  value={formData.estimateData}
                 />
-                {/* <input type="date" name="" id="" /> */}
               </div>
               <div className='flex flex-col gap-2 w-full lg:w-1/3'>
                 <p className='text-xs'>Valid To</p>
-                <DatePicker
-                  placement='bottomEnd'
-                  className='text-xs'
-                  onChange={(data) => {
-                    let date = new Date(data);
-                    setFormData({ ...formData, validDate: date.toDateString() })
+                <input
+                  type='date'
+                  onChange={(e) => {
+                    setFormData({ ...formData, validDate: e.target.value })
                   }}
-                  value={new Date(formData.validDate)}
+                  value={formData.validDate}
                 />
               </div>
             </div>

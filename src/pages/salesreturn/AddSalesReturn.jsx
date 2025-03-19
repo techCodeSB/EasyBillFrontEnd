@@ -43,7 +43,7 @@ const SalesReturn = ({ mode }) => {
   const [ItemRows, setItemRows] = useState([itemRowSet]);
   const [additionalRows, setAdditionalRow] = useState([additionalRowSet]); //{ additionalRowsItem: 1 }
   const [formData, setFormData] = useState({
-    party: '', salesReturnNumber: '', returnData: '',
+    party: '', salesReturnNumber: '', returnDate: '',
     items: ItemRows, additionalCharge: additionalRows, note: '', terms: '',
     discountType: '', discountAmount: '', discountPercentage: '',
   })
@@ -236,10 +236,20 @@ const SalesReturn = ({ mode }) => {
 
   // When change discount type `before` `after` `no`;
   const changeDiscountType = (e) => {
-    setFormData({ ...formData, discountType: e.target.value });
+
     if (e.target.value !== "no") {
+      if (e.target.value === "before") {
+        if (ItemRows.some((field) => parseInt(field.discountPerAmount) > 0)) {
+          toast("To apply discount before tax, remove discount on item", 'warning')
+          return;
+        }
+
+      }
+
+      setFormData({ ...formData, discountType: e.target.value });
       setDiscountToggler(false);
     } else {
+      setFormData({ ...formData, discountType: e.target.value });
       setFormData((pv) => ({
         ...pv,
         discountAmount: (0).toFixed(2),
@@ -398,7 +408,7 @@ const SalesReturn = ({ mode }) => {
   // *Save bill
   const saveBill = async () => {
 
-    if ([formData.party, formData.salesReturnNumber, formData.returnData]
+    if ([formData.party, formData.salesReturnNumber, formData.returnDate]
       .some((field) => field === "")) {
       return toast("Fill the blank", "error");
     }
@@ -447,7 +457,7 @@ const SalesReturn = ({ mode }) => {
     setItemRows([itemRowSet]);
     setAdditionalRow([additionalRowSet])
     setFormData({
-      party: '', salesReturnNumber: getBillPrefix, returnData: '', items: ItemRows,
+      party: '', salesReturnNumber: getBillPrefix, returnDate: '', items: ItemRows,
       additionalCharge: additionalRows, note: '', terms: '',
       discountType: '', discountAmount: '', discountPercentage: ''
     });
@@ -516,14 +526,12 @@ const SalesReturn = ({ mode }) => {
               </div>
               <div className='flex flex-col gap-2 w-full lg:w-1/3'>
                 <p className='text-xs'>Return Date</p>
-                <DatePicker className='text-xs'
-                  onChange={(data) => {
-                    let date = new Date(data);
-                    setFormData({ ...formData, returnData: date.toDateString() })
+                <input type="date"
+                  onChange={(e) => {
+                    setFormData({ ...formData, returnDate: e.target.value })
                   }}
-                  value={new Date(formData.returnData)}
+                  value={formData.returnDate}
                 />
-                {/* <input type="date" name="" id="" /> */}
               </div>
             </div>
 
