@@ -52,7 +52,7 @@ const Invoice = () => {
     } else if (bill === 'deliverychalan') {
       setUrlRoute("deliverychalan")
     }
-  }, [])
+  }, [bill])
 
 
 
@@ -60,17 +60,20 @@ const Invoice = () => {
     const getData = async () => {
       try {
 
-        const url = process.env.REACT_APP_API_URL + `/${urlRoute}/get`;
-        const req = await fetch(url, {
-          method: "POST",
-          headers: {
-            "Content-Type": 'application/json'
-          },
-          body: JSON.stringify({ token: Cookies.get("token"), id: id })
-        });
-        const res = await req.json();
-        setBillData(res.data)
-        return res;
+        if (urlRoute) {
+          const url = process.env.REACT_APP_API_URL + `/${urlRoute}/get`;
+          console.log(url)
+          const req = await fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": 'application/json'
+            },
+            body: JSON.stringify({ token: Cookies.get("token"), id: id })
+          });
+          const res = await req.json();
+          setBillData(res.data)
+          return res;
+        }
 
       } catch (error) {
         console.log(error)
@@ -165,7 +168,7 @@ const Invoice = () => {
       ...billDetails, qun, taxAmount: (taxAmount).toFixed(2), discount, amount: (amount).toFixed(2)
     })
 
-    setTotalAmountInText(toWords(amount));
+    setTotalAmountInText(toWords(amount || 0));
 
   }, [billData])
 
@@ -192,28 +195,6 @@ const Invoice = () => {
                   <FaRegFilePdf className="text-white text-[15px] mr-1" />
                   Download
                 </button>
-                {/* <button
-                  onClick={() => {
-                    navigate(`/admin/bill/print/${id}`)
-                  }}
-                  title='Print'
-                  className='bg-blue-700 rounded-full w-[25px] h-[25px] flex justify-center items-center'>
-                  <BiPrinter className="text-white text-[15px]" />
-                </button>
-                <button
-                  onClick={() => navigate(`/admin/quotation-estimate/edit/${id}`)}
-                  title='Edit'
-                  className='bg-blue-700 rounded-full w-[25px] h-[25px] flex justify-center items-center'>
-                  <MdEditSquare className="text-white text-[15px]" />
-                </button>
-                <button
-                  onClick={() => {
-                    navigate(-1)
-                  }}
-                  title='Back'
-                  className='bg-blue-700 rounded-full w-[25px] h-[25px] flex justify-center items-center'>
-                  <IoMdArrowBack className="text-white text-[15px]" />
-                </button> */}
               </div>
 
               <div>
@@ -222,7 +203,7 @@ const Invoice = () => {
                   <div className='flex w-full border-b border-black h-[130px]'>
                     <div className='p-3 w-[60%] flex items-center gap-5 border border-r' style={{ borderRight: "1px solid black" }}>
                       <div>
-                        <img src={Logo} className='h-[40px]' />
+                        <img src={companyDetails?.invoiceLogo} className='h-[40px]' />
                       </div>
                       <div className='flex flex-col gap-1 text-[12px]'>
                         <p className='text-blue-700 font-bold text-[16px] leading-none'>
@@ -351,7 +332,7 @@ const Invoice = () => {
                   <div className='w-full flex'>
                     <div className='w-full p-2'></div>
                     <div className='border-l border-black w-full text-center p-2'>
-                      <img src="/adf/adf" alt="signature" />
+                      <img src={companyDetails?.signature} alt="signature" className='mx-auto'/>
                       <p className='text-[10px] leading-[0] mt-5'>Authorised Signatory For</p>
                       <p className='text-[10px]'>Techinnovator Solutions PVT LTD</p>
                     </div>
@@ -383,7 +364,7 @@ const InvoicePdf = ({ companyDetails, billData, billDetails, hsnData, totalAmoun
     tableRow: { flexDirection: 'row' },
     tableCol: {
       borderBottom: '1px solid black', padding: 2,
-      borderRight: '0px solid black', 
+      borderRight: '0px solid black',
       borderLeft: '1px solid black',
     },
     header: { backgroundColor: '#f0f0f0' },
@@ -401,7 +382,7 @@ const InvoicePdf = ({ companyDetails, billData, billDetails, hsnData, totalAmoun
           <View style={[styles.border, { borderBottomWidth: 0 }]}>
             <View style={[styles.flexRow, { borderBottom: '1px solid black', height: 90 }]}>
               <View style={{ width: '60%', padding: 10, flexDirection: 'row', borderRight: '1px solid black' }}>
-                <Image src={Logo} style={{ height: 35, marginRight: 10, marginTop: 15 }} />
+                <Image src={companyDetails?.invoiceLogo}  style={{ height: 35, marginRight: 10, marginTop: 15 }} />
                 <View style={[styles.flexCol, styles.textSmall]}>
                   <Text style={[{ color: '#2202D0', fontWeight: '800', fontSize: 14, }, styles.partyText]}>
                     {companyDetails?.name}
@@ -539,7 +520,7 @@ const InvoicePdf = ({ companyDetails, billData, billDetails, hsnData, totalAmoun
           <View style={styles.flexRow}>
             <View style={{ width: '50%' }}></View>
             <View style={{ width: '50%', borderLeft: '1px solid black', textAlign: 'center', padding: 5 }}>
-              <Image src="/adf/adf" style={{ height: 30, marginBottom: 10 }} />
+              <Image src={companyDetails?.signature} style={{ height: 30, marginBottom: 10 }} />
               <Text style={styles.textSmall}>Authorised Signatory For</Text>
               <Text style={styles.textSmall}>Techinnovator Solutions PVT LTD</Text>
             </View>

@@ -95,7 +95,7 @@ const Quotation = ({ mode }) => {
         setItemRows([...data.data.ItemRows])
         setAdditionalRow([...data.data.additionalRows])
 
-        
+
       }
     }
   }, [])
@@ -801,7 +801,7 @@ const Quotation = ({ mode }) => {
                 <tfoot>
                   <tr>
                     <td colSpan={9}>
-                      <Button color='blue' className='float-right w-full font-bold' onClick={() => addItem(1)}>
+                      <Button className='float-right w-full font-bold' onClick={() => addItem(1)}>
                         <MdOutlinePlaylistAdd className='text-lg mr-1' />
                         Add Item
                       </Button>

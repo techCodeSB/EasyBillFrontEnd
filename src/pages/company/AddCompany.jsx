@@ -22,7 +22,9 @@ const AddCompany = () => {
     name: '', phone: '', email: '', gst: '', pan: '', invoiceLogo: '', signature: '',
     address: '', country: '', state: '', poInitial: '', invoiceInitial: '',
     proformaInitial: '', poNextCount: '', invoiceNextCount: '', proformaNextCount: '',
-    salesReminder: '', purchaseReminder: ''
+    salesReminder: '', purchaseReminder: '', quotationInitial: '', creditNoteInitial: '',
+    deliverChalanInitial: '', salesReturnInitial: '', quotationCount: '', creditNoteCount: '',
+    salesReturnCount: '', deliveryChalanCount: '', logoFileName: '', signatureFileName: "",
   })
 
   const fileUpload = async (e, field) => {
@@ -32,38 +34,59 @@ const AddCompany = () => {
     }
 
     if (field === "invoiceLogo") {
-      setCompanyData({ ...companyData, invoiceLogo: e.target.files[0] });
-    } else if (field === "signutre") {
-      setCompanyData({ ...companyData, signature: e.target.files[0] });
+      const reader = new FileReader();
+      reader.readAsDataURL(e.target.files[0]);
+      reader.onload = () => {
+        setCompanyData({ ...companyData, invoiceLogo: reader.result, logoFileName: e.target.files[0].name });
+      }
+      // setCompanyData({ ...companyData, invoiceLogo: e.target.files[0] });
+    }
+
+    else if (field === "signutre") {
+      const reader = new FileReader();
+      reader.readAsDataURL(e.target.files[0]);
+      reader.onload = () => {
+        setCompanyData({ ...companyData, signature: reader.result, signatureFileName: e.target.files[0].name });
+      }
+      // setCompanyData({ ...companyData, signature: e.target.files[0] });
     }
   }
 
 
+
   const removeUpload = (field) => {
-    if (field === "invoiceLogo") {
-      setCompanyData({ ...companyData, invoiceLogo: "" });
-    } else if (field === "signutre") {
-      setCompanyData({ ...companyData, signature: "" });
+     if (field === "logoFileName") {
+      setCompanyData({ ...companyData, logoFileName: "", invoiceLogo: "" });
+    } else if (field === "signatureFileName") {
+      setCompanyData({ ...companyData, signatureFileName: "", signature: "" });
     }
   }
 
 
   const saveCompany = async () => {
-    if (Object.values(companyData).some((field) => field === "")) {
-      console.log(companyData)
-      return toast("fill the require", 'error');
+    if ([companyData.name, companyData.address, companyData.phone,
+    companyData.email, companyData.gst, companyData.pan, companyData.state, companyData.country
+    ].some((field) => field === "")) {
+      return toast("fill the blank", "error")
     }
 
     try {
-      const formData = new FormData();
-      Object.keys(companyData).forEach((elm, _) => {
-        formData.append(elm, companyData[elm])
-      })
-      formData.append("token", Cookies.get("token"))
+      // const formData = new FormData();
+      // Object.keys(companyData).forEach((elm, _) => {
+      //   formData.append(elm, companyData[elm])
+      // })
+      // formData.append("token", Cookies.get("token"))
+
+      const data = { ...companyData, token: Cookies.get("token") };
+
+
       const url = process.env.REACT_APP_API_URL + "/company/add";
       const req = await fetch(url, {
         method: 'POST',
-        body: formData
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": 'application/json'
+        }
       });
       const res = await req.json();
       if (req.status !== 200) {
@@ -118,7 +141,9 @@ const AddCompany = () => {
       <main id='main'>
         <SideNav />
         <div className='content__body'>
-          <div className="content__body__main bg-white">
+          <div className="content__body__main bg-white mt-5">
+            <p className='font-bold'>Company Creation</p>
+            <hr />
             <div className='flex flex-col gap-2'>
               <div className='forms grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-5'>
                 {/* first col */}
@@ -156,15 +181,15 @@ const AddCompany = () => {
                   <div>
                     <p>Bill/Invoice Logo</p>
                     <div className='file__uploader__div'>
-                      <span className='file__name'>{companyData.invoiceLogo.name}</span>
+                      <span className='file__name'>{companyData.logoFileName}</span>
                       <div className="flex gap-2">
                         <input type="file" id="invoiceLogo" className='hidden' onChange={(e) => fileUpload(e, 'invoiceLogo')} />
                         <label htmlFor="invoiceLogo" className='file__upload' title='Upload'>
                           <MdUploadFile />
                         </label>
                         {
-                          companyData.invoiceLogo && <LuFileX2 className='remove__upload ' title='Remove upload'
-                            onClick={() => removeUpload('invoiceLogo')} />
+                          companyData.logoFileName && <LuFileX2 className='remove__upload ' title='Remove upload'
+                            onClick={() => removeUpload('logoFileName')} />
                         }
                       </div>
                     </div>
@@ -172,33 +197,35 @@ const AddCompany = () => {
                   <div>
                     <p>Authority Signature</p>
                     <div className='file__uploader__div'>
-                      <span className='file__name'>{companyData.signature.name}</span>
+                      <span className='file__name'>{companyData.signatureFileName}</span>
                       <div className="flex gap-2">
                         <input type="file" id="signutre" className='hidden' onChange={(e) => fileUpload(e, 'signutre')} />
                         <label htmlFor="signutre" className='file__upload' title='Upload'>
                           <MdUploadFile />
                         </label>
                         {
-                          companyData.signature && <LuFileX2 className='remove__upload' title='Remove upload'
-                            onClick={() => removeUpload('signutre')} />
+                          companyData.signatureFileName && <LuFileX2 className='remove__upload' title='Remove upload'
+                            onClick={() => removeUpload('signatureFileName')} />
                         }
                       </div>
                     </div>
                   </div>
                   <div>
                     <p>Company Address</p>
-                    <textarea rows={1} onChange={(e) => setCompanyData({ ...companyData, address: e.target.value })}>{companyData.address}</textarea>
+                    <textarea rows={1}
+                      value={companyData.address}
+                      onChange={(e) => setCompanyData({ ...companyData, address: e.target.value })}
+                    ></textarea>
                   </div>
                   <div>
                     <p>Select Country</p>
                     <SelectPicker className='w-full' data={countryList}
-                      value={companyData.country}
-                      onChange={(v) => setCompanyData({ ...companyData, country: v })} />
+                      value={companyData.country} onChange={(v) => setCompanyData({ ...companyData, country: v })} />
                   </div>
                   <div>
                     <p>Select State</p>
-                    <SelectPicker className='w-full' data={statesAndUTs} value={companyData.state}
-                      onChange={(v) => setCompanyData({ ...companyData, state: v })} />
+                    <SelectPicker className='w-full' data={statesAndUTs}
+                      value={companyData.state} onChange={(v) => setCompanyData({ ...companyData, state: v })} />
                   </div>
                 </div>
               </div>
@@ -210,21 +237,41 @@ const AddCompany = () => {
                       <th>PO Initial</th>
                       <th>Invoice Initial</th>
                       <th>Proforma Initial</th>
+                      <th>Quotation Initial</th>
+                      <th>Credit Note Initial</th>
+                      <th>Sales Return Initial</th>
+                      <th>Deliver Chalan Initial</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
                       <td className='min-w-[150px]'>
-                        <input type="text" value={companyData.poInitial}
-                          onChange={(e) => setCompanyData({ ...companyData, poInitial: e.target.value })} />
+                        <input type="text" onChange={(e) => setCompanyData({ ...companyData, poInitial: e.target.value })}
+                          value={companyData.poInitial} />
                       </td>
                       <td className='min-w-[150px]'>
-                        <input type="text" value={companyData.invoiceInitial}
-                          onChange={(e) => setCompanyData({ ...companyData, invoiceInitial: e.target.value })} />
+                        <input type="text" onChange={(e) => setCompanyData({ ...companyData, invoiceInitial: e.target.value })}
+                          value={companyData.invoiceInitial} />
                       </td>
                       <td className='min-w-[150px]'>
-                        <input type="text" value={companyData.proformaInitial}
-                          onChange={(e) => setCompanyData({ ...companyData, proformaInitial: e.target.value })} />
+                        <input type="text" onChange={(e) => setCompanyData({ ...companyData, proformaInitial: e.target.value })}
+                          value={companyData.proformaInitial} />
+                      </td>
+                      <td className='min-w-[150px]'>
+                        <input type="text" onChange={(e) => setCompanyData({ ...companyData, quotationInitial: e.target.value })}
+                          value={companyData.quotationInitial} />
+                      </td>
+                      <td className='min-w-[150px]'>
+                        <input type="text" onChange={(e) => setCompanyData({ ...companyData, creditNoteInitial: e.target.value })}
+                          value={companyData.creditNoteInitial} />
+                      </td>
+                      <td className='min-w-[150px]'>
+                        <input type="text" onChange={(e) => setCompanyData({ ...companyData, salesReturnInitial: e.target.value })}
+                          value={companyData.salesReturnInitial} />
+                      </td>
+                      <td className='min-w-[150px]'>
+                        <input type="text" onChange={(e) => setCompanyData({ ...companyData, deliverChalanInitial: e.target.value })}
+                          value={companyData.deliverChalanInitial} />
                       </td>
                     </tr>
                   </tbody>
@@ -233,19 +280,39 @@ const AddCompany = () => {
                       <th>Next Count</th>
                       <th>Next Count</th>
                       <th>Next Count</th>
+                      <th>Next Count</th>
+                      <th>Next Count</th>
+                      <th>Next Count</th>
+                      <th>Next Count</th>
                     </tr>
                     <tr>
                       <td className='min-w-[150px]'>
-                        <input type="text" value={companyData.poNextCount}
-                          onChange={(e) => setCompanyData({ ...companyData, poNextCount: e.target.value })} />
+                        <input type="text" onChange={(e) => setCompanyData({ ...companyData, poNextCount: e.target.value })}
+                          value={companyData.poNextCount} />
                       </td>
                       <td className='min-w-[150px]'>
-                        <input type="text" value={companyData.invoiceNextCount}
-                          onChange={(e) => setCompanyData({ ...companyData, invoiceNextCount: e.target.value })} />
+                        <input type="text" onChange={(e) => setCompanyData({ ...companyData, invoiceNextCount: e.target.value })}
+                          value={companyData.invoiceNextCount} />
                       </td>
                       <td className='min-w-[150px]'>
-                        <input type="text" value={companyData.proformaNextCount}
-                          onChange={(e) => setCompanyData({ ...companyData, proformaNextCount: e.target.value })} />
+                        <input type="text" onChange={(e) => setCompanyData({ ...companyData, proformaNextCount: e.target.value })}
+                          value={companyData.proformaNextCount} />
+                      </td>
+                      <td className='min-w-[150px]'>
+                        <input type="text" onChange={(e) => setCompanyData({ ...companyData, quotationCount: e.target.value })}
+                          value={companyData.quotationCount} />
+                      </td>
+                      <td className='min-w-[150px]'>
+                        <input type="text" onChange={(e) => setCompanyData({ ...companyData, creditNoteCount: e.target.value })}
+                          value={companyData.creditNoteCount} />
+                      </td>
+                      <td className='min-w-[150px]'>
+                        <input type="text" onChange={(e) => setCompanyData({ ...companyData, salesReturnCount: e.target.value })}
+                          value={companyData.salesReturnCount} />
+                      </td>
+                      <td className='min-w-[150px]'>
+                        <input type="text" onChange={(e) => setCompanyData({ ...companyData, deliveryChalanCount: e.target.value })}
+                          value={companyData.deliveryChalanCount} />
                       </td>
                     </tr>
                   </tfoot>
@@ -254,21 +321,21 @@ const AddCompany = () => {
               <div className="w-full flex flex-col lg:flex-row gap-2 lg:gap-5">
                 <div className='w-full'>
                   <p>Sales Invoice Reminder (Days Before)</p>
-                  <input type="text" value={companyData.salesReminder}
-                    onChange={(e) => setCompanyData({ ...companyData, salesReminder: e.target.value })} />
+                  <input type="text" onChange={(e) => setCompanyData({ ...companyData, salesReminder: e.target.value })}
+                    value={companyData.salesReminder} />
                 </div>
                 <div className='w-full'>
                   <p>Purchase Invoice Reminder (Days Before)</p>
-                  <input type="text"
-                    value={companyData.purchaseReminder}
-                    onChange={(e) => setCompanyData({ ...companyData, purchaseReminder: e.target.value })} />
+                  <input type="text" onChange={(e) => setCompanyData({ ...companyData, purchaseReminder: e.target.value })}
+                    value={companyData.purchaseReminder} />
                 </div>
               </div>
               <div className='w-full flex justify-center gap-3 my-3'>
-                <button onClick={saveCompany}
-                  className='bg-green-500 hover:bg-green-400 text-md text-white rounded w-[60px] flex items-center justify-center gap-1 py-2'>
+                <button
+                  onClick={saveCompany}
+                  className='bg-green-500 hover:bg-green-400 text-md text-white rounded w-[70px] flex items-center justify-center gap-1 py-2'>
                   <FaRegCheckCircle />
-                  Save
+                  Update
                 </button>
                 <button className='bg-blue-800 hover:bg-blue-700 text-md text-white rounded w-[60px] flex items-center justify-center gap-1 py-2'>
                   <BiReset />

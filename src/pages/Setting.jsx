@@ -30,7 +30,7 @@ const Setting = () => {
     proformaInitial: '', poNextCount: '', invoiceNextCount: '', proformaNextCount: '',
     salesReminder: '', purchaseReminder: '', quotationInitial: '', creditNoteInitial: '',
     deliverChalanInitial: '', salesReturnInitial: '', quotationCount: '', creditNoteCount: '',
-    salesReturnCount: '', deliveryChalanCount: ''
+    salesReturnCount: '', deliveryChalanCount: '', logoFileName: '', signatureFileName: "",
   })
 
   useEffect(() => {
@@ -69,10 +69,24 @@ const Setting = () => {
       setSiteData({ ...siteData, siteLogoReverse: e.target.files[0] });
     } else if (field === "favIcon") {
       setSiteData({ ...siteData, favIcon: e.target.files[0] });
-    } else if (field === "invoiceLogo") {
-      setCompanyData({ ...companyData, invoiceLogo: e.target.files[0] });
-    } else if (field === "signutre") {
-      setCompanyData({ ...companyData, signature: e.target.files[0] });
+    }
+
+    else if (field === "invoiceLogo") {
+      const reader = new FileReader();
+      reader.readAsDataURL(e.target.files[0]);
+      reader.onload = () => {
+        setCompanyData({ ...companyData, invoiceLogo: reader.result, logoFileName: e.target.files[0].name });
+      }
+      // setCompanyData({ ...companyData, invoiceLogo: e.target.files[0] });
+    }
+
+    else if (field === "signutre") {
+      const reader = new FileReader();
+      reader.readAsDataURL(e.target.files[0]);
+      reader.onload = () => {
+        setCompanyData({ ...companyData, signature: reader.result, signatureFileName: e.target.files[0].name });
+      }
+      // setCompanyData({ ...companyData, signature: e.target.files[0] });
     }
   }
 
@@ -83,10 +97,10 @@ const Setting = () => {
       setSiteData({ ...siteData, siteLogoReverse: "" });
     } else if (field === "favIcon") {
       setSiteData({ ...siteData, favIcon: "" });
-    } else if (field === "invoiceLogo") {
-      setCompanyData({ ...companyData, invoiceLogo: "" });
-    } else if (field === "signutre") {
-      setCompanyData({ ...companyData, signature: "" });
+    } else if (field === "logoFileName") {
+      setCompanyData({ ...companyData, logoFileName: "", invoiceLogo: "" });
+    } else if (field === "signatureFileName") {
+      setCompanyData({ ...companyData, signatureFileName: "", signature: "" });
     }
   }
 
@@ -101,24 +115,24 @@ const Setting = () => {
   const updateCompany = async () => {
     console.log(companyData)
     if ([companyData.name, companyData.address, companyData.phone,
-      companyData.email, companyData.gst, companyData.pan, companyData.state,
-      companyData.country, companyData.signature, companyData.invoiceLogo
+    companyData.email, companyData.gst, companyData.pan, companyData.state, companyData.country
     ].some((field) => field === "")) {
-      return toast("fill the blank.", "error")
+      return toast("fill the blank", "error")
     }
 
     try {
-      const updateCompanyData = { ...companyData };
-      const formData = new FormData();
-      formData.append("update", true);
-      formData.append("token", Cookies.get("token"))
-      Object.keys(updateCompanyData).forEach((el, _) => {
-        formData.append(el, updateCompanyData[el])
-      })
+      const updateCompanyData = { ...companyData, update: true, token: Cookies.get("token") };
+      // const formData = new FormData();
+      // Object.keys(updateCompanyData).forEach((el, _) => {
+      //   formData.append(el, updateCompanyData[el])
+      // })
       const url = process.env.REACT_APP_API_URL + "/company/add";
       const req = await fetch(url, {
         method: "POST",
-        body: formData
+        body: JSON.stringify(updateCompanyData),
+        headers: {
+          "Content-Type": 'application/json'
+        }
       });
       const res = await req.json();
       if (req.status !== 200 || res.update === false) {
@@ -438,15 +452,15 @@ const Setting = () => {
                   <div>
                     <p>Bill/Invoice Logo</p>
                     <div className='file__uploader__div'>
-                      <span className='file__name'>{typeof (companyData.invoiceLogo) === "object" ? companyData.invoiceLogo.name : companyData.invoiceLogo}</span>
+                      <span className='file__name'>{companyData.logoFileName}</span>
                       <div className="flex gap-2">
                         <input type="file" id="invoiceLogo" className='hidden' onChange={(e) => fileUpload(e, 'invoiceLogo')} />
                         <label htmlFor="invoiceLogo" className='file__upload' title='Upload'>
                           <MdUploadFile />
                         </label>
                         {
-                          companyData.invoiceLogo && <LuFileX2 className='remove__upload ' title='Remove upload'
-                            onClick={() => removeUpload('invoiceLogo')} />
+                          companyData.logoFileName && <LuFileX2 className='remove__upload ' title='Remove upload'
+                            onClick={() => removeUpload('logoFileName')} />
                         }
                       </div>
                     </div>
@@ -454,15 +468,15 @@ const Setting = () => {
                   <div>
                     <p>Authority Signature</p>
                     <div className='file__uploader__div'>
-                      <span className='file__name'>{typeof (companyData.signature) === "object" ? companyData.signature.name : companyData.signature}</span>
+                      <span className='file__name'>{companyData.signatureFileName}</span>
                       <div className="flex gap-2">
                         <input type="file" id="signutre" className='hidden' onChange={(e) => fileUpload(e, 'signutre')} />
                         <label htmlFor="signutre" className='file__upload' title='Upload'>
                           <MdUploadFile />
                         </label>
                         {
-                          companyData.signature && <LuFileX2 className='remove__upload' title='Remove upload'
-                            onClick={() => removeUpload('signutre')} />
+                          companyData.signatureFileName && <LuFileX2 className='remove__upload' title='Remove upload'
+                            onClick={() => removeUpload('signatureFileName')} />
                         }
                       </div>
                     </div>

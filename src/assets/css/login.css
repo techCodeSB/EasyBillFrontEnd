@@ -41,11 +41,13 @@
   border: 1px solid #ccc;
   border-radius: 5px;
   outline: none;
-  background-color: #01A9AC;
+  /* background-color: #01A9AC; */
+  background-color: #003E32;
   color: white;
+  text-align: center;
 }
 .button_style:hover{
-  background-color: #16d1d4;
+  background-color: #075243;
 }
 
 .shake{
@@ -58,4 +60,10 @@
   50% { transform: translateX(5px); }
   75% { transform: translateX(-5px); }
   100% { transform: translateX(0); }
+}
+
+.otp__field{
+  width: 50px;
+  height: 50px;
+  text-align: center;
 }

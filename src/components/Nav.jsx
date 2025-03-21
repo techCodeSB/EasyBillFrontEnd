@@ -8,7 +8,7 @@ import { IoIosLogOut } from "react-icons/io";
 import { Avatar, Popover, Whisper } from 'rsuite';
 import { Link, useNavigate } from 'react-router-dom';
 import CompanyList from './CompanyList';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { toggleModal } from '../store/copanyListSlice';
 import useGetUserData from "../hooks/useGetUserData";
 import { HiOutlineSwitchHorizontal } from "react-icons/hi";
@@ -23,12 +23,15 @@ const Nav = ({ title }) => {
   const dispatch = useDispatch();
   const getUserData = useGetUserData(); // Get user info api call
   const [companyName, setCompanyName] = useState("");
+  const userDetails = useSelector((store) => store.userDetail); //get use details from store
   const navigate = useNavigate();
+
 
   useEffect(() => {
     getUserData();
-  }, [])
 
+  }, [])
+  
 
   const toggleSideBar = () => {
     // setSideBar((prev) => {
@@ -82,7 +85,7 @@ const Nav = ({ title }) => {
               <span className='text-[12px]'>{companyName}</span>
               <HiOutlineSwitchHorizontal className='text-[16px] ml-2 text-white' />
             </div>
-            <Whisper className='' trigger={'click'} placement='bottomEnd' speaker={<Popover full>
+            <Whisper className='flex items-center' trigger={'click'} placement='bottomEnd' speaker={<Popover full>
               <Link className='menu-link' to={"/admin/site"}>
                 <CiSettings size={"20px"} />
                 <span>Site/Company Creation</span>
@@ -100,9 +103,9 @@ const Nav = ({ title }) => {
                 <span>Logout</span>
               </Link>
             </Popover>}>
-              <Avatar circle children={<FaUser />} size='sm' />
+              <Avatar circle children={<FaUser />} size='sm' src={userDetails.profile}/>
               <span className='ml-2 text-gray-800 text-[13px]'>
-                Bishai
+                {userDetails.name}
               </span>
             </Whisper>
           </div>

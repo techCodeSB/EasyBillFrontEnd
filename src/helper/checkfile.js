@@ -1,8 +1,8 @@
 // Check file before upload
 /**
- * file: fileObject
- * type: file type in array
- * size: file size in mb
+ * @params file: fileObject
+ * @params type: file type in array
+ * @params size: file size in mb
  */
 
 const checkfile = (file, type = ["jpg", "png", 'jpeg'], size = 3) => {

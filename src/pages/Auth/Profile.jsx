@@ -17,7 +17,7 @@ const Profile = () => {
   const [currentPasswordField, setCurrentPasswordField] = useState(false);
   const [newPasswordField, setNewPasswordField] = useState(false);
   const [data, setData] = useState({
-    name: '', email: '', profile: '', password: ''
+    name: '', email: '', profile: '', password: '', filename: ''
   });
   const [cPassword, setCPassword] = useState({ currentPassword: '', newPassword: '' });
   const userData = useSelector((state) => state.userDetail);
@@ -26,20 +26,27 @@ const Profile = () => {
 
 
   useEffect(() => {
-    const image = Object.keys(userData).length > 0 ? userData.profile?.split('\\')[userData.profile.split("\\").length - 1] : "";
-    setData({ name: userData.name, email: userData.email, profile: image })
+    setData({ name: userData.name, email: userData.email, filename: userData.filename })
   }, [userData]);
 
 
   const setFile = async (e) => {
     let validfile = await checkfile(e.target.files[0]);
 
+
     if (typeof (validfile) !== 'boolean') return toast(validfile, "error");
-    setData({ ...data, profile: e.target.files[0] });
+
+    const reader = new FileReader();
+    reader.readAsDataURL(e.target.files[0]);
+    reader.onload = () => {
+      setData({ ...data, profile: reader.result, filename: e.target.files[0].name });
+    }
   }
 
 
+
   const updateProfile = async (e) => {
+    console.log(data)
     if (data.name === "" || data.email === "" || data.password === "") {
       return toast("fill the blank", "warning");
     }
@@ -48,14 +55,13 @@ const Profile = () => {
       const url = process.env.REACT_APP_API_URL + "/user/create";
       const updateData = { ...data, update: true, token: Cookies.get("token") }
 
-      const formData = new FormData();
-      Object.keys(updateData).forEach((k, _) => {
-        formData.append(k, updateData[k]);
-      })
 
       const req = await fetch(url, {
         method: "POST",
-        body: formData
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updateData)
       })
       const res = await req.json();
       if (req.status === 500 || res.err) {
@@ -146,15 +152,15 @@ const Profile = () => {
                 <div>
                   <p className='ml-1'>Image</p>
                   <div className='file__uploader__div'>
-                    <span className='file__name'>{typeof (data.profile) == 'object' ? data.profile.name : data.profile}</span>
+                    <span className='file__name'>{data.filename}</span>
                     <div className="flex gap-2">
                       <input type="file" id="invoiceLogo" className='hidden' onChange={(e) => setFile(e)} />
                       <label htmlFor="invoiceLogo" className='file__upload' title='Upload'>
                         <MdUploadFile />
                       </label>
                       {
-                        data.profile && <LuFileX2 className='remove__upload ' title='Remove upload' onClick={() => {
-                          setData({ ...data, profile: "" });
+                        data.filename && <LuFileX2 className='remove__upload ' title='Remove upload' onClick={() => {
+                          setData({ ...data, filename: "" });
                         }} />
                       }
                     </div>

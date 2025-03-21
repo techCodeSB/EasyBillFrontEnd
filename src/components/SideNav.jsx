@@ -180,33 +180,33 @@ const SideNav = () => {
 
   /** if user have not any company so visible only company creation page */
   // =====================================================================
-  useEffect(() => {
-    let valid = true;
+  // useEffect(() => {
+  //   let valid = true;
 
-    if (userData.companies && userData.companies.length < 1) {
-      valid = false;
-    } else {
-      valid = true;
-    }
+  //   if (userData.companies && userData.companies.length < 1) {
+  //     valid = false;
+  //   } else {
+  //     valid = true;
+  //   }
 
-    setLinks(prevLinks =>
-      Object.fromEntries(
-        Object.entries(prevLinks).map(([category, items]) => [
-          category,
-          items.map(item => ({
-            ...item,
-            link: !valid ? "/admin/company" : item.link,
-            submenu: item.submenu
-              ? item.submenu.map(sub => ({
-                ...sub,
-                link: !valid ? "/admin/company" : sub.link,
-              }))
-              : null,
-          })),
-        ])
-      )
-    );
-  }, [userData])
+  //   setLinks(prevLinks =>
+  //     Object.fromEntries(
+  //       Object.entries(prevLinks).map(([category, items]) => [
+  //         category,
+  //         items.map(item => ({
+  //           ...item,
+  //           link: !valid ? "/admin/company" : item.link,
+  //           submenu: item.submenu
+  //             ? item.submenu.map(sub => ({
+  //               ...sub,
+  //               link: !valid ? "/admin/company" : sub.link,
+  //             }))
+  //             : null,
+  //         })),
+  //       ])
+  //     )
+  //   );
+  // }, [userData])
 
 
 
@@ -273,7 +273,7 @@ const SideNav = () => {
           <ul className=''>
             {links.sales.map((link, index) => (
               <Link key={index} to={link.link} data-tooltip-id="sideBarItemToolTip">
-                <li className={`flex items-center ${link.link === activePath ? 'active__link' : ''}`}>
+                <li className={`flex items-center ${activePath.search(link.link) >= 0 ? 'active__link' : ''}`}>
                   <span className='mr-3'>{link.icon}</span>
                   <span>{link.name}</span>
                 </li>
@@ -286,7 +286,7 @@ const SideNav = () => {
           <ul className=''>
             {links.Purshase.map((link, index) => (
               <Link key={index} to={link.link} data-tooltip-id="sideBarItemToolTip">
-                <li className={`flex items-center ${link.link === activePath ? 'active__link' : ''}`}>
+                <li className={`flex items-center ${activePath.search(link.link) >= 0 ? 'active__link' : ''}`}>
                   <span className='mr-3'>{link.icon}</span>
                   <span >{link.name}</span>
                 </li>
@@ -299,7 +299,7 @@ const SideNav = () => {
           <ul className=''>
             {links.Accounting.map((link, index) => (
               <Link key={index} to={link.link} data-tooltip-id="sideBarItemToolTip">
-                <li className={`flex items-center ${link.link === activePath ? 'active__link' : ''}`}>
+                <li className={`flex items-center ${activePath.search(link.link) >= 0 ? 'active__link' : ''}`}>
                   <span className='mr-3'>{link.icon}</span>
                   <span >{link.name}</span>
                 </li>
@@ -312,7 +312,7 @@ const SideNav = () => {
           <h3 className='text-[16px] my-5'>Setup</h3>
           <ul>
             <Link to={"/admin/site"} data-tooltip-id="sideBarItemToolTip">
-              <li className={`flex items-center ${"/admin/site" === activePath ? 'active__link' : ''}`}>
+              <li className={`flex items-center ${activePath.search("/admin/site") >= 0 ? 'active__link' : ''}`}>
                 <span className='mr-3'><IoSettingsOutline /></span>
                 <span>Site/Business Settings</span>
               </li>
@@ -365,31 +365,31 @@ const SideNav = () => {
               </li> */}
             {/* </Whisper> */}
             <Link to={"/admin/unit"} data-tooltip-id="sideBarItemToolTip">
-              <li className={`flex items-center ${"/admin/unit" === activePath ? 'active__link' : ''}`}>
+              <li className={`flex items-center ${activePath.search("/admin/unit") >= 0 ? 'active__link' : ''}`}>
                 <span className='mr-3'><PiComputerTowerThin /></span>
                 <span>Unit</span>
               </li>
             </Link>
             <Link to={"/admin/tax"} data-tooltip-id="sideBarItemToolTip">
-              <li className={`flex items-center ${"/admin/tax" === activePath ? 'active__link' : ''}`}>
+              <li className={`flex items-center ${activePath.search("/admin/tax") >= 0 ? 'active__link' : ''}`}>
                 <span className='mr-3'><PiComputerTowerThin /></span>
                 <span>Tax</span>
               </li>
             </Link>
             <Link to={"/admin/item"} data-tooltip-id="sideBarItemToolTip">
-              <li className={`flex items-center ${"/admin/item" === activePath ? 'active__link' : ''}`}>
+              <li className={`flex items-center ${activePath.search("/admin/item") >= 0 ? 'active__link' : ''}`}>
                 <span className='mr-3'><PiComputerTowerThin /></span>
                 <span>Item</span>
               </li>
             </Link>
             <Link to={"/admin/item-category"} data-tooltip-id="sideBarItemToolTip">
-              <li className={`flex items-center ${"/admin/item-category" === activePath ? 'active__link' : ''}`}>
+              <li className={`flex items-center ${activePath.search("/admin/item-category") >= 0 ? 'active__link' : ''}`}>
                 <span className='mr-3'><PiComputerTowerThin /></span>
                 <span>Category</span>
               </li>
             </Link>
             <Link to={"/admin/party"} data-tooltip-id="sideBarItemToolTip">
-              <li className={`flex items-center ${"/admin/party" === activePath ? 'active__link' : ''}`}>
+              <li className={`flex items-center ${activePath.search("/admin/party") >= 0 ? 'active__link' : ''}`}>
                 <span className='mr-3'><PiComputerTowerThin /></span>
                 <span>Party</span>
               </li>

@@ -23,6 +23,7 @@ const Dashboard = () => {
   const [recentsalepagination, setRecentsalepagination] = useState(1);
   const [recentpurchasepagination, setRecentpurchasepagination] = useState(1);
   const [stockalertpagination, setStockalertpagination] = useState(1);
+  
 
   return (
     <>
