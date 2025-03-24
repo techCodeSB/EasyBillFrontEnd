@@ -9,8 +9,13 @@ import Cookies from 'js-cookie';
 import Nav from '../../components/Nav';
 import SideNav from '../../components/SideNav';
 import { toWords } from 'number-to-words';
-import { Document, Page, View, Text, Image, StyleSheet, PDFViewer } from '@react-pdf/renderer';
+import { Document, Page, View, Text, Image, StyleSheet, PDFViewer, pdf } from '@react-pdf/renderer';
 import downloadPdf from '../../helper/downloadPdf';
+import useMyToaster from '../../hooks/useMyToaster';
+import { LuSend } from "react-icons/lu";
+import Loading from '../../components/Loading';
+
+
 
 
 
@@ -24,6 +29,8 @@ const Invoice = () => {
   const [billDetails, setBillDetails] = useState({})
   const [totalAmountInText, setTotalAmountInText] = useState("");
   const [urlRoute, setUrlRoute] = useState("");
+  const toast = useMyToaster();
+  const [loading, setLoading] = useState(false);
 
 
 
@@ -173,6 +180,55 @@ const Invoice = () => {
   }, [billData])
 
 
+
+  const sendViaMail = async () => {
+    setLoading(true);
+    function blobToBase64(blob) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = reject;
+      });
+    }
+
+
+    try {
+      const blob = await pdf(
+        InvoicePdf({ companyDetails, billData, billDetails, hsnData, totalAmountInText, billname: urlRoute.toUpperCase() })
+      ).toBlob();
+      let pdfData = await blobToBase64(blob);
+
+
+      const url = process.env.REACT_APP_API_URL + '/user/send-bill';
+      const req = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": 'application/json'
+        },
+        body: JSON.stringify({
+          token: Cookies.get("token"),
+          email: billData.party?.email,
+          data: pdfData
+        })
+      });
+      const res = await req.json();
+      setLoading(false);
+
+      if (req.status !== 200 && !res.send) {
+        return toast("Email not sent", "error");
+      }
+
+
+      return toast("Email sent", "success");
+
+    } catch (error) {
+      return error;
+    }
+
+  }
+
+
   return (
 
     <>
@@ -194,6 +250,14 @@ const Invoice = () => {
                   className='bg-blue-700 text-white rounded-[5px] flex justify-center items-center p-2'>
                   <FaRegFilePdf className="text-white text-[15px] mr-1" />
                   Download
+                </button>
+
+                <button
+                  onClick={sendViaMail}
+                  className='flex items-center gap-1 bg-orange-600 text-white rounded-[5px] p-2'
+                >
+                  {loading ? <Loading /> : <LuSend />}
+                  Send Email
                 </button>
               </div>
 
@@ -217,8 +281,22 @@ const Invoice = () => {
                       </div>
                     </div>
                     <div className='w-[40%] flex flex-col justify-center px-3 text-[12px]'>
-                      <p><span className='font-bold'>Invoice No. </span>{billData?.quotationNumber}</p>
-                      <p><span className='font-bold'>Invoice Date </span>{new Date(billData?.estimateData).toLocaleDateString()}</p>
+                      <p><span className='font-bold'>Invoice No. </span>{
+                        billData?.quotationNumber || billData?.proformaNumber || billData?.poNumber || billData?.purchaseInvoiceNumber ||
+                        billData?.purchaseReturnNumber || billData?.debitNoteNumber ||
+                        billData?.salesInvoiceNumber || billData?.salesReturnNumber || billData?.creditNoteNumber ||
+                        billData?.deliveryChalanNumber
+                      }</p>
+                      <p><span className='font-bold'>Invoice Date </span>
+                        {
+                          new Date(
+                            billData?.estimateData || billData?.invoiceDate || billData?.debitNoteDate ||
+                            billData?.returnDate || billData?.poDate || billData?.purchaseInvoiceDate
+                            || billData?.creditNoteDate || billData?.purchaseReturnDate
+                            || billData?.chalanDate
+                          ).toLocaleDateString()
+                        }
+                      </p>
                     </div>
                   </div>
 
@@ -332,7 +410,7 @@ const Invoice = () => {
                   <div className='w-full flex'>
                     <div className='w-full p-2'></div>
                     <div className='border-l border-black w-full text-center p-2'>
-                      <img src={companyDetails?.signature} alt="signature" className='mx-auto'/>
+                      <img src={companyDetails?.signature} alt="signature" className='mx-auto' />
                       <p className='text-[10px] leading-[0] mt-5'>Authorised Signatory For</p>
                       <p className='text-[10px]'>Techinnovator Solutions PVT LTD</p>
                     </div>
@@ -382,7 +460,7 @@ const InvoicePdf = ({ companyDetails, billData, billDetails, hsnData, totalAmoun
           <View style={[styles.border, { borderBottomWidth: 0 }]}>
             <View style={[styles.flexRow, { borderBottom: '1px solid black', height: 90 }]}>
               <View style={{ width: '60%', padding: 10, flexDirection: 'row', borderRight: '1px solid black' }}>
-                <Image src={companyDetails?.invoiceLogo}  style={{ height: 35, marginRight: 10, marginTop: 15 }} />
+                <Image src={companyDetails?.invoiceLogo} style={{ height: 35, marginRight: 10, marginTop: 15 }} />
                 <View style={[styles.flexCol, styles.textSmall]}>
                   <Text style={[{ color: '#2202D0', fontWeight: '800', fontSize: 14, }, styles.partyText]}>
                     {companyDetails?.name}
@@ -396,8 +474,21 @@ const InvoicePdf = ({ companyDetails, billData, billDetails, hsnData, totalAmoun
                 </View>
               </View>
               <View style={[styles.flexCol, { width: '40%', padding: 10, justifyContent: 'center' }, styles.textSmall]}>
-                <Text style={styles.partyText}><Text style={styles.bold}>Invoice No.</Text> {billData?.quotationNumber}</Text>
-                <Text style={styles.partyText}><Text style={styles.bold}>Invoice Date</Text> {new Date(billData?.estimateData).toLocaleDateString()}</Text>
+                <Text style={styles.partyText}><Text style={styles.bold}>Invoice No: </Text>{
+                  billData?.quotationNumber || billData?.proformaNumber || billData?.poNumber || billData?.purchaseInvoiceNumber ||
+                  billData?.purchaseReturnNumber || billData?.debitNoteNumber ||
+                  billData?.salesInvoiceNumber || billData?.salesReturnNumber || billData?.creditNoteNumber ||
+                  billData?.deliveryChalanNumber
+                }</Text>
+                <Text style={styles.partyText}><Text style={styles.bold}>Invoice Date: </Text>  {
+                  new Date(
+                    billData?.estimateData || billData?.invoiceDate || billData?.debitNoteDate ||
+                    billData?.returnDate || billData?.poDate || billData?.purchaseInvoiceDate
+                    || billData?.creditNoteDate || billData?.purchaseReturnDate
+                    || billData?.chalanDate
+                  ).toLocaleDateString()
+                }
+                </Text>
               </View>
             </View>
 

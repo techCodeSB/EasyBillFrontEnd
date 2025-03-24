@@ -99,7 +99,10 @@ const SalesInvoice = ({ mode }) => {
         body: JSON.stringify({ token: cookie, id: id })
       })
       const res = await req.json();
-      setFormData({ ...formData, ...res.data });
+      const removeProformaNumber = { ...res.data };
+      delete removeProformaNumber.proformaNumber;
+
+      setFormData({ ...removeProformaNumber, ...res.data });
       setAdditionalRow([...res.data.additionalCharge])
       setItemRows([...res.data.items]);
 
@@ -121,8 +124,9 @@ const SalesInvoice = ({ mode }) => {
   // Set invoice number;
   useEffect(() => {
     if ((getBillPrefix && mode === "convert") || (getBillPrefix && !mode)) {
-      console.log(getBillPrefix[0] + getBillPrefix[1])
+      console.log("----set----")
       setFormData(prev => ({ ...prev, salesInvoiceNumber: getBillPrefix[0] + getBillPrefix[1] }));
+      console.log(formData)
     }
     else if (getBillPrefix && mode === "edit") {
       console.log("not if")
@@ -442,6 +446,7 @@ const SalesInvoice = ({ mode }) => {
   // *Save bill
   const saveBill = async () => {
 
+    console.log("---Save bill---", formData)
     if ([formData.party, formData.salesInvoiceNumber, formData.invoiceDate]
       .some((field) => field === "")) {
       return toast("Fill the blank", "error");

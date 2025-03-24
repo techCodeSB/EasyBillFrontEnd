@@ -71,7 +71,7 @@ const Forget = () => {
             className='input_style' placeholder='Enter email'
           />
           <button className='button_style' type="submit">
-            {loading ? <Loading /> : 'Forgot'}
+            {loading ? <Loading /> : 'Send'}
           </button>
           <div className="text-center my-2">
             <button

@@ -9,6 +9,9 @@ import checkfile from '../../helper/checkfile';
 import useMyToaster from "../../hooks/useMyToaster";
 import Cookies from 'js-cookie';
 import { useSelector } from 'react-redux';
+import Loading from '../../components/Loading';
+
+
 
 
 const Profile = () => {
@@ -22,11 +25,12 @@ const Profile = () => {
   const [cPassword, setCPassword] = useState({ currentPassword: '', newPassword: '' });
   const userData = useSelector((state) => state.userDetail);
   const [visible, setVisible] = useState(1); // 1=profile | 2=password;
+  const [loading, setLoading] = useState(false);
 
 
 
   useEffect(() => {
-    setData({ name: userData.name, email: userData.email, filename: userData.filename })
+    setData({ name: userData.name, email: userData.email, filename: userData.filename, profile: userData.profile });
   }, [userData]);
 
 
@@ -46,12 +50,13 @@ const Profile = () => {
 
 
   const updateProfile = async (e) => {
-    console.log(data)
+
     if (data.name === "" || data.email === "" || data.password === "") {
-      return toast("fill the blank", "warning");
+      return toast("fill the blank", "error");
     }
 
     try {
+      setLoading(true);
       const url = process.env.REACT_APP_API_URL + "/user/create";
       const updateData = { ...data, update: true, token: Cookies.get("token") }
 
@@ -64,6 +69,7 @@ const Profile = () => {
         body: JSON.stringify(updateData)
       })
       const res = await req.json();
+      setLoading(false);
       if (req.status === 500 || res.err) {
         return toast(res.err, 'error');
       }
@@ -83,6 +89,7 @@ const Profile = () => {
     }
 
     try {
+      setLoading(true);
       const url = process.env.REACT_APP_API_URL + "/user/change-pass";
       const req = await fetch(url, {
         method: "POST",
@@ -92,6 +99,7 @@ const Profile = () => {
         body: JSON.stringify({ ...cPassword, token: Cookies.get("token") })
       })
       const res = await req.json();
+      setLoading(false);
       if (req.status === 500 || res.err) {
         return toast(res.err, 'error');
       }
@@ -175,14 +183,20 @@ const Profile = () => {
                 </div>
               </div>
             </div>
-            <div className='flex justify-center pt-9'>
-              <div className='flex rounded-sm bg-green-500 text-white'>
-                <FaRegCheckCircle className='mt-3 ml-2' />
-                <button className='p-2' onClick={updateProfile}>Update</button>
+            <div className='flex justify-center pt-9 gap-5'>
+              <div className=''>
+                <button className='p-2 flex rounded-sm bg-green-500 text-white items-center gap-1'
+                  onClick={updateProfile}>
+                  {loading ? <Loading /> : <FaRegCheckCircle />}
+                  Update
+                </button>
               </div>
-              <div className='flex rounded-sm ml-4 bg-blue-500 text-white'>
-                <LuRefreshCcw className='mt-3 ml-2' />
-                <button className='p-2' onClick={() => clear(1)}>Reset</button>
+              <div>
+                <button className='p-2 flex rounded-sm bg-blue-500 text-white items-center gap-1'
+                  onClick={() => clear(1)}>
+                  <LuRefreshCcw />
+                  Reset
+                </button>
               </div>
               {/* <div className="flex rounded-sm ml-4 bg-gray-500 text-white">
                  <IoMdArrowRoundBack className='mt-3 ml-2' />
@@ -216,14 +230,20 @@ const Profile = () => {
                     {newPasswordField ? <MdOutlineRemoveRedEye /> : <FaRegEyeSlash />}
                   </div>
                 </div>
-                <div className='flex justify-center pt-9'>
-                  <div className='flex rounded-sm bg-green-500 text-white'>
-                    <FaRegCheckCircle className='mt-3 ml-2' />
-                    <button className='p-2' onClick={updatePassword}>Update</button>
+                <div className='flex justify-center gap-5 pt-9'>
+                  <div className=''>
+                    <button className='p-2 flex rounded-sm bg-green-500 text-white items-center gap-1'
+                      onClick={updatePassword}>
+                      {loading ? <Loading /> : <FaRegCheckCircle />}
+                      Update
+                    </button>
                   </div>
-                  <div className='flex rounded-sm ml-4 bg-blue-500 text-white'>
-                    <LuRefreshCcw className='mt-3 ml-2' />
-                    <button className='p-2' onClick={() => clear(2)}>Reset</button>
+                  <div>
+                    <button className='p-2 flex rounded-sm bg-blue-500 text-white items-center gap-1'
+                      onClick={() => clear(2)}>
+                      <LuRefreshCcw />
+                      Reset
+                    </button>
                   </div>
                 </div>
               </div >

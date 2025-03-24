@@ -67,3 +67,8 @@
   height: 50px;
   text-align: center;
 }
+
+.login__main a:hover{
+  color: #007bff !important;
+  text-decoration: underline !important;
+}

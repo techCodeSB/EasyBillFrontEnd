@@ -1,6 +1,7 @@
 import React, { Suspense, useEffect } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { ProtectRoute, UnProtectRoute } from "./components/ProtectRoute";
+import ProtectCP from "./components/ProtectCP";
 
 const Login = React.lazy(() => import("./pages/Auth/Login"));
 const Dashboard = React.lazy(() => import("./pages/Dashboard"));
@@ -94,7 +95,7 @@ const App = () => {
         <Route path="/admin/signup" element={<UnProtectRoute login={true}><Signup /></UnProtectRoute>} />
         <Route path="/admin/forget" element={<UnProtectRoute login={true}>< Forgot /></UnProtectRoute>} />
         <Route path="/admin/otp" element={<UnProtectRoute login={true}>< Otp /></UnProtectRoute>} />
-        <Route path="/admin/change-password" element={<UnProtectRoute login={true}>< ChangePassword /></UnProtectRoute>} />
+        <Route path="/admin/change-password" element={<ProtectCP>< ChangePassword /></ProtectCP>} />
         <Route path="/admin/site" element={<ProtectRoute><Setting /></ProtectRoute>} />
         <Route path="/admin/company" element={<ProtectRoute><AddCompany /></ProtectRoute>} />
         <Route path="admin/dashboard" element={<ProtectRoute><Dashboard /></ProtectRoute>} />

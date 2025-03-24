@@ -34,7 +34,7 @@ const PartyComponent = ({mode}) => {
   const [partyData, setPartyData] = useState({
     name: "", type: "", contactNumber: "", address: "",
     pan: "", gst: "", country: "", state: "", openingBalance: "0",
-    details: ''
+    details: '', email: ''
   })
 
   useEffect(() => {
@@ -81,11 +81,7 @@ const PartyComponent = ({mode}) => {
       }
 
       if (!mode) {
-        setPartyData({
-          name: "", type: "", contactNumber: "", address: "",
-          pan: "", gst: "", country: "", state: "", openingBalance: "0",
-          details: ''
-        });
+        clear();
       }
 
       return toast(!mode ? "Party create success" : "Party update success", 'success');
@@ -101,7 +97,7 @@ const PartyComponent = ({mode}) => {
     setPartyData({
       name: "", type: "", contactNumber: "", address: "",
       pan: "", gst: "", country: "", state: "", openingBalance: "0",
-      details: ''
+      details: '', email: ''
     })
   }
 
@@ -139,6 +135,11 @@ const PartyComponent = ({mode}) => {
               value={partyData.address}
               onChange={(e) => setPartyData({ ...partyData, address: e.target.value })}
             ></textarea>
+          </div>
+          <div>
+            <p className='mb-1'>Email</p>
+            <input type="email" onChange={(e) => setPartyData({ ...partyData, email: e.target.value })}
+              value={partyData.email} />
           </div>
         </div>
 

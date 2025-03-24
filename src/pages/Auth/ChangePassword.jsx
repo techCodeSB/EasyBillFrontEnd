@@ -7,10 +7,11 @@ import useMyToaster from "../../hooks/useMyToaster";
 import Cookies from 'js-cookie';
 
 const ChangePassword = () => {
-  const [loginData, setLoginData] = useState({ email: '', password: '' });
+  const [loginData, setLoginData] = useState({ confirPassword: '', password: '' });
   const shakeIt = useLoginShake();
   const navigate = useNavigate();
   const toast = useMyToaster();
+
 
   const formAction = async (e) => {
     e.preventDefault();
@@ -23,22 +24,29 @@ const ChangePassword = () => {
       }
     }
 
+
+    if (loginData.password !== loginData.confirPassword) {
+      return toast("Confirm password not match", "error")
+    }
+
+
     try {
-      const url = process.env.REACT_APP_API_URL + "/user/login";
+      const url = process.env.REACT_APP_API_URL + "/user/reset-pass";
       const req = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(loginData)
+        body: JSON.stringify({password: loginData.password, token: Cookies.get("user-token")})
       });
 
       const res = await req.json();
-      if (req.status !== 200 || !res.login) {
+      if (req.status !== 200 || !res.change) {
         return toast(res.err, "error")
       }
 
-      Cookies.set("token", res.token, {secure:true});
+      Cookies.remove("user-token");
+      Cookies.set("token", res.newToken, { secure: true });
       navigate("/admin/dashboard")
 
     } catch (error) {
@@ -53,19 +61,19 @@ const ChangePassword = () => {
     <main className='login__main'>
       <img src={Logo} alt="Logo.png" className='mb-5' />
       <div className="login__box flex flex-col" id="loginBox">
-        <h1 className='text-center text-[25px] mb-8 mt-4'>Sign In</h1>
+        <h1 className='text-center text-[25px] mb-8 mt-4'>Change Password</h1>
         <form onSubmit={formAction}>
           <input type="text" name="text"
-            value={loginData.email}
-            onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
+            value={loginData.password}
+            onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
             className='input_style' placeholder='New password'
           />
           <input type="text" name="text"
-            value={loginData.email}
-            onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
-            className='input_style' placeholder='Current password'
+            value={loginData.confirPassword}
+            onChange={(e) => setLoginData({ ...loginData, confirPassword: e.target.value })}
+            className='input_style' placeholder='Confirm password'
           />
-          <button className='button_style' onClick={() => navigate('/admin/dashboard')}>Save</button>
+          <button className='button_style'>Save</button>
         </form>
       </div>
     </main>

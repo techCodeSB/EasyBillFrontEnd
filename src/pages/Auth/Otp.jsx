@@ -47,7 +47,7 @@ const Otp = () => {
         return toast(res.err, "error")
       }
 
-      console.log(res)
+      navigate("/admin/change-password");
 
     } catch (error) {
       setLoading(false)
@@ -69,7 +69,7 @@ const Otp = () => {
         </div>
         <p className="text-2xl font-bold text-center">OTP Verification</p>
         <p className="mb-8 text-center">
-          Please enter your verification code we sent <br />to {email}
+          Please enter your verification code we sent <br />to <i>{email}</i>
         </p>
         <form className='flex gap-4 justify-center items-center'>
           <input type="text" name="text"
