@@ -7,6 +7,9 @@ import useMyToaster from "../../hooks/useMyToaster";
 import Cookies from 'js-cookie';
 import Loading from "../../components/Loading";
 
+
+
+
 const Forget = () => {
   const [loginData, setLoginData] = useState({ email: ''});
   const shakeIt = useLoginShake();
@@ -37,13 +40,13 @@ const Forget = () => {
       });
 
       const res = await req.json();
+      setLoading(false);
       if (req.status !== 200 || res.err) {
-        setLoading(false);
         return toast(res.err, "error")
       }
 
       Cookies.set("user-token", res.token, { secure: true });
-      navigate("/admin/otp")
+      navigate("/admin/otp", {state:{email: loginData.email}});
 
     } catch (error) {
       console.log(error)
