@@ -22,6 +22,8 @@ const AddPayment = ({ mode }) => {
     party: "", paymentInNumber: "", paymentInDate: "", paymentMode: "", account: "",
     amount: "", details: ""
   })
+  const [dueAmout, setDueAmount] = useState(null);
+
   // Store party
   const [party, setParty] = useState([]);
   // Store account
@@ -47,7 +49,10 @@ const AddPayment = ({ mode }) => {
           body: JSON.stringify({ token: cookie, invoice: true })
         })
         const res = await req.json();
-        const inv = res.data.map((inv) => ({ value: inv.salesInvoiceNumber, label: inv.salesInvoiceNumber }));
+        const inv = res.data.map((inv) => ({
+          value: inv.salesInvoiceNumber, label: inv.salesInvoiceNumber,
+          due: inv.dueAmount
+        }));
         setInvoice([...inv])
 
       } catch (error) {
@@ -219,7 +224,9 @@ const AddPayment = ({ mode }) => {
                   <p className='mb-1'>Select Invoice</p>
                   <SelectPicker className='w-full'
                     onChange={(data) => {
-                      console.log(data)
+                      const getDue = invoice.filter((inv, _) => inv.value === data)
+                      setDueAmount(getDue[0]?.due)
+                      console.log(getDue[0]?.due)
                     }}
                     data={invoice}
                   />

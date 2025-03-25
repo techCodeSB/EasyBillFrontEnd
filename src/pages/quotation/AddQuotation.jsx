@@ -593,7 +593,7 @@ const Quotation = ({ mode }) => {
                 <SelectPicker
                   onChange={(data) => setFormData({ ...formData, party: data })}
                   data={party}
-                  value={formData.party._id || formData.party}
+                  value={formData.party?._id || formData.party}
                 />
               </div>
               <div className='flex flex-col gap-2 w-full lg:w-1/3'>
