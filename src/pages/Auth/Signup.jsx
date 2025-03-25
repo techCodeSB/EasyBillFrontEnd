@@ -75,7 +75,7 @@ const Signup = () => {
             onChange={(e) => setsignupData({ ...signupData, password: e.target.value })}
             className='input_style' placeholder='Enter password'
           />
-          <button className='button_style flex items-center gap-2 justify-center'>
+          <button className='button_style flex items-center justify-center gap-2'>
             {loading ? <Loading /> : null}
             Sign up
           </button>
