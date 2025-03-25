@@ -1,8 +1,8 @@
 import React, { use, useState } from 'react'
 import { Modal } from 'rsuite'
 import useMyToaster from '../hooks/useMyToaster';
-import { setData, toggle } from '../store/mailSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import { toggle } from '../store/mailSlice';
+import { useDispatch } from 'react-redux';
 import Loading from './Loading';
 import { LuSend } from 'react-icons/lu';
 import Cookies from 'js-cookie'
@@ -45,7 +45,9 @@ const MailModal = ({ open, pdf, email }) => {
                 return toast("Email not sent", "error");
             }
 
-            return toast("Email sent", "success");
+            setMailData({ subject: "", body: "" })
+            dispatch(toggle(false))
+            return toast("Email sent successfully", "success");
             
         } catch (error) {
             console.log(error)
@@ -68,11 +70,11 @@ const MailModal = ({ open, pdf, email }) => {
                 <Modal.Body className='flex flex-col gap-2 mail__body'>
                     <div className=''>
                         <p>To</p>
-                        <input type="text" value={email} onChange={null} disabled />
+                        <input type="text" value={email} onChange={null} />
                     </div>
 
                     <div>
-                        <p className='mb-2'>Subject</p>
+                        <p>Subject</p>
                         <input type="email"
                             value={mailData.subject}
                             onChange={(e) => setMailData({ ...mailData, subject: e.target.value })} />

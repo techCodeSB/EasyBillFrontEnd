@@ -33,7 +33,7 @@ const Invoice = () => {
   const [totalAmountInText, setTotalAmountInText] = useState("");
   const [urlRoute, setUrlRoute] = useState("");
   const toast = useMyToaster();
-  
+
   const openModal = useSelector((state) => state.mailModalSlice.show)
   const dispatch = useDispatch();
   const [pdfData, setPdfData] = useState(null);
@@ -185,7 +185,7 @@ const Invoice = () => {
 
   }, [billData])
 
-
+  
 
   const sendViaMail = async () => {
     function blobToBase64(blob) {

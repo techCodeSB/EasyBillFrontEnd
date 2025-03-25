@@ -26,8 +26,38 @@ const AddPayment = ({ mode }) => {
   const [party, setParty] = useState([]);
   // Store account
   const [account, setAccount] = useState([]);
+  // Store invoice number
+  const [invoice, setInvoice] = useState([]);
 
 
+
+
+  // Get invoice
+  useEffect(() => {
+    const getInvoice = async () => {
+      try {
+        const url = process.env.REACT_APP_API_URL + "/salesinvoice/get";
+        const cookie = Cookies.get("token");
+
+        const req = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": 'application/json'
+          },
+          body: JSON.stringify({ token: cookie, invoice: true })
+        })
+        const res = await req.json();
+        const inv = res.data.map((inv)=>({value: inv.salesInvoiceNumber, label: inv.salesInvoiceNumber}));
+        setInvoice([...inv])
+
+      } catch (error) {
+
+      }
+    }
+
+    getInvoice();
+
+  }, [])
 
   // Get data for update mode
   useEffect(() => {
@@ -147,7 +177,7 @@ const AddPayment = ({ mode }) => {
                 <div>
                   <p className='mb-1'>Payment in Date</p>
                   <input type="date"
-                    onChange={(e)=>{
+                    onChange={(e) => {
                       setFormData({ ...formData, paymentInDate: e.target.value })
                     }}
                     value={formData.paymentInDate}
@@ -182,6 +212,15 @@ const AddPayment = ({ mode }) => {
                   <input type='text'
                     value={formData.amount}
                     onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <p className='mb-1'>Select Invoice</p>
+                  <SelectPicker className='w-full'
+                    onChange={(data) => {
+                      console.log(data)
+                    }}
+                    data={invoice}
                   />
                 </div>
               </div>
