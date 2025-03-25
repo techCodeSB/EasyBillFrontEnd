@@ -4,6 +4,7 @@ import { useState } from "react";
 import useLoginShake from "../../hooks/useLoginShake";
 import { useNavigate } from 'react-router-dom';
 import useMyToaster from "../../hooks/useMyToaster";
+import Loading from '../../components/Loading'
 
 
 document.title = "Signup";
@@ -12,6 +13,7 @@ const Signup = () => {
   const shakeIt = useLoginShake();
   const [signupData, setsignupData] = useState({ name: '', email: '', password: '' });
   const toast = useMyToaster();
+  const [loading, setLoading] = useState(false);
 
 
   const formAction = async (e) => {
@@ -26,6 +28,7 @@ const Signup = () => {
     }
 
     try {
+      setLoading(true)
       const url = process.env.REACT_APP_API_URL + "/user/create";
       const req = await fetch(url, {
         method: "POST",
@@ -37,6 +40,7 @@ const Signup = () => {
 
       const res = await req.json();
 
+      setLoading(false)
       if (req.status !== 200 || !res.register) {
         return toast(res.err, "error")
       }
@@ -71,7 +75,10 @@ const Signup = () => {
             onChange={(e) => setsignupData({ ...signupData, password: e.target.value })}
             className='input_style' placeholder='Enter password'
           />
-          <button className='button_style'>Sign up</button>
+          <button className='button_style flex items-center gap-2'>
+            {loading ? <Loading /> : null}
+            Sign up
+          </button>
         </form>
       </div>
     </main>

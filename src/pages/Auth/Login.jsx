@@ -6,12 +6,17 @@ import { useNavigate } from 'react-router-dom';
 import useMyToaster from "../../hooks/useMyToaster";
 import Cookies from 'js-cookie';
 import { Link } from 'react-router-dom';
+import Loading from '../../components/Loading'
+
+
 
 const Login = () => {
   const [loginData, setLoginData] = useState({ email: '', password: '' });
   const shakeIt = useLoginShake();
   const navigate = useNavigate();
   const toast = useMyToaster();
+  const [loading, setLoading] = useState(false);
+
 
   const formAction = async (e) => {
     e.preventDefault();
@@ -25,6 +30,7 @@ const Login = () => {
     }
 
     try {
+      setLoading(true)
       const url = process.env.REACT_APP_API_URL + "/user/login";
       const req = await fetch(url, {
         method: "POST",
@@ -35,6 +41,8 @@ const Login = () => {
       });
 
       const res = await req.json();
+
+      setLoading(false);
       if (req.status !== 200 || !res.login) {
         return toast(res.err, "error")
       }
@@ -66,7 +74,10 @@ const Login = () => {
             onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
             className='input_style' placeholder='Enter password'
           />
-          <button className='button_style'>Sign in</button>
+          <button className='button_style flex items-center gap-2'>
+            {loading ? <Loading /> : null}
+            Sign in
+          </button>
         </form>
         <div className='flex justify-center text-[12px]'>
           You have no account?
