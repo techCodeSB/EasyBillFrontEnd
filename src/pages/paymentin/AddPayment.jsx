@@ -47,7 +47,7 @@ const AddPayment = ({ mode }) => {
           body: JSON.stringify({ token: cookie, invoice: true })
         })
         const res = await req.json();
-        const inv = res.data.map((inv)=>({value: inv.salesInvoiceNumber, label: inv.salesInvoiceNumber}));
+        const inv = res.data.map((inv) => ({ value: inv.salesInvoiceNumber, label: inv.salesInvoiceNumber }));
         setInvoice([...inv])
 
       } catch (error) {
@@ -184,6 +184,14 @@ const AddPayment = ({ mode }) => {
                     className='w-full'
                   />
                 </div>
+                <div>
+                  <p className='mb-1'>Due Amount</p>
+                  <input type='text'
+                    value={formData.amount}
+                    onChange={null}
+                    disabled
+                  />
+                </div>
               </div>
 
               {/* Second Column */}
@@ -208,19 +216,19 @@ const AddPayment = ({ mode }) => {
                   />
                 </div>
                 <div>
-                  <p className='mb-1'>Amount</p>
-                  <input type='text'
-                    value={formData.amount}
-                    onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-                  />
-                </div>
-                <div>
                   <p className='mb-1'>Select Invoice</p>
                   <SelectPicker className='w-full'
                     onChange={(data) => {
                       console.log(data)
                     }}
                     data={invoice}
+                  />
+                </div>
+                <div>
+                  <p className='mb-1'>Amount</p>
+                  <input type='text'
+                    value={formData.amount}
+                    onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
                   />
                 </div>
               </div>
