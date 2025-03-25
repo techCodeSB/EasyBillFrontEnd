@@ -4,6 +4,8 @@ import userDetailSlice from './userDetailSlice';
 import calculatorSlice from './calculatorSlice';
 import partyModalSlice from './partyModalSlice';
 import itemModalSlice from './itemModalSlice';
+import mailSlice from './mailSlice';
+
 
 
 const store = configureStore({
@@ -12,7 +14,8 @@ const store = configureStore({
     userDetail: userDetailSlice,
     calculator: calculatorSlice,
     partyModalSlice: partyModalSlice,
-    itemModalSlice: itemModalSlice
+    itemModalSlice: itemModalSlice,
+    mailModalSlice: mailSlice,
   },
 })
 

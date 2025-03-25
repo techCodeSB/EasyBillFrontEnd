@@ -375,3 +375,7 @@ select {
     background-position: -200% 0;
   }
 }
+
+.mail__modal .mail__body p{
+  margin-bottom: 5px !important;
+}

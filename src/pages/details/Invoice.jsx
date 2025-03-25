@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 import { BiPrinter } from 'react-icons/bi'
 import { FaRegFilePdf } from 'react-icons/fa'
 import { MdEditSquare } from 'react-icons/md';
@@ -14,6 +14,9 @@ import downloadPdf from '../../helper/downloadPdf';
 import useMyToaster from '../../hooks/useMyToaster';
 import { LuSend } from "react-icons/lu";
 import Loading from '../../components/Loading';
+import MailModal from '../../components/MailModal';
+import { useDispatch, useSelector } from 'react-redux';
+import { toggle } from '../../store/mailSlice';
 
 
 
@@ -30,7 +33,10 @@ const Invoice = () => {
   const [totalAmountInText, setTotalAmountInText] = useState("");
   const [urlRoute, setUrlRoute] = useState("");
   const toast = useMyToaster();
-  const [loading, setLoading] = useState(false);
+  
+  const openModal = useSelector((state) => state.mailModalSlice.show)
+  const dispatch = useDispatch();
+  const [pdfData, setPdfData] = useState(null);
 
 
 
@@ -182,7 +188,6 @@ const Invoice = () => {
 
 
   const sendViaMail = async () => {
-    setLoading(true);
     function blobToBase64(blob) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -197,32 +202,15 @@ const Invoice = () => {
       const blob = await pdf(
         InvoicePdf({ companyDetails, billData, billDetails, hsnData, totalAmountInText, billname: urlRoute.toUpperCase() })
       ).toBlob();
+
       let pdfData = await blobToBase64(blob);
+      setPdfData(pdfData)
 
+      dispatch(toggle(true)) //open modal
 
-      const url = process.env.REACT_APP_API_URL + '/user/send-bill';
-      const req = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": 'application/json'
-        },
-        body: JSON.stringify({
-          token: Cookies.get("token"),
-          email: billData.party?.email,
-          data: pdfData
-        })
-      });
-      const res = await req.json();
-      setLoading(false);
-
-      if (req.status !== 200 && !res.send) {
-        return toast("Email not sent", "error");
-      }
-
-
-      return toast("Email sent", "success");
 
     } catch (error) {
+      toast("Something went wrong", 'error')
       return error;
     }
 
@@ -235,6 +223,7 @@ const Invoice = () => {
       <Nav />
       <main id='main'>
         <SideNav />
+        <MailModal open={openModal} pdf={pdfData} email={billData?.party?.email} />
         <div className="content__body">
           <div id='invoice' className='content__body__main w-[100%] min-h-[100vh] bg-gray-100 flex justify-center'>
             <div className='bg-white /*w-[190mm]*/ w-[80%]  p-5'>
@@ -256,7 +245,7 @@ const Invoice = () => {
                   onClick={sendViaMail}
                   className='flex items-center gap-1 bg-orange-600 text-white rounded-[5px] p-2'
                 >
-                  {loading ? <Loading /> : <LuSend />}
+                  <LuSend />
                   Send Email
                 </button>
               </div>
