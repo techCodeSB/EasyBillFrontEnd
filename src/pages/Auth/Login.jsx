@@ -51,6 +51,7 @@ const Login = () => {
       navigate("/admin/dashboard")
 
     } catch (error) {
+      setLoading(false)
       console.log(error)
       return toast("Something went wrong", "error")
     }

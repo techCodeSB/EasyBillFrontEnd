@@ -48,6 +48,7 @@ const Signup = () => {
       navigate("/admin")
 
     } catch (error) {
+      setLoading(false)
       console.log(error)
     }
 
