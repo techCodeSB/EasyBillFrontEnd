@@ -71,7 +71,7 @@ const Login = () => {
         <div className='flex justify-center text-[12px]'>
           You have no account?
           <Link to={'/admin/signup'} className="ml-1">
-            SingnUp
+            SignUp
           </Link>
         </div>
         <div className='flex justify-center mt-2 text-[12px]'>
