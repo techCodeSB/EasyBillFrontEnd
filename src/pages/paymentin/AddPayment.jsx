@@ -226,7 +226,6 @@ const AddPayment = ({ mode }) => {
                     onChange={(data) => {
                       const getDue = invoice.filter((inv, _) => inv.value === data)
                       setDueAmount(getDue[0]?.due)
-                      console.log(getDue[0]?.due)
                     }}
                     data={invoice}
                   />
