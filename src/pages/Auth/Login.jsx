@@ -74,7 +74,7 @@ const Login = () => {
             onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
             className='input_style' placeholder='Enter password'
           />
-          <button className='button_style flex items-center gap-2'>
+          <button className='button_style flex items-center gap-2 justify-center'>
             {loading ? <Loading /> : null}
             Sign in
           </button>
