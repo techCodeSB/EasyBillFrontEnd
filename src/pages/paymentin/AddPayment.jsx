@@ -20,9 +20,9 @@ const AddPayment = ({ mode }) => {
   const { id } = useParams();
   const [formData, setFormData] = useState({
     party: "", paymentInNumber: "", paymentInDate: "", paymentMode: "", account: "",
-    amount: "", details: ""
+    amount: "", details: "", invoiceId: ''
   })
-  const [dueAmout, setDueAmount] = useState(null);
+  const [dueAmount, setDueAmount] = useState(null);
 
   // Store party
   const [party, setParty] = useState([]);
@@ -46,7 +46,7 @@ const AddPayment = ({ mode }) => {
           headers: {
             "Content-Type": 'application/json'
           },
-          body: JSON.stringify({ token: cookie, invoice: true })
+          body: JSON.stringify({ token: cookie, invoice: true, party: formData.party })
         })
         const res = await req.json();
         const inv = res.data.map((inv) => ({
@@ -56,13 +56,14 @@ const AddPayment = ({ mode }) => {
         setInvoice([...inv])
 
       } catch (error) {
-
+        console.log(error);
+        return toast("Something went wrong", "error");
       }
     }
 
     getInvoice();
 
-  }, [])
+  }, [formData.party])
 
   // Get data for update mode
   useEffect(() => {
@@ -106,11 +107,16 @@ const AddPayment = ({ mode }) => {
   }, [])
 
 
+
   const savePayment = async () => {
     if ([formData.party, formData.paymentInNumber,
     formData.paymentInDate, formData.paymentMode, formData.account, formData.amount]
       .some((field) => field === "")) {
       return toast("Fill the blank", "error");
+    }
+
+    if(parseFloat(formData.amount) > parseFloat(dueAmount)){
+      return toast("Invalid amount", 'error');
     }
 
     try {
@@ -122,7 +128,7 @@ const AddPayment = ({ mode }) => {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(!mode ? { ...formData, token } : { ...formData, token, update: true, id: id })
+        body: JSON.stringify(!mode ? { ...formData, token, dueAmount } : { ...formData, token, update: true, id: id, dueAmount })
       })
       const res = await req.json();
       if (req.status !== 200 || res.err) {
@@ -147,7 +153,7 @@ const AddPayment = ({ mode }) => {
   const clear = () => {
     setFormData({
       party: "", paymentInNumber: "", paymentInDate: "", paymentMode: "", account: "",
-      amount: "", details: ""
+      amount: "", details: "", invoiceId: ''
     })
   }
 
@@ -192,7 +198,7 @@ const AddPayment = ({ mode }) => {
                 <div>
                   <p className='mb-1'>Due Amount</p>
                   <input type='text'
-                    value={formData.amount}
+                    value={dueAmount}
                     onChange={null}
                     disabled
                   />
@@ -226,6 +232,7 @@ const AddPayment = ({ mode }) => {
                     onChange={(data) => {
                       const getDue = invoice.filter((inv, _) => inv.value === data)
                       setDueAmount(getDue[0]?.due)
+                      setFormData({...formData, invoiceId: data})
                     }}
                     data={invoice}
                   />
