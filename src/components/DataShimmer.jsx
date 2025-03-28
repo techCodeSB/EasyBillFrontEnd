@@ -9,7 +9,7 @@ const DataShimmer = () => {
           <div className='animate w-[40px] h-[25px] rounded'></div>
           <div className='flex gap-2'>
             {Array.from({ length: 3 }).map((i, _) =>
-              <div className='animate w-[30px] h-[30px] rounded-full'></div>)}
+              <div key={i} className='animate w-[30px] h-[30px] rounded-full'></div>)}
           </div>
         </div>
         {/* for search */}
@@ -20,7 +20,7 @@ const DataShimmer = () => {
       <div className='mt-5 mb-10'>
         <div className='flex gap-2'>
           {Array.from({ length: 5 }).map((i, _) =>
-            <div className='animate w-[60px] h-[25px] rounded'></div>)}
+            <div key={i} className='animate w-[60px] h-[25px] rounded'></div>)}
         </div>
       </div>
 
@@ -28,7 +28,7 @@ const DataShimmer = () => {
       <div>
         <div className='flex flex-col gap-2'>
           {Array.from({ length: 8 }).map((i, _) =>
-            <div className='animate w-full h-[20px] rounded'></div>)}
+            <div key={i} className='animate w-full h-[20px] rounded'></div>)}
         </div>
       </div>
     </div>

@@ -897,7 +897,7 @@ const SalesInvoice = ({ mode }) => {
                     value={formData.terms}
                   />
                 </div>
-                <div>
+                {/* <div>
                   <p>Payment Status:</p>
                   <select
                     onChange={(e) => {
@@ -908,8 +908,8 @@ const SalesInvoice = ({ mode }) => {
                     <option value="0">Not Paid</option>
                     <option value="1">Paid</option>
                   </select>
-                </div>
-                <div>
+                </div> */}
+                {/* <div>
                   <p>Select Account:</p>
                   <select
                     onChange={(e) => {
@@ -924,7 +924,7 @@ const SalesInvoice = ({ mode }) => {
                       })
                     }
                   </select>
-                </div>
+                </div> */}
               </div>
               <div className='w-full'>
                 <div className='uppercase font-bold border border-dashed p-2 rounded'>

@@ -26,7 +26,6 @@ const useGetUserData = () => {
     const res = await req.json();
     dispatch(add(res))
     
-
     
     // if(res.companies.length < 1){
     //   nagivate("/admin/company");
