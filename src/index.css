@@ -110,12 +110,13 @@ h6 {
   font-weight: 600;
 }
 
-.side__nav .active__link{
+.side__nav .active__link {
   background-color: white;
   color: #003628;
   font-weight: 600;
 }
-.side__nav .active__link svg{
+
+.side__nav .active__link svg {
   color: #003628;
 }
 
@@ -376,6 +377,24 @@ select {
   }
 }
 
-.mail__modal .mail__body p{
+.mail__modal .mail__body p {
   margin-bottom: 5px !important;
+}
+
+
+.record__download {
+  @apply text-xl w-[25px] h-[25px] bg-blue-400 rounded-full text-white grid place-items-center cursor-pointer;
+}
+
+.download__menu {
+  padding: 5px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.raport__table tr:nth-child(even) {
+  background-color: lightgray;
 }

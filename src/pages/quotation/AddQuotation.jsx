@@ -21,6 +21,7 @@ import { HiOutlineDocumentDuplicate } from "react-icons/hi";
 import AddItemModal from '../../components/AddItemModal';
 import swal from 'sweetalert';
 import { IoSettingsOutline } from 'react-icons/io5';
+import MySelect2 from '../../components/MySelect2';
 
 
 
@@ -101,20 +102,20 @@ const Quotation = ({ mode }) => {
   }, [])
 
   // Store data to locaStoreage
-  useEffect(() => {
-    let local = {
-      data: {
-        formData,
-        ItemRows,
-        additionalRows
-      }
-    }
+  // useEffect(() => {
+  //   let local = {
+  //     data: {
+  //       formData,
+  //       ItemRows,
+  //       additionalRows
+  //     }
+  //   }
 
-    if (!mode) {
-      localStorage.setItem("quotationKey", JSON.stringify(local))
-    }
+  //   if (!mode) {
+  //     localStorage.setItem("quotationKey", JSON.stringify(local))
+  //   }
 
-  }, [formData, ItemRows, additionalRows])
+  // }, [formData, ItemRows, additionalRows])
 
 
 
@@ -342,6 +343,7 @@ const Quotation = ({ mode }) => {
 
 
   const onItemChange = (value, index) => {
+
     let item = [...ItemRows];
     item[index].itemName = value;
     setItemRows(item);
@@ -350,14 +352,14 @@ const Quotation = ({ mode }) => {
     if (selectedItem.length >= 0) {
       let item = [...ItemRows];
       let currentUnit = [];
-      let taxId = selectedItem[0].category.tax;
+      let taxId = selectedItem[0]?.category?.tax;
       const getTax = tax.filter((t, _) => t._id === taxId)[0];
 
-      item[index].hsn = selectedItem[0].category.hsn;
-      item[index].unit = selectedItem[0].unit;
-      item[index].selectedUnit = selectedItem[0].unit[0].unit
-      item[index].tax = getTax.gst;
-      selectedItem[0].unit.forEach((u, _) => {
+      item[index].hsn = selectedItem[0]?.category.hsn;
+      item[index].unit = selectedItem[0]?.unit;
+      item[index].selectedUnit = selectedItem[0]?.unit[0].unit
+      item[index].tax = getTax?.gst;
+      selectedItem[0]?.unit.forEach((u, _) => {
         currentUnit.push(u.unit);
       })
       item[index].unit = [...currentUnit];
@@ -552,7 +554,7 @@ const Quotation = ({ mode }) => {
           <div className='content__body__main bg-white' id='addQuotationTable'>
 
             <div className='top__btn__grp'>
-              <div className='add__btns'>
+              {/* <div className='add__btns'>
                 <button onClick={() => {
                   dispatch(toggle(!getPartyModalState))
                 }}><MdOutlineAdd /> Add Party</button>
@@ -560,7 +562,7 @@ const Quotation = ({ mode }) => {
                 <button onClick={() => {
                   dispatch(itemToggle(!getItemModalState))
                 }}><MdOutlineAdd /> Add Item</button>
-              </div>
+              </div> */}
 
               {
                 mode && <div className='extra__btns'>
@@ -590,9 +592,17 @@ const Quotation = ({ mode }) => {
             <div className='flex flex-col lg:flex-row items-center justify-around gap-4'>
               <div className='flex flex-col gap-2 w-full'>
                 <p className='text-xs'>Select Party</p>
-                <SelectPicker
+                {/* <SelectPicker
                   onChange={(data) => setFormData({ ...formData, party: data })}
                   data={party}
+                  value={formData.party?._id || formData.party}
+                /> */}
+                <MySelect2
+                  model={"party"}
+                  onType={(v) => {
+                    console.log("the value is", v)
+                    setFormData({ ...formData, party: v })
+                  }}
                   value={formData.party?._id || formData.party}
                 />
               </div>
@@ -653,12 +663,19 @@ const Quotation = ({ mode }) => {
 
                       {/* Item name and description */}
                       <td>
-                        <div className='flex flex-col gap-2'>
-                          <SelectPicker
+                        <div className='flex flex-col gap-2 text-left'>
+                          {/* <SelectPicker
                             onChange={(v) => onItemChange(v, index)}
                             value={ItemRows[index].itemName}
                             data={itemData}
+                          /> */}
+
+                          <MySelect2
+                            model={"item"}
+                            onType={(v) => onItemChange(v, index)}
+                            value={ItemRows[index].itemName}
                           />
+
                           <input type='text' className='input-style' placeholder='Description'
                             onChange={(e) => {
                               let item = [...ItemRows];

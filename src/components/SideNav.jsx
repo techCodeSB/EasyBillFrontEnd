@@ -267,6 +267,18 @@ const SideNav = () => {
               </Link>
             ))}
           </ul>
+          <Link to={"/admin/party"} data-tooltip-id="sideBarItemToolTip">
+            <li className={`flex items-center ${activePath.search("/admin/party") >= 0 ? 'active__link' : ''}`}>
+              <span className='mr-3'><PiComputerTowerThin /></span>
+              <span>Party</span>
+            </li>
+          </Link>
+          <Link to={"/admin/item"} data-tooltip-id="sideBarItemToolTip">
+            <li className={`flex items-center ${activePath.search("/admin/item") >= 0 ? 'active__link' : ''}`}>
+              <span className='mr-3'><PiComputerTowerThin /></span>
+              <span>Item</span>
+            </li>
+          </Link>
         </div>
         <div className="side__nav__link__group">
           <h3 className='text-[16px] my-5'>Sales</h3>
@@ -376,24 +388,13 @@ const SideNav = () => {
                 <span>Tax</span>
               </li>
             </Link>
-            <Link to={"/admin/item"} data-tooltip-id="sideBarItemToolTip">
-              <li className={`flex items-center ${activePath.search("/admin/item") >= 0 ? 'active__link' : ''}`}>
-                <span className='mr-3'><PiComputerTowerThin /></span>
-                <span>Item</span>
-              </li>
-            </Link>
             <Link to={"/admin/item-category"} data-tooltip-id="sideBarItemToolTip">
               <li className={`flex items-center ${activePath.search("/admin/item-category") >= 0 ? 'active__link' : ''}`}>
                 <span className='mr-3'><PiComputerTowerThin /></span>
                 <span>Category</span>
               </li>
             </Link>
-            <Link to={"/admin/party"} data-tooltip-id="sideBarItemToolTip">
-              <li className={`flex items-center ${activePath.search("/admin/party") >= 0 ? 'active__link' : ''}`}>
-                <span className='mr-3'><PiComputerTowerThin /></span>
-                <span>Party</span>
-              </li>
-            </Link>
+
           </ul>
         </div>
       </div>

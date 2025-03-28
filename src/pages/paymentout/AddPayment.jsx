@@ -20,10 +20,10 @@ const AddPayment = ({ mode }) => {
   const { id } = useParams();
   const [formData, setFormData] = useState({
     party: "", paymentOutNumber: "", paymentOutDate: "", paymentMode: "", account: "",
-    amount: "", details: ""
+    amount: "", details: "", invoiceId: ''
   })
 
-  const [dueAmout, setDueAmount] = useState(null);
+  const [dueAmount, setDueAmount] = useState(null);
 
   // Store party
   const [party, setParty] = useState([]);
@@ -45,23 +45,25 @@ const AddPayment = ({ mode }) => {
           headers: {
             "Content-Type": 'application/json'
           },
-          body: JSON.stringify({ token: cookie, invoice: true })
+          body: JSON.stringify({ token: cookie, invoice: true, party: formData.party })
         })
         const res = await req.json();
+        console.log(res)
         const inv = res.data.map((inv) => ({
-          value: inv.salesInvoiceNumber, label: inv.salesInvoiceNumber,
+          value: inv.purchaseInvoiceNumber, label: inv.purchaseInvoiceNumber,
           due: inv.dueAmount
         }));
         setInvoice([...inv])
 
       } catch (error) {
-
+        console.log(error);
+        return toast("Something went wrong", "error");
       }
     }
 
     getInvoice();
 
-  }, [])
+  }, [formData.party])
 
 
 
@@ -94,7 +96,6 @@ const AddPayment = ({ mode }) => {
     const apiData = async () => {
       {
         const data = await getApiData("party");
-        console.log("party---", data);
         const party = data.data.map(d => ({ label: d.name, value: d._id }));
         setParty([...party]);
       }
@@ -114,6 +115,10 @@ const AddPayment = ({ mode }) => {
     formData.paymentOutDate, formData.paymentMode, formData.account, formData.amount]
       .some((field) => field === "")) {
       return toast("Fill the blank", "error");
+    }
+
+    if(parseFloat(formData.amount) > parseFloat(dueAmount)){
+      return toast("Invalid amount", 'error');
     }
 
     try {
@@ -195,7 +200,7 @@ const AddPayment = ({ mode }) => {
                 <div>
                   <p className='mb-1'>Due Amount</p>
                   <input type='text'
-                    value={formData.amount}
+                    value={dueAmount}
                     onChange={null}
                     disabled
                   />
@@ -229,6 +234,7 @@ const AddPayment = ({ mode }) => {
                     onChange={(data) => {
                       const getDue = invoice.filter((inv, _) => inv.value === data)
                       setDueAmount(getDue[0]?.due)
+                      setFormData({ ...formData, invoiceId: data })
                     }}
                     data={invoice}
                   />

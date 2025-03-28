@@ -12,6 +12,7 @@ import Cookies from 'js-cookie';
 import { useParams } from 'react-router-dom';
 import useApi from '../../hooks/useApi';
 import { RiDeleteBin6Line } from 'react-icons/ri';
+import MySelect2 from '../../components/MySelect2';
 
 
 
@@ -22,14 +23,14 @@ const ItemAdd = ({ mode }) => {
       <main id='main'>
         <SideNav />
         <div className='content__body'>
-          <AddItemComponent mode={mode}/>
+          <AddItemComponent mode={mode} />
         </div>
       </main>
     </>
   )
 }
 
-const AddItemComponent = ({mode}) => {
+const AddItemComponent = ({ mode }) => {
   const toast = useMyToaster();
   const { getApiData } = useApi()
   const editorRef = useRef(null);
@@ -172,10 +173,18 @@ const AddItemComponent = ({mode}) => {
         <div className='w-full pt-1'>
           <div>
             <p className='ml-1'>Select Category</p>
-            <SelectPicker className='w-full'
+            {/* <SelectPicker className='w-full'
               data={category}
               onChange={(v) => categoryChange(v)}
-              value={form.category} />
+              value={form.category} /> */}
+            <MySelect2
+              model={"category"}
+              onType={(v) => {
+                console.log(v)
+                setForm({ ...form, category: v })
+              }}
+              value={form.category}
+            />
           </div>
           <div>
             <p className='ml-1 mb-2 mt-2'>Select Tax</p>

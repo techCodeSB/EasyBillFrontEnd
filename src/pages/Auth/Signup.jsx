@@ -64,12 +64,12 @@ const Signup = () => {
           <input type="text" name="name"
             value={signupData.name}
             onChange={(e) => setsignupData({ ...signupData, name: e.target.value })}
-            className='input_style' placeholder='Enter name'
+            className='input_style' placeholder='Enter username'
           />
           <input type="emial" name="email"
             value={signupData.email}
             onChange={(e) => setsignupData({ ...signupData, email: e.target.value })}
-            className='input_style' placeholder='Enter email'
+            className='input_style' placeholder='Enter login email'
           />
           <input type="password" name="pass"
             value={signupData.password}
