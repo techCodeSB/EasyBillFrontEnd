@@ -240,7 +240,7 @@ const AddPayment = ({ mode }) => {
               </div>
             </div>
             <div>
-              <p className='my-2'>Details/Remark</p>
+              <p className='my-2'>Details</p>
               <Editor
                 onEditorChange={(v, editor) => {
                   setFormData({ ...formData, details: editor.getContent() })

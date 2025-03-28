@@ -22,10 +22,46 @@ const AddPayment = ({ mode }) => {
     party: "", paymentOutNumber: "", paymentOutDate: "", paymentMode: "", account: "",
     amount: "", details: ""
   })
+
+  const [dueAmout, setDueAmount] = useState(null);
+
   // Store party
   const [party, setParty] = useState([]);
   // Store account
   const [account, setAccount] = useState([]);
+  // Store invoice number
+  const [invoice, setInvoice] = useState([]);
+
+
+  // Get invoice
+  useEffect(() => {
+    const getInvoice = async () => {
+      try {
+        const url = process.env.REACT_APP_API_URL + "/purchaseinvoice/get";
+        const cookie = Cookies.get("token");
+
+        const req = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": 'application/json'
+          },
+          body: JSON.stringify({ token: cookie, invoice: true })
+        })
+        const res = await req.json();
+        const inv = res.data.map((inv) => ({
+          value: inv.salesInvoiceNumber, label: inv.salesInvoiceNumber,
+          due: inv.dueAmount
+        }));
+        setInvoice([...inv])
+
+      } catch (error) {
+
+      }
+    }
+
+    getInvoice();
+
+  }, [])
 
 
 
@@ -151,9 +187,17 @@ const AddPayment = ({ mode }) => {
                   <input type="date"
                     value={formData.paymentOutDate}
                     onChange={(e) => {
-                      setFormData({ ...formData, paymentOutDate: e.target.value})
+                      setFormData({ ...formData, paymentOutDate: e.target.value })
                     }}
                     className='w-full'
+                  />
+                </div>
+                <div>
+                  <p className='mb-1'>Due Amount</p>
+                  <input type='text'
+                    value={formData.amount}
+                    onChange={null}
+                    disabled
                   />
                 </div>
               </div>
@@ -177,6 +221,16 @@ const AddPayment = ({ mode }) => {
                     data={account}
                     onChange={(v) => setFormData({ ...formData, account: v })}
                     value={formData.account}
+                  />
+                </div>
+                <div>
+                  <p className='mb-1'>Select Invoice</p>
+                  <SelectPicker className='w-full'
+                    onChange={(data) => {
+                      const getDue = invoice.filter((inv, _) => inv.value === data)
+                      setDueAmount(getDue[0]?.due)
+                    }}
+                    data={invoice}
                   />
                 </div>
                 <div>
