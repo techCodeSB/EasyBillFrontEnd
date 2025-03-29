@@ -82,7 +82,7 @@ const Nav = ({ title }) => {
               onClick={() => {
                 dispatch(toggleModal(true))
               }}>
-              <span className='text-[12px]'>companyName</span>
+              <span className='text-[12px]'>{companyName}</span>
               <HiOutlineSwitchHorizontal className='text-[16px] ml-2 text-white' />
             </div>
             <Whisper className='flex items-center' trigger={'click'} placement='bottomEnd' speaker={<Popover full>
@@ -103,10 +103,10 @@ const Nav = ({ title }) => {
                 <span>Logout</span>
               </Link>
             </Popover>}>
-              <Avatar circle children={<FaUser />} size='sm' src={userDetails.profile}/>
-              <span className='ml-2 text-gray-800 text-[13px]'>
+              <Avatar circle children={<FaUser />} size='sm' src={userDetails.profile} className='border'/>
+              <div className='ml-2 text-gray-800 text-[13px]'>
                 {userDetails.name}
-              </span>
+              </div>
             </Whisper>
           </div>
         </div>

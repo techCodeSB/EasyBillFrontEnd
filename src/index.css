@@ -383,7 +383,8 @@ select {
 
 
 .record__download {
-  @apply text-xl w-[25px] h-[25px] bg-blue-400 rounded-full text-white grid place-items-center cursor-pointer;
+  @apply text-xl w-[25px] h-[25px] bg-gray-100 border rounded-full grid place-items-center cursor-pointer;
+  @apply text-gray-600
 }
 
 .download__menu {
@@ -397,4 +398,24 @@ select {
 
 .raport__table tr:nth-child(even) {
   background-color: lightgray;
+}
+
+
+.add_new_compnent button{
+  @apply px-3 py-1 rounded flex items-center gap-2
+} 
+
+.admin__area  span{
+  display: flex;
+  align-items: center;
+}
+
+.select__add__button{
+  @apply w-full bg-blue-400 rounded text-white flex items-center gap-1 justify-center;
+  padding: 7px;
+}
+
+.select__add__button:hover svg{
+  transition: 0.3s all linear;
+  margin-left: 5px;
 }
