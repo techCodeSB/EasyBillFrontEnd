@@ -82,7 +82,7 @@ const Nav = ({ title }) => {
               onClick={() => {
                 dispatch(toggleModal(true))
               }}>
-              <span className='text-[12px]'>companyName</span>
+              <span className='text-[12px]'>{companyName}</span>
               <HiOutlineSwitchHorizontal className='text-[16px] ml-2 text-white' />
             </div>
             <Whisper className='flex items-center' trigger={'click'} placement='bottomEnd' speaker={<Popover full>

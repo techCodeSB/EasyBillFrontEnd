@@ -23,6 +23,9 @@ import DataShimmer from '../../components/DataShimmer';
 import { IoSettingsOutline } from "react-icons/io5";
 import { Tooltip } from 'react-tooltip';
 import { IoMdMore } from 'react-icons/io';
+import { IoMdAddCircle } from "react-icons/io";
+
+
 
 
 
@@ -72,8 +75,8 @@ const Quotation = () => {
         });
         const res = await req.json();
         console.log(res)
-        setTotalData(res.totalData)
-        setBillData([...res.data])
+        setTotalData(res?.totalData)
+        setBillData([...res?.data])
         setLoading(false);
 
       } catch (error) {
@@ -226,7 +229,7 @@ const Quotation = () => {
           ]} /> */}
 
           {
-            !loading ? <div className='content__body__main'>
+            !loading ? billData.length > 0 ? <div className='content__body__main'>
               {/* First Row */}
               <div className='flex justify-end'>
                 <Whisper placement='leftStart' enterable
@@ -431,6 +434,13 @@ const Quotation = () => {
                 {/* pagination end */}
               </div>
             </div>
+              : <div className='content__body__main grid place-items-center h-[200px]'>
+                <button
+                  className='bg-blue-500 rounded py-2 px-3 text-white flex items-center gap-2'>
+                  <IoMdAddCircle className='text-blue-800' />
+                  Add New
+                </button>
+              </div>
               : <DataShimmer />}
         </div>
       </main>
