@@ -47,7 +47,7 @@ const Quotation = ({ mode }) => {
   const [ItemRows, setItemRows] = useState([itemRowSet]);
   const [additionalRows, setAdditionalRow] = useState([additionalRowSet]); //{ additionalRowsItem: 1 }
   const [formData, setFormData] = useState({
-    party: '', quotationNumber: '', estimateData: '', validDate: '', items: ItemRows,
+    party: '', quotationNumber: '', estimateDate: '', validDate: '', items: ItemRows,
     additionalCharge: additionalRows, note: '', terms: '',
     discountType: '', discountAmount: '', discountPercentage: '',
   })
@@ -76,30 +76,30 @@ const Quotation = ({ mode }) => {
 
 
   // Get data from localStorage and set;
-  useEffect(() => {
-    if (!mode) {
-      let data = localStorage.getItem("quotationKey");
+  // useEffect(() => {
+  //   if (!mode) {
+  //     let data = localStorage.getItem("quotationKey");
 
-      if (data) {
-        data = JSON.parse(data);
-        console.log(data)
+  //     if (data) {
+  //       data = JSON.parse(data);
 
-        setFormData({ ...formData, ...data.data.formData })
-        getApiData("party").then((d) => {
-          d.data.forEach((p) => {
-            if (p._id == data.data.formData.party) {
-              setFormData({ ...formData, party: p })
-            }
-          })
-        })
+  //       setFormData({ ...formData, ...data.data.formData })
+  //       getApiData("party").then((d) => {
+  //         d.data.forEach((p) => {
+  //           if (p._id == data.data.formData.party) {
+  //             setFormData({ ...formData, party: p })
+  //           }
+  //         })
+  //       })
+  //       console.log("party run...")
 
-        setItemRows([...data.data.ItemRows])
-        setAdditionalRow([...data.data.additionalRows])
+  //       setItemRows([...data.data.ItemRows])
+  //       setAdditionalRow([...data.data.additionalRows])
 
 
-      }
-    }
-  }, [])
+  //     }
+  //   }
+  // }, [])
 
   // Store data to locaStoreage
   // useEffect(() => {
@@ -121,6 +121,7 @@ const Quotation = ({ mode }) => {
 
 
   const get = async () => {
+    console.log("runn")
     const url = process.env.REACT_APP_API_URL + "/quotation/get";
     const cookie = Cookies.get("token");
 
@@ -133,6 +134,7 @@ const Quotation = ({ mode }) => {
         body: JSON.stringify({ token: cookie, id: id })
       })
       const res = await req.json();
+      console.log('run add')
       setFormData({ ...formData, ...res.data });
       setAdditionalRow([...res.data.additionalCharge])
       setItemRows([...res.data.items]);
@@ -185,6 +187,7 @@ const Quotation = ({ mode }) => {
       }
       {
         const data = await getApiData("party");
+        console.log('run party')
         const party = data.data.map(d => ({ label: d.name, value: d._id }));
         setParty([...party]);
       }
@@ -483,7 +486,7 @@ const Quotation = ({ mode }) => {
   // *Save bill
   const saveBill = async () => {
 
-    if ([formData.party, formData.estimateData]
+    if ([formData.party, formData.estimateDate]
       .some((field) => field === "")) {
       return toast("Fill the blank", "error");
     }
@@ -532,7 +535,7 @@ const Quotation = ({ mode }) => {
     setItemRows([itemRowSet]);
     setAdditionalRow([additionalRowSet])
     setFormData({
-      party: '', quotationNumber: '', estimateData: '', validDate: '', items: ItemRows,
+      party: '', quotationNumber: '', estimateDate: '', validDate: '', items: ItemRows,
       additionalCharge: additionalRows, note: '', terms: '',
       discountType: '', discountAmount: '', discountPercentage: '',
     });
@@ -618,16 +621,16 @@ const Quotation = ({ mode }) => {
                 {/* <DatePicker className='text-xs'
                   onChange={(data) => {
                     let date = new Date(data);
-                    setFormData({ ...formData, estimateData: date.toLocaleDateString() })
+                    setFormData({ ...formData, estimateDate: date.toLocaleDateString() })
                   }}
-                  value={new Date(formData.estimateData)}
+                  value={new Date(formData.estimateDate)}
                 /> */}
                 <input
                   type='date'
                   onChange={(e) => {
-                    setFormData({ ...formData, estimateData: e.target.value })
+                    setFormData({ ...formData, estimateDate: e.target.value })
                   }}
-                  value={formData.estimateData}
+                  value={formData.estimateDate}
                 />
               </div>
               <div className='flex flex-col gap-2 w-full lg:w-1/3'>

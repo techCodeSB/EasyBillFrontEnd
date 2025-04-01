@@ -103,10 +103,10 @@ const Nav = ({ title }) => {
                 <span>Logout</span>
               </Link>
             </Popover>}>
-              <Avatar circle children={<FaUser />} size='sm' src={userDetails.profile}/>
-              <span className='ml-2 text-gray-800 text-[13px]'>
+              <Avatar circle children={<FaUser />} size='sm' src={userDetails.profile} className='border'/>
+              <div className='ml-2 text-gray-800 text-[13px]'>
                 {userDetails.name}
-              </span>
+              </div>
             </Whisper>
           </div>
         </div>

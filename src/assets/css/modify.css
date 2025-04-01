@@ -102,3 +102,7 @@ a:active, a:focus, a:hover{
 .rs-picker-default:not(.rs-picker-disabled) .rs-picker-toggle:focus, .rs-picker-default:not(.rs-picker-disabled) .rs-picker-toggle:hover{
   border-color: rgb(0 62 50 / var(--tw-border-opacity, 1)) !important;
 }
+
+.rs-drawer-body{
+  padding: 0px !important;
+}
