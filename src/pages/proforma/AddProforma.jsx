@@ -20,6 +20,7 @@ import { MdOutlineAdd } from "react-icons/md";
 import { HiOutlineDocumentDuplicate } from "react-icons/hi";
 import AddPartyModal from '../../components/AddPartyModal';
 import AddItemModal from '../../components/AddItemModal';
+import MySelect2 from '../../components/MySelect2';
 
 
 
@@ -47,7 +48,7 @@ const Proforma = ({ mode }) => {
   const [ItemRows, setItemRows] = useState([itemRowSet]);
   const [additionalRows, setAdditionalRow] = useState([additionalRowSet]); //{ additionalRowsItem: 1 }
   const [formData, setFormData] = useState({
-    party: '', proformaNumber: '', estimateData: '', validDate: '', items: ItemRows,
+    party: '', proformaNumber: '', estimateDate: '', validDate: '', items: ItemRows,
     additionalCharge: additionalRows, note: '', terms: '',
     discountType: '', discountAmount: '', discountPercentage: '',
   })
@@ -412,7 +413,7 @@ const Proforma = ({ mode }) => {
   // *Save bill
   const saveBill = async () => {
 
-    if ([formData.party, formData.proformaNumber, formData.estimateData]
+    if ([formData.party, formData.proformaNumber, formData.estimateDate]
       .some((field) => field === "")) {
       return toast("Fill the blank", "error");
     }
@@ -461,7 +462,7 @@ const Proforma = ({ mode }) => {
     setItemRows([itemRowSet]);
     setAdditionalRow([additionalRowSet])
     setFormData({
-      party: '', proformaNumber: getBillPrefix, estimateData: '', validDate: '', items: ItemRows,
+      party: '', proformaNumber: getBillPrefix, estimateDate: '', validDate: '', items: ItemRows,
       additionalCharge: additionalRows, note: '', terms: '',
       discountType: '', discountAmount: '', discountPercentage: '',
     });
@@ -481,7 +482,7 @@ const Proforma = ({ mode }) => {
           <div className='content__body__main bg-white' id='addQuotationTable'>
 
             <div className='top__btn__grp'>
-              <div className='add__btns'>
+              {/* <div className='add__btns'>
                 <button onClick={() => {
                   dispatch(toggle(!getPartyModalState))
                 }}><MdOutlineAdd /> Add Party</button>
@@ -489,7 +490,7 @@ const Proforma = ({ mode }) => {
                 <button onClick={() => {
                   dispatch(itemToggle(!getItemModalState))
                 }}><MdOutlineAdd /> Add Item</button>
-              </div>
+              </div> */}
 
               {
                 mode && <div className='extra__btns'>
@@ -516,9 +517,16 @@ const Proforma = ({ mode }) => {
             <div className='flex flex-col lg:flex-row items-center justify-around gap-4'>
               <div className='flex flex-col gap-2 w-full'>
                 <p className='text-xs'>Select Party</p>
-                <SelectPicker
+                {/* <SelectPicker
                   onChange={(data) => setFormData({ ...formData, party: data })}
                   data={party}
+                  value={formData.party?._id}
+                /> */}
+                <MySelect2
+                  model={"party"}
+                  onType={(v) => {
+                    setFormData({ ...formData, party: v })
+                  }}
                   value={formData.party?._id}
                 />
               </div>
@@ -534,9 +542,9 @@ const Proforma = ({ mode }) => {
                 <input
                   type='date'
                   onChange={(e) => {
-                    setFormData({ ...formData, estimateData: e.target.value })
+                    setFormData({ ...formData, estimateDate: e.target.value })
                   }}
-                  value={formData.estimateData}
+                  value={formData.estimateDate}
                 />
               </div>
               <div className='flex flex-col gap-2 w-full lg:w-1/3'>
@@ -572,10 +580,15 @@ const Proforma = ({ mode }) => {
                       {/* Item name and description */}
                       <td>
                         <div className='flex flex-col gap-2'>
-                          <SelectPicker
+                          {/* <SelectPicker
                             onChange={(v) => onItemChange(v, index)}
                             value={ItemRows[index].itemName}
                             data={itemData}
+                          /> */}
+                          <MySelect2
+                            model={"item"}
+                            onType={(v) => onItemChange(v, index)}
+                            value={ItemRows[index].itemName}
                           />
                           <input type='text' className='input-style' placeholder='Description'
                             onChange={(e) => {

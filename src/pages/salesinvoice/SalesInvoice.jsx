@@ -25,6 +25,8 @@ import { IoIosAdd, IoMdMore } from 'react-icons/io';
 import { CiViewList } from 'react-icons/ci';
 import { Popover, Whisper } from 'rsuite';
 import AddNew from '../../components/AddNew';
+import { TbZoomReset } from 'react-icons/tb';
+import { LuSearch } from 'react-icons/lu';
 
 
 
@@ -53,36 +55,41 @@ const SalesInvoice = () => {
   }, [billData]);
   const [loading, setLoading] = useState(true);
   const [summaryToggle, setSummaryToggle] = useState(false);
+  const [filterToggle, setFilterToggle] = useState(false);
+  const [filterData, setFilterData] = useState({
+    productName: "", fromDate: '', toDate: '', billNo: '', party: '',
+    gst: "", billDate: ''
+  })
 
 
 
   // Get data;
-  useEffect(() => {
-    const getParty = async () => {
-      try {
-        const data = {
-          token: Cookies.get("token"),
-          trash: tableStatusData === "trash" ? true : false,
-          all: tableStatusData === "all" ? true : false
-        }
-        const url = process.env.REACT_APP_API_URL + `/salesinvoice/get?page=${activePage}&limit=${dataLimit}`;
-        const req = await fetch(url, {
-          method: "POST",
-          headers: {
-            "Content-Type": 'application/json'
-          },
-          body: JSON.stringify(data)
-        });
-        const res = await req.json();
-        setTotalData(res.totalData)
-        setBillData([...res.data])
-        setLoading(false);
-
-      } catch (error) {
-        console.log(error)
+  const getData = async () => {
+    try {
+      const data = {
+        token: Cookies.get("token"),
+        trash: tableStatusData === "trash" ? true : false,
+        all: tableStatusData === "all" ? true : false
       }
+      const url = process.env.REACT_APP_API_URL + `/salesinvoice/get?page=${activePage}&limit=${dataLimit}`;
+      const req = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+      const res = await req.json();
+      setTotalData(res.totalData)
+      setBillData([...res.data])
+      setLoading(false);
+
+    } catch (error) {
+      console.log(error)
     }
-    getParty();
+  }
+  useEffect(() => {
+    getData();
   }, [tableStatusData, dataLimit, activePage])
 
 
@@ -215,6 +222,46 @@ const SalesInvoice = () => {
   }
 
 
+  const getFilterData = async () => {
+
+    if ([
+      filterData.billDate, filterData.party, filterData.billNo, filterData.fromDate,
+      filterData.toDate, filterData.gst, filterData.productName
+    ].every((field) => field === "" || !field)) {
+      return toast("Choose a filter option", 'error')
+    }
+
+    try {
+      const url = process.env.REACT_APP_API_URL + `/salesinvoice/filter?page=${activePage}&limit=${dataLimit}`;
+
+      const req = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": 'application/json'
+        },
+        body: JSON.stringify({ token: Cookies.get("token"), ...filterData })
+      });
+      const res = await req.json();
+
+      console.log(res)
+      setTotalData(res?.totalData)
+      setBillData([...res?.data])
+
+    } catch (error) {
+      console.log(error)
+      return toast("Something went wrong", 'error')
+    }
+  }
+
+
+  const clearFilterData = () => {
+    getData()
+    setFilterData({
+      productName: "", fromDate: '', toDate: '', billNo: '', party: '',
+      gst: "", billDate: ''
+    })
+  }
+
 
   return (
     <>
@@ -227,7 +274,12 @@ const SalesInvoice = () => {
           <div
             className={`mb-5 w-full bg-white rounded p-4 shadow-sm add_new_compnent  overflow-hidden
             transition-all
-            ${summaryToggle ? 'h-[150px]' : 'h-[65px]'}
+            ${filterToggle
+                ? 'h-[270px]' // Highest priority
+                : summaryToggle
+                  ? 'h-[150px]' // Second priority
+                  : 'h-[65px]'  // Default height
+              }
           `}>
             <div className='flex justify-between items-center'>
               <div className='flex flex-col'>
@@ -238,7 +290,7 @@ const SalesInvoice = () => {
                   <option value={100}>100</option>
                 </select>
               </div>
-              <div className='flex items-center gap-2'>
+              <div className='flex items-center gap-2 listing__btn_grp'>
                 <div className='flex w-full flex-col lg:w-[300px]'>
                   <input type='text'
                     placeholder='Search...'
@@ -249,12 +301,18 @@ const SalesInvoice = () => {
                 <button
                   onClick={() => {
                     setSummaryToggle(!summaryToggle)
+                    setFilterToggle(false)
                   }}
                   className={`${summaryToggle ? 'bg-gray-200' : 'bg-gray-100'} border`}>
                   <CiViewList className='text-xl' />
                   Summary
                 </button>
-                <button className='bg-gray-100 border'>
+                <button
+                  onClick={() => {
+                    setFilterToggle(!filterToggle)
+                    setSummaryToggle(false)
+                  }}
+                  className={`${filterToggle ? 'bg-gray-200' : 'bg-gray-100'} border`}>
                   <MdFilterList className='text-xl' />
                   Filter
                 </button>
@@ -273,25 +331,89 @@ const SalesInvoice = () => {
               </div>
             </div>
 
-            <div id='summaryToggle'>
-              <hr />
-              <table className='w-full'>
-                <tr className='text-center'>
-                  <td>Total Transactions</td>
-                  <td>Total CGST</td>
-                  <td>Total SGST</td>
-                  <td>Total Taxable</td>
-                  <td>Total Value</td>
-                </tr>
-                <tr className='text-center'>
-                  <td className='pt-4 font-bold'>1</td>
-                  <td className='font-bold'>Rs. 0.00</td>
-                  <td className='font-bold'>Rs. 0.00</td>
-                  <td className='font-bold'>Rs. 0.00</td>
-                  <td className='font-bold'>Rs. 4,500.00</td>
-                </tr>
-              </table>
-            </div>
+            {
+              summaryToggle && <div id='summaryToggle'>
+                <hr />
+                <table className='w-full'>
+                  <tr className='text-center'>
+                    <td>Total Transactions</td>
+                    <td>Total CGST</td>
+                    <td>Total SGST</td>
+                    <td>Total Taxable</td>
+                    <td>Total Value</td>
+                  </tr>
+                  <tr className='text-center'>
+                    <td className='pt-4 font-bold'>1</td>
+                    <td className='font-bold'>Rs. 0.00</td>
+                    <td className='font-bold'>Rs. 0.00</td>
+                    <td className='font-bold'>Rs. 0.00</td>
+                    <td className='font-bold'>Rs. 4,500.00</td>
+                  </tr>
+                </table>
+              </div>
+            }
+
+            {
+              filterToggle && <div id='filterToggle'>
+                <hr />
+
+                <div className='grid gap-4 lg:grid-cols-4 sm:grid-cols-2 grid-cols-1' id='filterBill'>
+                  <div>
+                    <p>Product Name</p>
+                    <input type="text"
+                      value={filterData.productName}
+                      onChange={(e) => setFilterData({ ...filterData, productName: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <p>Bill No</p>
+                    <input type="text"
+                      value={filterData.billNo}
+                      onChange={(e) => setFilterData({ ...filterData, billNo: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <p>From Date</p>
+                    <input type="date"
+                      value={filterData.fromDate}
+                      onChange={(e) => setFilterData({ ...filterData, fromDate: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <p>To Date</p>
+                    <input type="date"
+                      value={filterData.toDate}
+                      onChange={(e) => setFilterData({ ...filterData, toDate: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <p>Party</p>
+                    <input type="text"
+                      value={filterData.party}
+                      onChange={(e) => setFilterData({ ...filterData, party: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <p>GSTIN</p>
+                    <input type="text"
+                      value={filterData.gst}
+                      onChange={(e) => setFilterData({ ...filterData, gst: e.target.value })}
+                    />
+                  </div>
+                </div>
+
+                <div className='w-full flex justify-end gap-2 mt-5' id='filterBtnGrp'>
+                  <button onClick={getFilterData}>
+                    <LuSearch />
+                    Search
+                  </button>
+                  <button onClick={clearFilterData}>
+                    <TbZoomReset />
+                    Reset
+                  </button>
+                </div>
+              </div>
+            }
           </div>
 
           {
@@ -409,10 +531,10 @@ const SalesInvoice = () => {
                           <td className='py-2 px-4 border-b max-w-[10px]'>
                             <input type='checkbox' checked={selected.includes(data._id)} onChange={() => handleCheckboxChange(data._id)} />
                           </td>
-                          <td className='px-4 border-b' align='center'>{data.invoiceDate}</td>
+                          <td className='px-4 border-b' align='center'>{new Date(data.invoiceDate).toLocaleDateString()}</td>
                           <td className='px-4 border-b' align='center'>{data.salesInvoiceNumber}</td>
                           <td className='px-4 border-b' align='center'>{data.party.name}</td>
-                          <td className='px-4 border-b' align='center'>{data.DueDate}</td>
+                          <td className='px-4 border-b' align='center'>{new Date(data.DueDate).toLocaleDateString()}</td>
                           <td className='px-4 border-b max-w-[20px]' align='center'>
                             <span className={`${data.paymentStatus === "1" ? 'bg-green-500' : 'bg-red-500'} px-2 text-white rounded-lg text-[11px] font-bold`}>
                               {data.paymentStatus === "1" ? "Paid" : "Not Paid"}
@@ -473,9 +595,9 @@ const SalesInvoice = () => {
                 </div>
                 {/* pagination end */}
               </div>
-            </div> 
-            : <AddNew title={"Sales Invoice"} link={"/admin/sales-invoice/add"}/>
-            : <DataShimmer />
+            </div>
+              : <AddNew title={"Sales Invoice"} link={"/admin/sales-invoice/add"} />
+              : <DataShimmer />
           }
         </div>
       </main>

@@ -19,6 +19,7 @@ import { HiOutlineDocumentDuplicate } from 'react-icons/hi';
 import AddPartyModal from '../../components/AddPartyModal';
 import AddItemModal from '../../components/AddItemModal';
 import { MdCurrencyRupee, MdOutlineAdd } from "react-icons/md";
+import MySelect2 from '../../components/MySelect2';
 
 
 
@@ -479,7 +480,7 @@ const PurchaseInvoice = ({ mode }) => {
           <div className='content__body__main bg-white' id='addQuotationTable'>
 
             <div className='top__btn__grp'>
-              <div className='add__btns'>
+              {/* <div className='add__btns'>
                 <button onClick={() => {
                   dispatch(toggle(!getPartyModalState))
                 }}><MdOutlineAdd /> Add Party</button>
@@ -487,7 +488,7 @@ const PurchaseInvoice = ({ mode }) => {
                 <button onClick={() => {
                   dispatch(itemToggle(!getItemModalState))
                 }}><MdOutlineAdd /> Add Item</button>
-              </div>
+              </div> */}
 
               {
                 mode === "edit" && <div className='extra__btns'>
@@ -514,9 +515,16 @@ const PurchaseInvoice = ({ mode }) => {
             <div className='flex flex-col lg:flex-row items-center justify-around gap-4'>
               <div className='flex flex-col gap-2 w-full lg:max-w-[450px]'>
                 <p className='text-xs'>Select Party</p>
-                <SelectPicker
+                {/* <SelectPicker
                   onChange={(data) => setFormData({ ...formData, party: data })}
                   data={party}
+                  value={formData.party?._id}
+                /> */}
+                <MySelect2
+                  model={"party"}
+                  onType={(v) => {
+                    setFormData({ ...formData, party: v })
+                  }}
                   value={formData.party?._id}
                 />
               </div>
@@ -561,10 +569,15 @@ const PurchaseInvoice = ({ mode }) => {
                       {/* Item name and description */}
                       <td>
                         <div className='flex flex-col gap-2'>
-                          <SelectPicker
+                          {/* <SelectPicker
                             onChange={(v) => onItemChange(v, index)}
                             value={ItemRows[index].itemName}
                             data={itemData}
+                          /> */}
+                          <MySelect2
+                            model={"item"}
+                            onType={(v) => onItemChange(v, index)}
+                            value={ItemRows[index].itemName}
                           />
                           <input type='text' className='input-style' placeholder='Description'
                             onChange={(e) => {

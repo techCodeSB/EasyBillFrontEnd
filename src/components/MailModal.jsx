@@ -65,7 +65,7 @@ const MailModal = ({ open, pdf, email }) => {
                 dispatch(toggle(false));
             }}>
                 <Modal.Header>
-                    <p>Mail</p>
+                    <p className='text-xl font-bold'>Mail</p>
                 </Modal.Header>
                 <Modal.Body className='flex flex-col gap-2 mail__body'>
                     <div className=''>

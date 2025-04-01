@@ -9,6 +9,9 @@ import useApi from '../../hooks/useApi'
 import useMyToaster from '../../hooks/useMyToaster'
 import Cookies from 'js-cookie';
 import { useParams } from 'react-router-dom'
+import MySelect2 from '../../components/MySelect2';
+
+
 
 
 
@@ -117,7 +120,7 @@ const AddPayment = ({ mode }) => {
       return toast("Fill the blank", "error");
     }
 
-    if(parseFloat(formData.amount) > parseFloat(dueAmount)){
+    if (parseFloat(formData.amount) > parseFloat(dueAmount)) {
       return toast("Invalid amount", 'error');
     }
 
@@ -172,9 +175,16 @@ const AddPayment = ({ mode }) => {
               <div className='flex flex-col gap-2'>
                 <div>
                   <p className='mb-1'>Select Party</p>
-                  <SelectPicker className='w-full'
+                  {/* <SelectPicker className='w-full'
                     onChange={(data) => setFormData({ ...formData, party: data })}
                     data={party}
+                    value={formData.party}
+                  /> */}
+                  <MySelect2
+                    model={"party"}
+                    onType={(v) => {
+                      setFormData({ ...formData, party: v })
+                    }}
                     value={formData.party}
                   />
                 </div>

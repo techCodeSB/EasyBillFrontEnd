@@ -222,7 +222,7 @@ const PurchaseReturn = () => {
             className={`mb-5 w-full bg-white rounded p-4 shadow-sm add_new_compnent overflow-hidden
               transition-all
             `}>
-            <div className='flex justify-between items-center'>
+            <div className='flex justify-between items-center listing__btn_grp'>
               <div className='flex flex-col'>
                 <select value={dataLimit} onChange={(e) => setDataLimit(e.target.value)}>
                   <option value={10}>10</option>

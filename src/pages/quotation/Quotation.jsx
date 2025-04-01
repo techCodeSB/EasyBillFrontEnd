@@ -55,37 +55,41 @@ const Quotation = () => {
   }, [billData]);
   const [loading, setLoading] = useState(true);
   const [filterToggle, setFilterToggle] = useState(false);
+  const [filterData, setFilterData] = useState({
+    productName: "", fromDate: '', toDate: '', billNo: '', party: '',
+    gst: "", billDate: ''
+  })
 
 
 
 
   // Get data;
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const data = {
-          token: Cookies.get("token"),
-          trash: tableStatusData === "trash" ? true : false,
-          all: tableStatusData === "all" ? true : false
-        }
-        const url = process.env.REACT_APP_API_URL + `/quotation/get?page=${activePage}&limit=${dataLimit}`;
-        const req = await fetch(url, {
-          method: "POST",
-          headers: {
-            "Content-Type": 'application/json'
-          },
-          body: JSON.stringify(data)
-        });
-        const res = await req.json();
-        console.log(res)
-        setTotalData(res?.totalData)
-        setBillData([...res?.data])
-        setLoading(false);
-
-      } catch (error) {
-        console.log(error)
+  const getData = async () => {
+    try {
+      const data = {
+        token: Cookies.get("token"),
+        trash: tableStatusData === "trash" ? true : false,
+        all: tableStatusData === "all" ? true : false
       }
+      const url = process.env.REACT_APP_API_URL + `/quotation/get?page=${activePage}&limit=${dataLimit}`;
+      const req = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+      const res = await req.json();
+
+      setTotalData(res?.totalData)
+      setBillData([...res?.data])
+      setLoading(false);
+
+    } catch (error) {
+      console.log(error)
     }
+  }
+  useEffect(() => {
     getData();
   }, [tableStatusData, dataLimit, activePage])
 
@@ -217,7 +221,45 @@ const Quotation = () => {
   }
 
 
+  const getFilterData = async () => {
 
+    if ([
+      filterData.billDate, filterData.party, filterData.billNo, filterData.fromDate,
+      filterData.toDate, filterData.gst, filterData.productName
+    ].every((field) => field === "" || !field)) {
+      return toast("Choose a filter option", 'error')
+    }
+
+    try {
+      const url = process.env.REACT_APP_API_URL + `/quotation/filter?page=${activePage}&limit=${dataLimit}`;
+
+      const req = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": 'application/json'
+        },
+        body: JSON.stringify({ token: Cookies.get("token"), ...filterData })
+      });
+      const res = await req.json();
+
+      console.log(res)
+      setTotalData(res?.totalData)
+      setBillData([...res?.data])
+
+    } catch (error) {
+      console.log(error)
+      return toast("Something went wrong", 'error')
+    }
+  }
+
+
+  const clearFilterData = () => {
+    getData()
+    setFilterData({
+      productName: "", fromDate: '', toDate: '', billNo: '', party: '',
+      gst: "", billDate: ''
+    })
+  }
 
   return (
     <>
@@ -241,7 +283,7 @@ const Quotation = () => {
                   <option value={100}>100</option>
                 </select>
               </div>
-              <div className='flex items-center gap-2'>
+              <div className='flex items-center gap-2 listing__btn_grp'>
                 <div className='flex w-full flex-col lg:w-[300px]'>
                   <input type='text'
                     placeholder='Search...'
@@ -278,36 +320,54 @@ const Quotation = () => {
               <div className='grid gap-4 lg:grid-cols-4 sm:grid-cols-2 grid-cols-1' id='filterBill'>
                 <div>
                   <p>Product Name</p>
-                  <input type="text" />
+                  <input type="text"
+                    value={filterData.productName}
+                    onChange={(e) => setFilterData({ ...filterData, productName: e.target.value })}
+                  />
                 </div>
                 <div>
                   <p>Bill No</p>
-                  <input type="text" />
+                  <input type="text"
+                    value={filterData.billNo}
+                    onChange={(e) => setFilterData({ ...filterData, billNo: e.target.value })}
+                  />
                 </div>
                 <div>
                   <p>From Date</p>
-                  <input type="date" />
+                  <input type="date"
+                    value={filterData.fromDate}
+                    onChange={(e) => setFilterData({ ...filterData, fromDate: e.target.value })}
+                  />
                 </div>
                 <div>
                   <p>To Date</p>
-                  <input type="date" />
+                  <input type="date"
+                    value={filterData.toDate}
+                    onChange={(e) => setFilterData({ ...filterData, toDate: e.target.value })}
+                  />
                 </div>
                 <div>
                   <p>Party</p>
-                  <input type="text" />
+                  <input type="text"
+                    value={filterData.party}
+                    onChange={(e) => setFilterData({ ...filterData, party: e.target.value })}
+                  />
                 </div>
                 <div>
                   <p>GSTIN</p>
-                  <input type="text" />
+                  <input type="text"
+                    value={filterData.gst}
+                    onChange={(e) => setFilterData({ ...filterData, gst: e.target.value })}
+                  />
                 </div>
               </div>
 
               <div className='w-full flex justify-end gap-2 mt-5' id='filterBtnGrp'>
-                <button>
+                <button onClick={getFilterData}>
                   <LuSearch />
                   Search
                 </button>
-                <button>
+                <button onClick={clearFilterData}>
                   <TbZoomReset />
                   Reset
                 </button>
@@ -458,10 +518,10 @@ const Quotation = () => {
                           <td className='py-2 px-4 border-b max-w-[10px]'>
                             <input type='checkbox' checked={selected.includes(data._id)} onChange={() => handleCheckboxChange(data._id)} />
                           </td>
-                          <td className='px-4 border-b' align='center'>{data.estimateDate}</td>
+                          <td className='px-4 border-b' align='center'>{new Date(data.estimateDate).toLocaleDateString()}</td>
                           <td className='px-4 border-b' align='center'>{data.quotationNumber}</td>
                           <td className='px-4 border-b' align='center'>{data.party.name}</td>
-                          <td className='px-4 border-b' align='center'>{data.validDate}</td>
+                          <td className='px-4 border-b' align='center'>{new Date(data.validDate).toLocaleDateString()}</td>
                           <td className='px-4 border-b max-w-[20px]' align='center'>
                             <span className='bg-green-500 px-2 text-white rounded-lg text-[12px] font-bold'>
                               {new Date(Date.parse(new Date().toLocaleDateString())).toISOString() > new Date(Date.parse(data.validDate)).toISOString() ? "Expired" : "Valid"}
@@ -520,7 +580,7 @@ const Quotation = () => {
                 {/* pagination end */}
               </div>
             </div>
-              : <AddNew title={'Quotation'} link={"/admin/quotation-estimate/add"}/>
+              : <AddNew title={'Quotation'} link={"/admin/quotation-estimate/add"} />
               : <DataShimmer />}
         </div>
       </main>

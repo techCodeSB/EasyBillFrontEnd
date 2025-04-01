@@ -71,6 +71,7 @@ const MySelect2 = ({ model, onType, value }) => {
           return toast("Something went wrong", 'error')
         }
 
+
       }
 
       get()

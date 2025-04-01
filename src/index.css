@@ -1,9 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 * {
   box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: normal;
 }
 
 
@@ -122,7 +129,7 @@ h6 {
 
 .side__nav__links li {
   padding: 8px;
-  font-size: 12px;
+  font-size: 11px;
   padding-left: 15px;
   transition: 0.5s all;
   border-radius: 0px;
@@ -401,36 +408,45 @@ select {
 }
 
 
-.add_new_compnent button{
+.add_new_compnent button {
   @apply px-3 py-1 rounded flex items-center gap-2
-} 
+}
 
-.admin__area  span{
+.admin__area span {
   display: flex;
   align-items: center;
 }
 
-.select__add__button{
+.select__add__button {
   @apply w-full bg-blue-400 rounded text-white flex items-center gap-1 justify-center;
   padding: 7px;
 }
 
-.select__add__button:hover svg{
+.select__add__button:hover svg {
   transition: 0.3s all linear;
   margin-left: 5px;
 }
 
-#filterBill div{
+#filterBill div {
   display: flex;
   flex-direction: column;
-  gap:5px;
+  gap: 5px;
   font-size: 13px;
 }
 
-#filterBtnGrp button{
-@apply rounded px-3 py-2 bg-green-500 text-white
+#filterBtnGrp button {
+  @apply rounded px-3 py-2 bg-green-500 text-white
 }
-#filterBtnGrp button:last-child{
+
+#filterBtnGrp button:last-child {
   @apply bg-blue-500
 }
-#filterBtnGrp button svg{font-size: 17px;}
+
+#filterBtnGrp button svg {
+  font-size: 17px;
+}
+
+
+.listing__btn_grp button:last-child:active {
+  @apply scale-95;
+}

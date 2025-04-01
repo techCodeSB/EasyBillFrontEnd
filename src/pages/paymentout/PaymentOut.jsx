@@ -231,7 +231,7 @@ const PaymentOut = () => {
                   <option value={100}>100</option>
                 </select>
               </div>
-              <div className='flex items-center gap-2'>
+              <div className='flex items-center gap-2 listing__btn_grp'>
                 <div className='flex w-full flex-col lg:w-[300px]'>
                   <input type='text'
                     placeholder='Search...'
@@ -286,7 +286,7 @@ const PaymentOut = () => {
                     </div>
                   </Popover>}
                 >
-                  <div className='record__download' >
+                  <div className='record__download'>
                     <IoMdMore />
                   </div>
                 </Whisper>

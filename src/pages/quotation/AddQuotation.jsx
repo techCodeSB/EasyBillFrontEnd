@@ -603,7 +603,6 @@ const Quotation = ({ mode }) => {
                 <MySelect2
                   model={"party"}
                   onType={(v) => {
-                    console.log("the value is", v)
                     setFormData({ ...formData, party: v })
                   }}
                   value={formData.party?._id || formData.party}
