@@ -25,6 +25,8 @@ import { Tooltip } from 'react-tooltip';
 import AddNew from '../../components/AddNew';
 import { IoIosAdd, IoMdMore } from 'react-icons/io';
 import { CiViewList } from 'react-icons/ci';
+import { TbZoomReset } from 'react-icons/tb';
+import { LuSearch } from 'react-icons/lu';
 
 
 
@@ -53,35 +55,42 @@ const PurchaseInvoice = () => {
 	}, [billData]);
 	const [loading, setLoading] = useState(true)
 	const [summaryToggle, setSummaryToggle] = useState(false);
+	const [filterToggle, setFilterToggle] = useState(false);
+	const [filterData, setFilterData] = useState({
+		productName: "", fromDate: '', toDate: '', billNo: '', party: '',
+		gst: "", billDate: ''
+	})
+
 
 
 	// Get data;
-	useEffect(() => {
-		const getParty = async () => {
-			try {
-				const data = {
-					token: Cookies.get("token"),
-					trash: tableStatusData === "trash" ? true : false,
-					all: tableStatusData === "all" ? true : false
-				}
-				const url = process.env.REACT_APP_API_URL + `/purchaseinvoice/get?page=${activePage}&limit=${dataLimit}`;
-				const req = await fetch(url, {
-					method: "POST",
-					headers: {
-						"Content-Type": 'application/json'
-					},
-					body: JSON.stringify(data)
-				});
-				const res = await req.json();
-				setTotalData(res.totalData)
-				setBillData([...res.data]);
-				setLoading(false);
-
-			} catch (error) {
-				console.log(error)
+	const getData = async () => {
+		try {
+			const data = {
+				token: Cookies.get("token"),
+				trash: tableStatusData === "trash" ? true : false,
+				all: tableStatusData === "all" ? true : false
 			}
+			const url = process.env.REACT_APP_API_URL + `/purchaseinvoice/get?page=${activePage}&limit=${dataLimit}`;
+			const req = await fetch(url, {
+				method: "POST",
+				headers: {
+					"Content-Type": 'application/json'
+				},
+				body: JSON.stringify(data)
+			});
+			const res = await req.json();
+			setTotalData(res.totalData)
+			setBillData([...res.data]);
+			setLoading(false);
+
+		} catch (error) {
+			console.log(error)
 		}
-		getParty();
+	}
+	useEffect(() => {
+
+		getData();
 	}, [tableStatusData, dataLimit, activePage])
 
 
@@ -214,6 +223,47 @@ const PurchaseInvoice = () => {
 	}
 
 
+	const getFilterData = async () => {
+
+		if ([
+			filterData.billDate, filterData.party, filterData.billNo, filterData.fromDate,
+			filterData.toDate, filterData.gst, filterData.productName
+		].every((field) => field === "" || !field)) {
+			return toast("Choose a filter option", 'error')
+		}
+
+		try {
+			const url = process.env.REACT_APP_API_URL + `/purchaseinvoice/filter?page=${activePage}&limit=${dataLimit}`;
+
+			const req = await fetch(url, {
+				method: "POST",
+				headers: {
+					"Content-Type": 'application/json'
+				},
+				body: JSON.stringify({ token: Cookies.get("token"), ...filterData })
+			});
+			const res = await req.json();
+
+			console.log(res)
+			setTotalData(res?.totalData)
+			setBillData([...res?.data])
+
+		} catch (error) {
+			console.log(error)
+			return toast("Something went wrong", 'error')
+		}
+	}
+
+
+	const clearFilterData = () => {
+		getData()
+		setFilterData({
+			productName: "", fromDate: '', toDate: '', billNo: '', party: '',
+			gst: "", billDate: ''
+		})
+	}
+
+
 
 	return (
 		<>
@@ -225,9 +275,14 @@ const PurchaseInvoice = () => {
 					{/* top section */}
 					<div
 						className={`mb-5 w-full bg-white rounded p-4 shadow-sm add_new_compnent  overflow-hidden
-											transition-all
-											${summaryToggle ? 'h-[150px]' : 'h-[65px]'}
-										`}>
+						transition-all
+						${filterToggle
+								? 'h-[270px]' // Highest priority
+								: summaryToggle
+									? 'h-[150px]' // Second priority
+									: 'h-[65px]'  // Default height
+							}
+					`}>
 						<div className='flex justify-between items-center'>
 							<div className='flex flex-col'>
 								<select value={dataLimit} onChange={(e) => setDataLimit(e.target.value)}>
@@ -248,12 +303,18 @@ const PurchaseInvoice = () => {
 								<button
 									onClick={() => {
 										setSummaryToggle(!summaryToggle)
+										setFilterToggle(false)
 									}}
 									className={`${summaryToggle ? 'bg-gray-200' : 'bg-gray-100'} border`}>
 									<CiViewList className='text-xl' />
 									Summary
 								</button>
-								<button className='bg-gray-100 border'>
+								<button
+									onClick={() => {
+										setFilterToggle(!filterToggle)
+										setSummaryToggle(false)
+									}}
+									className={`${filterToggle ? 'bg-gray-200' : 'bg-gray-100'} border`}>
 									<MdFilterList className='text-xl' />
 									Filter
 								</button>
@@ -272,56 +333,120 @@ const PurchaseInvoice = () => {
 							</div>
 						</div>
 
-						<div id='summaryToggle'>
-							<hr />
-							<table className='w-full'>
-								<tr className='text-center'>
-									<td>Total Transactions</td>
-									<td>Total CGST</td>
-									<td>Total SGST</td>
-									<td>Total Taxable</td>
-									<td>Total Value</td>
-								</tr>
-								<tr className='text-center'>
-									<td className='pt-4 font-bold'>1</td>
-									<td className='font-bold'>Rs. 0.00</td>
-									<td className='font-bold'>Rs. 0.00</td>
-									<td className='font-bold'>Rs. 0.00</td>
-									<td className='font-bold'>Rs. 4,500.00</td>
-								</tr>
-							</table>
-						</div>
+						{
+							summaryToggle && <div id='summaryToggle'>
+								<hr />
+								<table className='w-full'>
+									<tr className='text-center'>
+										<td>Total Transactions</td>
+										<td>Total CGST</td>
+										<td>Total SGST</td>
+										<td>Total Taxable</td>
+										<td>Total Value</td>
+									</tr>
+									<tr className='text-center'>
+										<td className='pt-4 font-bold'>1</td>
+										<td className='font-bold'>Rs. 0.00</td>
+										<td className='font-bold'>Rs. 0.00</td>
+										<td className='font-bold'>Rs. 0.00</td>
+										<td className='font-bold'>Rs. 4,500.00</td>
+									</tr>
+								</table>
+							</div>
+						}
+
+						{
+							filterToggle && <div id='filterToggle'>
+								<hr />
+
+								<div className='grid gap-4 lg:grid-cols-4 sm:grid-cols-2 grid-cols-1' id='filterBill'>
+									<div>
+										<p>Product Name</p>
+										<input type="text"
+											value={filterData.productName}
+											onChange={(e) => setFilterData({ ...filterData, productName: e.target.value })}
+										/>
+									</div>
+									<div>
+										<p>Bill No</p>
+										<input type="text"
+											value={filterData.billNo}
+											onChange={(e) => setFilterData({ ...filterData, billNo: e.target.value })}
+										/>
+									</div>
+									<div>
+										<p>From Date</p>
+										<input type="date"
+											value={filterData.fromDate}
+											onChange={(e) => setFilterData({ ...filterData, fromDate: e.target.value })}
+										/>
+									</div>
+									<div>
+										<p>To Date</p>
+										<input type="date"
+											value={filterData.toDate}
+											onChange={(e) => setFilterData({ ...filterData, toDate: e.target.value })}
+										/>
+									</div>
+									<div>
+										<p>Party</p>
+										<input type="text"
+											value={filterData.party}
+											onChange={(e) => setFilterData({ ...filterData, party: e.target.value })}
+										/>
+									</div>
+									<div>
+										<p>GSTIN</p>
+										<input type="text"
+											value={filterData.gst}
+											onChange={(e) => setFilterData({ ...filterData, gst: e.target.value })}
+										/>
+									</div>
+								</div>
+
+								<div className='w-full flex justify-end gap-2 mt-5' id='filterBtnGrp'>
+									<button onClick={getFilterData}>
+										<LuSearch />
+										Search
+									</button>
+									<button onClick={clearFilterData}>
+										<TbZoomReset />
+										Reset
+									</button>
+								</div>
+							</div>
+						}
 					</div>
 
 					{
-						!loading ?  billData.length > 0 ? <div className='content__body__main bg-white'>
+						!loading ? billData.length > 0 ? <div className='content__body__main bg-white'>
 							{/* First Row */}
 							<div className='flex justify-end'>
-                <Whisper placement='leftStart' enterable
-                  speaker={<Popover full>
-                    <div className='download__menu' onClick={() => exportTable('print')} >
-                      <BiPrinter className='text-[16px]' />
-                      Print Table
-                    </div>
-                    <div className='download__menu' onClick={() => exportTable('copy')}>
-                      <FaRegCopy className='text-[16px]' />
-                      Copy Table
-                    </div>
-                    <div className='download__menu' onClick={() => exportTable('pdf')}>
-                      <FaRegFilePdf className="text-[16px]" />
-                      Download Pdf
-                    </div>
-                    <div className='download__menu' onClick={() => exportTable('excel')} >
-                      <FaRegFileExcel className='text-[16px]' />
-                      Download Excel
-                    </div>
-                  </Popover>}
-                >
-                  <div className='record__download' >
-                    <IoMdMore />
-                  </div>
-                </Whisper>
-              </div>
+								<Whisper placement='leftStart' enterable
+									speaker={<Popover full>
+										<div className='download__menu' onClick={() => exportTable('print')} >
+											<BiPrinter className='text-[16px]' />
+											Print Table
+										</div>
+										<div className='download__menu' onClick={() => exportTable('copy')}>
+											<FaRegCopy className='text-[16px]' />
+											Copy Table
+										</div>
+										<div className='download__menu' onClick={() => exportTable('pdf')}>
+											<FaRegFilePdf className="text-[16px]" />
+											Download Pdf
+										</div>
+										<div className='download__menu' onClick={() => exportTable('excel')} >
+											<FaRegFileExcel className='text-[16px]' />
+											Download Excel
+										</div>
+									</Popover>}
+								>
+									<div className='record__download' >
+										<IoMdMore />
+									</div>
+								</Whisper>
+							</div>
 							{/* <div className='flex justify-between items-center flex-col lg:flex-row gap-4'>
 								<div className='flex items-center gap-4 justify-between w-full lg:justify-start'>
 									<div className='flex flex-col'>
@@ -473,9 +598,9 @@ const PurchaseInvoice = () => {
 								</div>
 								{/* pagination end */}
 							</div>
-						</div> 
-						:<AddNew title={"Purchase Invoice"} link={'/admin/purchase-invoice/add'}/>
-						: <DataShimmer />
+						</div>
+							: <AddNew title={"Purchase Invoice"} link={'/admin/purchase-invoice/add'} />
+							: <DataShimmer />
 					}
 				</div>
 			</main>

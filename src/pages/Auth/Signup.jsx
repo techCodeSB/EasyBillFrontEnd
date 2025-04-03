@@ -2,7 +2,7 @@ import "../../assets/css/login.css"
 import Logo from '../../assets/images/logo.png';
 import { useState } from "react";
 import useLoginShake from "../../hooks/useLoginShake";
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import useMyToaster from "../../hooks/useMyToaster";
 import Loading from '../../components/Loading'
 
@@ -81,6 +81,12 @@ const Signup = () => {
             Sign up
           </button>
         </form>
+        <div className='flex justify-center text-[12px]'>
+          All ready have an account?
+          <Link to={'/admin'} className="ml-1">
+            Login
+          </Link>
+        </div>
       </div>
     </main>
   )

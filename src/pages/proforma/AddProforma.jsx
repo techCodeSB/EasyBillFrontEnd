@@ -516,7 +516,7 @@ const Proforma = ({ mode }) => {
 
             <div className='flex flex-col lg:flex-row items-center justify-around gap-4'>
               <div className='flex flex-col gap-2 w-full'>
-                <p className='text-xs'>Select Party</p>
+                <p className='text-xs'>Select Party <span className='required__text'>*</span></p>
                 {/* <SelectPicker
                   onChange={(data) => setFormData({ ...formData, party: data })}
                   data={party}
@@ -531,14 +531,14 @@ const Proforma = ({ mode }) => {
                 />
               </div>
               <div className='flex flex-col gap-2 w-full lg:w-1/3'>
-                <p className='text-xs'>Proforma / Estimate Number</p>
+                <p className='text-xs'>Proforma Number <span className='required__text'>*</span></p>
                 <input type="text"
                   onChange={(e) => setFormData({ ...formData, proformaNumber: e.target.value })}
                   value={formData.proformaNumber}
                 />
               </div>
               <div className='flex flex-col gap-2 w-full lg:w-1/3'>
-                <p className='text-xs'>Proforma / Estimate Date</p>
+                <p className='text-xs'>Proforma Date <span className='required__text'>*</span></p>
                 <input
                   type='date'
                   onChange={(e) => {

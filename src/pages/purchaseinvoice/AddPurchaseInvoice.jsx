@@ -534,7 +534,9 @@ const PurchaseInvoice = ({ mode }) => {
 
             <div className='flex flex-col lg:flex-row items-center justify-around gap-4'>
               <div className='flex flex-col gap-2 w-full'>
-                <p className='text-xs'>Select Party</p>
+                <p className='text-xs'>
+                  Select Party <span className='required__text'>*</span>
+                </p>
                 {/* <SelectPicker
                   onChange={(data) => setFormData({ ...formData, party: data })}
                   data={party}
@@ -548,22 +550,22 @@ const PurchaseInvoice = ({ mode }) => {
                   value={formData.party?._id}
                 />
               </div>
-              <div className='flex flex-col gap-2 w-full lg:w-1/3'>
-                <p className='text-xs'>Purchase Invoice Number</p>
+              <div className='flex flex-col gap-2 w-full lg:w-1/2'>
+                <p className='text-xs'>Purchase Invoice Number <span className='required__text'>*</span></p>
                 <input type="text"
                   onChange={(e) => setFormData({ ...formData, purchaseInvoiceNumber: e.target.value })}
                   value={formData.purchaseInvoiceNumber}
                 />
               </div>
-              <div className='flex flex-col gap-2 w-full lg:w-1/3'>
-                <p className='text-xs'>Original Invoice Number</p>
+              <div className='flex flex-col gap-2 w-full lg:w-1/2'>
+                <p className='text-xs'>Original Invoice Number <span className='required__text'>*</span></p>
                 <input type="text"
                   onChange={(e) => setFormData({ ...formData, originalInvoiceNumber: e.target.value })}
                   value={formData.originalInvoiceNumber}
                 />
               </div>
-              <div className='flex flex-col gap-2 w-full lg:w-1/3'>
-                <p className='text-xs'>Invoice Date</p>
+              <div className='flex flex-col gap-2 w-full lg:w-1/2'>
+                <p className='text-xs'>Invoice Date <span className='required__text'>*</span></p>
                 <input type="date"
                   className='text-xs'
                   onChange={(e) => {
@@ -572,7 +574,7 @@ const PurchaseInvoice = ({ mode }) => {
                   value={formData.invoiceDate}
                 />
               </div>
-              <div className='flex flex-col gap-2 w-full lg:w-1/3'>
+              <div className='flex flex-col gap-2 w-full lg:w-1/2'>
                 <p className='text-xs'>Due Date</p>
                 <input type="date"
                   className='text-xs'

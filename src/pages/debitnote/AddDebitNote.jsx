@@ -512,7 +512,7 @@ const DebitNote = ({ mode }) => {
 
             <div className='flex flex-col lg:flex-row items-center justify-around gap-4'>
               <div className='flex flex-col gap-2 w-full lg:max-w-[450px]'>
-                <p className='text-xs'>Select Party</p>
+                <p className='text-xs'>Select Party <span className='required__text'>*</span></p>
                 {/* <SelectPicker
                   onChange={(data) => setFormData({ ...formData, party: data })}
                   data={party}
@@ -527,14 +527,14 @@ const DebitNote = ({ mode }) => {
                 />
               </div>
               <div className='flex flex-col gap-2 w-full lg:w-1/3'>
-                <p className='text-xs'>Debit Note Number</p>
+                <p className='text-xs'>Debit Note Number <span className='required__text'>*</span></p>
                 <input type="text"
                   onChange={(e) => setFormData({ ...formData, debitNoteNumber: e.target.value })}
                   value={formData.debitNoteNumber}
                 />
               </div>
               <div className='flex flex-col gap-2 w-full lg:w-1/3'>
-                <p className='text-xs'>Return Date</p>
+                <p className='text-xs'>Return Date <span className='required__text'>*</span></p>
                 <input type="date"
                   className='text-xs'
                   onChange={(e) => {

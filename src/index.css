@@ -186,6 +186,10 @@ textarea {
   border-radius: 3px
 }
 
+input[type="checkbox"] {
+  width: 20px !important;
+}
+
 select {
   @apply w-full p-[4px] border border-gray-200 rounded outline-none;
 }
@@ -449,4 +453,14 @@ select {
 
 .listing__btn_grp button:last-child:active {
   @apply scale-95;
+}
+
+
+.bill__and__sping__adr{
+  @apply w-full p-2 flex ;
+}
+
+
+.required__text{
+  @apply text-red-600
 }

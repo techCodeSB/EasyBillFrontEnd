@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import checkfile from '../helper/checkfile'
 import useMyToaster from '../hooks/useMyToaster';
 import Cookies from 'js-cookie'
+import TabView from '../components/TabView';
 
 
 
@@ -158,6 +159,10 @@ const Setting = () => {
       <main id='main'>
         <SideNav />
         <div className='content__body' id='Settings'>
+
+          {/* TabView */}
+          <TabView />
+
           {/* site setting */}
           <div className="content__body__main bg-white" >
             <p className='font-bold'>Site Settings</p>
@@ -604,7 +609,11 @@ const Setting = () => {
               <div className='w-full flex justify-center gap-3 my-3'>
                 <button
                   onClick={updateCompany}
-                  className='bg-green-500 hover:bg-green-400 text-md text-white rounded w-[70px] flex items-center justify-center gap-1 py-2'>
+                  className='bg-green-500 hover:bg-green-400 text-md text-white rounded w-[70px] flex items-center justify-center gap-1 py-2
+                  
+                  
+                  
+                  '>
                   <FaRegCheckCircle />
                   Update
                 </button>
@@ -614,6 +623,51 @@ const Setting = () => {
                 </button>
               </div>
             </div>
+          </div>
+
+          {/* ==================== Party Category  ===================*/}
+          {/* ========================================================*/}
+          <div className="content__body__main bg-white mt-5">
+            <p className='font-bold'>Party Category</p>
+
+            {/* <div className='overflow-x-auto mt-5 list__table'>
+              <table className='min-w-full bg-white' id='listQuotation' ref={tableRef}>
+                <thead className='bg-gray-100'>
+                  <tr>
+                    <th className='py-2 px-4 border-b w-[50px]'>
+                      <input type='checkbox' onChange={selectAll} checked={unitData.length > 0 && selected.length === unitData.length} />
+                    </th>
+                    <th className='py-2 px-4 border-b '>Title</th>
+                    <th className='py-2 px-4 border-b w-[70px]'>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {
+                    unitData.map((data, i) =>
+                      <tr key={i}>
+                        <td className='py-2 px-4 border-b max-w-[10px]'>
+                          <input type='checkbox' checked={selected.includes(data._id)} onChange={() => handleCheckboxChange(data._id)} />
+                        </td>
+                        <td className='px-4 border-b' align='center'>{data.title}</td>
+
+
+                        <td className='px-4 border-b' align='center'>
+                          <div
+                            data-tooltip-id="unitTooltip" data-tooltip-content="Edit"
+                            className='flex justify-center flex-col md:flex-row gap-2 mr-2'>
+                            <button className='bg-blue-400 grid place-items-center text-white px-2 py-1 rounded w-full text-[16px]'
+                              onClick={() => navigate(`/admin/unit/edit/${data._id}`)}>
+                              <MdEditSquare />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    )
+                  }
+                </tbody>
+              </table>
+            </div> */}
+            {/* table close */}
           </div>
         </div>
       </main>

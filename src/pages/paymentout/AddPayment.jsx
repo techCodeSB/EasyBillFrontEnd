@@ -258,7 +258,7 @@ const AddPayment = ({ mode }) => {
                 </div>
               </div>
             </div>
-            <div>
+            {/* <div>
               <p className='my-2'>Details/Remark</p>
               <Editor
                 onEditorChange={(v, editor) => {
@@ -282,7 +282,7 @@ const AddPayment = ({ mode }) => {
                   content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
                 }}
               />
-            </div>
+            </div> */}
             <div className='w-full flex justify-center gap-3 mt-3'>
               <button
                 onClick={savePayment}

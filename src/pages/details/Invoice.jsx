@@ -185,7 +185,7 @@ const Invoice = () => {
 
   }, [billData])
 
-  
+
 
   const sendViaMail = async () => {
     function blobToBase64(blob) {
@@ -279,7 +279,7 @@ const Invoice = () => {
                       <p><span className='font-bold'>Invoice Date </span>
                         {
                           new Date(
-                            billData?.estimateData || billData?.invoiceDate || billData?.debitNoteDate ||
+                            billData?.estimateDate || billData?.invoiceDate || billData?.debitNoteDate ||
                             billData?.returnDate || billData?.poDate || billData?.purchaseInvoiceDate
                             || billData?.creditNoteDate || billData?.purchaseReturnDate
                             || billData?.chalanDate
@@ -455,10 +455,10 @@ const InvoicePdf = ({ companyDetails, billData, billDetails, hsnData, totalAmoun
                     {companyDetails?.name}
                   </Text>
                   <Text style={styles.partyText}>{companyDetails?.address}</Text>
-                  <Text>
-                    <Text style={[styles.bold, styles.partyText]}>GSTIN:</Text> {companyDetails?.gst}
-                    <Text style={[styles.bold, styles.partyText]}> Mobile:</Text> {companyDetails?.phone}
-                  </Text>
+                  {/* <Text> */}
+                  <Text style={[styles.bold, styles.partyText]}>GSTIN: {companyDetails?.gst}</Text>
+                  <Text style={[styles.bold, styles.partyText]}>Mobile: {companyDetails?.phone}</Text>
+                  {/* </Text> */}
                   <Text style={styles.partyText}><Text style={[styles.bold]}>PAN Number:</Text> {companyDetails?.pan}</Text>
                 </View>
               </View>
@@ -471,7 +471,7 @@ const InvoicePdf = ({ companyDetails, billData, billDetails, hsnData, totalAmoun
                 }</Text>
                 <Text style={styles.partyText}><Text style={styles.bold}>Invoice Date: </Text>  {
                   new Date(
-                    billData?.estimateData || billData?.invoiceDate || billData?.debitNoteDate ||
+                    billData?.estimateDate || billData?.invoiceDate || billData?.debitNoteDate ||
                     billData?.returnDate || billData?.poDate || billData?.purchaseInvoiceDate
                     || billData?.creditNoteDate || billData?.purchaseReturnDate
                     || billData?.chalanDate
@@ -485,12 +485,12 @@ const InvoicePdf = ({ companyDetails, billData, billDetails, hsnData, totalAmoun
             <View style={{ padding: 10 }}>
               <Text style={[styles.textSmall, styles.partyText]}>TO</Text>
               <Text style={[styles.bold, styles.textSmall, styles.partyText]}>{billData?.party.name?.toUpperCase()}</Text>
-              <Text style={[styles.textSmall, styles.partyText]}>
+              <Text style={[styles.textSmall, styles.partyText, {flexWrap: 'wrap'}]}>
                 <Text>Address:</Text> {billData?.party.address}
               </Text>
               <Text style={[styles.textSmall, styles.partyText, { textTransform: 'uppercase' }]}>
                 <Text>GSTIN:</Text> {billData?.party.gst}
-                <Text>State:</Text> {billData?.party.state}
+                <Text> State:</Text> {billData?.party.state}
               </Text>
             </View>
           </View>

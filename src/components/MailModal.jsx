@@ -48,9 +48,10 @@ const MailModal = ({ open, pdf, email }) => {
             setMailData({ subject: "", body: "" })
             dispatch(toggle(false))
             return toast("Email sent successfully", "success");
-            
+
         } catch (error) {
             console.log(error)
+            setLoading(false)
             toast("Mail not send", 'error')
         }
 

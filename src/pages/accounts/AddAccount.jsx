@@ -141,7 +141,7 @@ const AddAccount = ({ mode }) => {
                                 </div>
                             </div>
                         </div>
-                        <div className='mt-3 '>
+                        {/* <div className='mt-3 '>
                             <p className='ml-2 pb-2'>Details</p>
                             <Editor
                                 value={from.details}
@@ -165,7 +165,7 @@ const AddAccount = ({ mode }) => {
                                     content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
                                 }}
                             />
-                        </div>
+                        </div> */}
                         <div className='flex justify-center pt-9 mb-6'>
                             <button
                                 className='p-2 flex rounded-sm bg-green-500 text-white items-center gap-2'

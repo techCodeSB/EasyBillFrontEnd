@@ -30,7 +30,7 @@ const ItemAdd = ({ mode }) => {
   )
 }
 
-const AddItemComponent = ({ mode }) => {
+const AddItemComponent = ({ mode, save }) => {
   const toast = useMyToaster();
   const { getApiData } = useApi()
   const editorRef = useRef(null);
@@ -125,7 +125,9 @@ const AddItemComponent = ({ mode }) => {
 
       if (!mode) clearData();
 
-      return toast(!mode ? "Item create success" : "Item update success", 'success');
+      toast(!mode ? "Item create success" : "Item update success", 'success');
+      save(true); // for close sidebar in MySelect2
+      return;
 
     } catch (error) {
       console.log(error);
@@ -203,7 +205,7 @@ const AddItemComponent = ({ mode }) => {
       </div>
       <div className='mt-3 '>
         <p className='ml-2 pb-2'>Details</p>
-        <Editor
+        {/* <Editor
           onEditorChange={(v, editor) => {
             setForm({ ...form, details: editor.getContent() })
           }}
@@ -224,7 +226,7 @@ const AddItemComponent = ({ mode }) => {
               'removeformat | help',
             content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
           }}
-        />
+        /> */}
       </div>
       <div className='w-full overflow-auto mt-2'>
         <table className='w-full border'>

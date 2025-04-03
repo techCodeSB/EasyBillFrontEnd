@@ -23,6 +23,8 @@ import DataShimmer from '../../components/DataShimmer';
 import { Tooltip } from 'react-tooltip';
 import { IoIosAdd, IoMdMore } from 'react-icons/io';
 import AddNew from '../../components/AddNew';
+import { TbZoomReset } from 'react-icons/tb';
+import { LuSearch } from 'react-icons/lu';
 
 
 
@@ -47,36 +49,41 @@ const DeliveryChalan = () => {
       "Valid Date": validDate
     }));
   }, [billData]);
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
+  const [filterToggle, setFilterToggle] = useState(false);
+  const [filterData, setFilterData] = useState({
+    productName: "", fromDate: '', toDate: '', billNo: '', party: '',
+    gst: "", billDate: ''
+  })
 
 
   // Get data;
-  useEffect(() => {
-    const getParty = async () => {
-      try {
-        const data = {
-          token: Cookies.get("token"),
-          trash: tableStatusData === "trash" ? true : false,
-          all: tableStatusData === "all" ? true : false
-        }
-        const url = process.env.REACT_APP_API_URL + `/deliverychalan/get?page=${activePage}&limit=${dataLimit}`;
-        const req = await fetch(url, {
-          method: "POST",
-          headers: {
-            "Content-Type": 'application/json'
-          },
-          body: JSON.stringify(data)
-        });
-        const res = await req.json();
-        setTotalData(res.totalData)
-        setBillData([...res.data]);
-        setLoading(false);
-
-      } catch (error) {
-        console.log(error)
+  const getData = async () => {
+    try {
+      const data = {
+        token: Cookies.get("token"),
+        trash: tableStatusData === "trash" ? true : false,
+        all: tableStatusData === "all" ? true : false
       }
+      const url = process.env.REACT_APP_API_URL + `/deliverychalan/get?page=${activePage}&limit=${dataLimit}`;
+      const req = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+      const res = await req.json();
+      setTotalData(res.totalData)
+      setBillData([...res.data]);
+      setLoading(false);
+
+    } catch (error) {
+      console.log(error)
     }
-    getParty();
+  }
+  useEffect(() => {
+    getData();
   }, [tableStatusData, dataLimit, activePage])
 
 
@@ -207,6 +214,47 @@ const DeliveryChalan = () => {
   }
 
 
+  const getFilterData = async () => {
+
+    if ([
+      filterData.billDate, filterData.party, filterData.billNo, filterData.fromDate,
+      filterData.toDate, filterData.gst, filterData.productName
+    ].every((field) => field === "" || !field)) {
+      return toast("Choose a filter option", 'error')
+    }
+
+    try {
+      const url = process.env.REACT_APP_API_URL + `/deliverychalan/filter?page=${activePage}&limit=${dataLimit}`;
+
+      const req = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": 'application/json'
+        },
+        body: JSON.stringify({ token: Cookies.get("token"), ...filterData })
+      });
+      const res = await req.json();
+
+      console.log(res)
+      setTotalData(res?.totalData)
+      setBillData([...res?.data])
+
+    } catch (error) {
+      console.log(error)
+      return toast("Something went wrong", 'error')
+    }
+  }
+
+
+  const clearFilterData = () => {
+    getData()
+    setFilterData({
+      productName: "", fromDate: '', toDate: '', billNo: '', party: '',
+      gst: "", billDate: ''
+    })
+  }
+
+
 
   return (
     <>
@@ -218,7 +266,7 @@ const DeliveryChalan = () => {
           {/* top section */}
           <div
             className={`mb-5 w-full bg-white rounded p-4 shadow-sm add_new_compnent overflow-hidden
-              transition-all
+              transition-all ${filterToggle ? 'h-[265px]' : 'h-[65px]'}
             `}>
             <div className='flex justify-between items-center listing__btn_grp'>
               <div className='flex flex-col'>
@@ -237,7 +285,10 @@ const DeliveryChalan = () => {
                     className='p-[6px]'
                   />
                 </div>
-                <button className='bg-gray-100 border'>
+                <button onClick={() => {
+                  setFilterToggle(!filterToggle)
+                }}
+                  className={`${filterToggle ? 'bg-gray-200 border-gray-300' : 'bg-gray-100'} border`}>
                   <MdFilterList className='text-xl' />
                   Filter
                 </button>
@@ -256,7 +307,64 @@ const DeliveryChalan = () => {
               </div>
             </div>
 
-            <div id='proformaInvoice'>
+            <div id='filterToggle'>
+              <hr />
+
+              <div className='grid gap-4 lg:grid-cols-4 sm:grid-cols-2 grid-cols-1' id='filterBill'>
+                <div>
+                  <p>Product Name</p>
+                  <input type="text"
+                    value={filterData.productName}
+                    onChange={(e) => setFilterData({ ...filterData, productName: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <p>Bill No</p>
+                  <input type="text"
+                    value={filterData.billNo}
+                    onChange={(e) => setFilterData({ ...filterData, billNo: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <p>From Date</p>
+                  <input type="date"
+                    value={filterData.fromDate}
+                    onChange={(e) => setFilterData({ ...filterData, fromDate: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <p>To Date</p>
+                  <input type="date"
+                    value={filterData.toDate}
+                    onChange={(e) => setFilterData({ ...filterData, toDate: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <p>Party</p>
+                  <input type="text"
+                    value={filterData.party}
+                    onChange={(e) => setFilterData({ ...filterData, party: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <p>GSTIN</p>
+                  <input type="text"
+                    value={filterData.gst}
+                    onChange={(e) => setFilterData({ ...filterData, gst: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              <div className='w-full flex justify-end gap-2 mt-5' id='filterBtnGrp'>
+                <button onClick={getFilterData}>
+                  <LuSearch />
+                  Search
+                </button>
+                <button onClick={clearFilterData}>
+                  <TbZoomReset />
+                  Reset
+                </button>
+              </div>
             </div>
           </div>
 

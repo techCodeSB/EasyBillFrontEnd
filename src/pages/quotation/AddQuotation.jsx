@@ -594,7 +594,7 @@ const Quotation = ({ mode }) => {
 
             <div className='flex flex-col lg:flex-row items-center justify-around gap-4'>
               <div className='flex flex-col gap-2 w-full'>
-                <p className='text-xs'>Select Party</p>
+                <p className='text-xs'>Select Party <span className='required__text'>*</span></p>
                 {/* <SelectPicker
                   onChange={(data) => setFormData({ ...formData, party: data })}
                   data={party}
@@ -608,15 +608,15 @@ const Quotation = ({ mode }) => {
                   value={formData.party?._id || formData.party}
                 />
               </div>
-              <div className='flex flex-col gap-2 w-full lg:w-1/3'>
-                <p className='text-xs'>Quotation / Estimate Number</p>
+              <div className='flex flex-col gap-2 w-full lg:w-1/2'>
+                <p className='text-xs'>Quotation / Estimate Number <span className='required__text'>*</span></p>
                 <input type="text"
                   onChange={(e) => setFormData({ ...formData, quotationNumber: e.target.value })}
                   value={formData.quotationNumber}
                 />
               </div>
-              <div className='flex flex-col gap-2 w-full lg:w-1/3'>
-                <p className='text-xs'>Quotation / Estimate Date</p>
+              <div className='flex flex-col gap-2 w-full lg:w-1/2'>
+                <p className='text-xs'>Quotation / Estimate Date <span className='required__text'>*</span></p>
                 {/* <DatePicker className='text-xs'
                   onChange={(data) => {
                     let date = new Date(data);
@@ -632,7 +632,7 @@ const Quotation = ({ mode }) => {
                   value={formData.estimateDate}
                 />
               </div>
-              <div className='flex flex-col gap-2 w-full lg:w-1/3'>
+              <div className='flex flex-col gap-2 w-full lg:w-1/2'>
                 <p className='text-xs'>Valid To</p>
                 <input
                   type='date'
@@ -642,6 +642,10 @@ const Quotation = ({ mode }) => {
                   value={formData.validDate}
                 />
               </div>
+            </div>
+
+            <div className='bill__and__sping__adr'>
+              
             </div>
 
             <div className='overflow-x-auto rounded'>

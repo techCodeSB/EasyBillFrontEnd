@@ -12,6 +12,7 @@ import { FaArrowRight } from "react-icons/fa6";
 import { Drawer } from 'rsuite';
 import { PartyComponent } from '../pages/party/AddParty';
 import { AddItemComponent } from '../pages/Items/ItemAdd';
+import { CategoryComponent } from '../pages/Item/CategoryAdd';
 
 
 
@@ -88,11 +89,11 @@ const MySelect2 = ({ model, onType, value }) => {
     if (debounceTime.current) {
       clearTimeout(debounceTime.current);
     }
+
     setLoading(true)
-
     debounceTime.current = setTimeout(async () => {
-      // Search code here
 
+      // Search code here
       try {
         const url = process.env.REACT_APP_API_URL + `/${model}/get`;
         const req = await fetch(url, {
@@ -103,7 +104,6 @@ const MySelect2 = ({ model, onType, value }) => {
           body: JSON.stringify({ token: Cookies.get("token"), search: true, searchText: v })
         })
         const res = await req.json();
-        console.log(res)
         setLoading(false)
 
         if (req.status === 200 && res.data) {
@@ -118,12 +118,20 @@ const MySelect2 = ({ model, onType, value }) => {
         }
 
       } catch (er) {
-
+        console.log('Someting went wrong', er);
       }
 
     }, 100);
   };
 
+
+  const closeDrawer = (save) => {
+    if (save) {
+      model === "party" ?
+        setPartyDrawer(false) : model === "item" ?
+          setItemDrawer(false) : setCategoryDrawer(false);
+    }
+  }
 
   return (
     <>
@@ -143,7 +151,7 @@ const MySelect2 = ({ model, onType, value }) => {
             </Drawer.Actions>
           </Drawer.Header>
           <Drawer.Body>
-            <PartyComponent />
+            <PartyComponent save={closeDrawer} />
           </Drawer.Body>
         </Drawer>
 
@@ -159,7 +167,7 @@ const MySelect2 = ({ model, onType, value }) => {
             </Drawer.Actions>
           </Drawer.Header>
           <Drawer.Body>
-            <AddItemComponent />
+            <AddItemComponent save={closeDrawer} />
           </Drawer.Body>
         </Drawer>
 
@@ -175,7 +183,7 @@ const MySelect2 = ({ model, onType, value }) => {
             </Drawer.Actions>
           </Drawer.Header>
           <Drawer.Body>
-            <AddItemComponent />
+            <CategoryComponent save={closeDrawer} />
           </Drawer.Body>
         </Drawer>
 
@@ -207,7 +215,7 @@ const MySelect2 = ({ model, onType, value }) => {
           className='w-full max-h-[250px] overflow-y-auto bg-white absolute z-50 rounded mt-1'
           style={{ boxShadow: "0px 0px 5px lightgray" }}>
           <ul>
-            {loading === true ? <li>Searching...</li> : null}
+            {loading && <li className='p-2 text-center'>Searching...</li>}
             {
               searchList.map((d, i) => {
                 return <li key={i}

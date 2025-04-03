@@ -519,7 +519,7 @@ const DeliveryChalan = ({ mode }) => {
 
             <div className='flex flex-col lg:flex-row items-center justify-around gap-4'>
               <div className='flex flex-col gap-2 w-full'>
-                <p className='text-xs'>Select Party</p>
+                <p className='text-xs'>Select Party <span className='required__text'>*</span></p>
                 {/* <SelectPicker
                   onChange={(data) => setFormData({ ...formData, party: data })}
                   data={party}
@@ -534,14 +534,14 @@ const DeliveryChalan = ({ mode }) => {
                 />
               </div>
               <div className='flex flex-col gap-2 w-full lg:w-1/3'>
-                <p className='text-xs'>Deliver Chalan Number</p>
+                <p className='text-xs'>Deliver Chalan Number <span className='required__text'>*</span></p>
                 <input type="text"
                   onChange={(e) => setFormData({ ...formData, chalanNumber: e.target.value })}
                   value={formData.chalanNumber}
                 />
               </div>
               <div className='flex flex-col gap-2 w-full lg:w-1/3'>
-                <p className='text-xs'>Deliver Chalan Date</p>
+                <p className='text-xs'>Deliver Chalan Date <span className='required__text'>*</span></p>
                 <input type="date"
                   className='text-xs'
                   onChange={(e) => {

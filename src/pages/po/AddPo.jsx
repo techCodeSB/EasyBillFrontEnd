@@ -513,7 +513,7 @@ const PO = ({ mode }) => {
 
             <div className='flex flex-col lg:flex-row items-center justify-around gap-4'>
               <div className='flex flex-col gap-2 w-full'>
-                <p className='text-xs'>Select Party</p>
+                <p className='text-xs'>Select Party <span className='required__text'>*</span></p>
                 {/* <SelectPicker
                   onChange={(data) => setFormData({ ...formData, party: data })}
                   data={party}
@@ -528,14 +528,14 @@ const PO = ({ mode }) => {
                 />
               </div>
               <div className='flex flex-col gap-2 w-full lg:w-1/3'>
-                <p className='text-xs'>PO Number</p>
+                <p className='text-xs'>PO Number <span className='required__text'>*</span></p>
                 <input type="text"
                   onChange={(e) => setFormData({ ...formData, poNumber: e.target.value })}
                   value={formData.poNumber}
                 />
               </div>
               <div className='flex flex-col gap-2 w-full lg:w-1/3'>
-                <p className='text-xs'>PO Date</p>
+                <p className='text-xs'>PO Date <span className='required__text'>*</span></p>
                 <input type="date"
                   className='text-xs'
                   onChange={(e) => {
