@@ -9,6 +9,7 @@ import { FaRegCheckCircle } from 'react-icons/fa';
 import useMyToaster from '../../hooks/useMyToaster';
 import Cookies from 'js-cookie';
 import { useParams } from 'react-router-dom';
+import MySelect2 from '../../components/MySelect2';
 
 
 
@@ -27,6 +28,7 @@ const AddParty = ({ mode }) => {
 }
 
 
+
 const PartyComponent = ({ mode, save }) => {
   const editorRef = useRef(null);
   const { id } = useParams()
@@ -34,8 +36,13 @@ const PartyComponent = ({ mode, save }) => {
   const [partyData, setPartyData] = useState({
     name: "", type: "", contactNumber: "", billingAddress: "",
     pan: "", gst: "", billingCountry: "", billingState: "", openingBalance: "0",
-    details: '', email: '', shippingAddress: '', shippingCountry: '', shippingState: ''
+    details: '', email: '', shippingAddress: '', shippingCountry: '', shippingState: '',
+    partyCategory: '',
   })
+
+
+
+
 
   useEffect(() => {
     if (mode) {
@@ -135,9 +142,17 @@ const PartyComponent = ({ mode, save }) => {
           </div>
 
           <div>
-            <p className='mb-1'>Credit Period <span className='text-red-600'>*</span></p>
+            <p className='mb-1'>Credit Period </p>
             <input type="text" onChange={(e) => setPartyData({ ...partyData, contactNumber: e.target.value })}
               value={partyData.contactNumber} />
+          </div>
+
+          <div>
+            <p className='mb-1'>Party Category </p>
+            <MySelect2
+              model={"partycategory"}
+              onType={(v) => setPartyData({ ...partyData, type: v })}
+            />
           </div>
 
           <div>
@@ -201,8 +216,14 @@ const PartyComponent = ({ mode, save }) => {
           </div>
 
           <div>
-            <p className='mb-1'>Credit Limit <span className='text-red-600'>*</span></p>
+            <p className='mb-1'>Credit Limit</p>
             <input type="text" onChange={(e) => setPartyData({ ...partyData, contactNumber: e.target.value })}
+              value={partyData.contactNumber} />
+          </div>
+
+          <div>
+            <p className='mb-1'>DOB</p>
+            <input type="date" onChange={(e) => setPartyData({ ...partyData, contactNumber: e.target.value })}
               value={partyData.contactNumber} />
           </div>
 
@@ -268,13 +289,13 @@ const PartyComponent = ({ mode, save }) => {
       <div className='w-full flex justify-center gap-3 mt-5 my-3'>
         <button
           onClick={saveParty}
-          className='bg-green-500 hover:bg-green-400 text-md text-white rounded w-[70px] flex items-center justify-center gap-1 py-2'>
+          className='bg-green-500 hover:bg-green-400 text-md text-white rounded w-[90px] flex items-center justify-center gap-1 py-2'>
           <FaRegCheckCircle />
           {!mode ? "Save" : "Update"}
         </button>
         <button
           onClick={clear}
-          className='bg-blue-800 hover:bg-blue-700 text-md text-white rounded w-[60px] flex items-center justify-center gap-1 py-2'>
+          className='bg-blue-800 hover:bg-blue-700 text-md text-white rounded w-[90px] flex items-center justify-center gap-1 py-2'>
           <BiReset />
           Reset
         </button>

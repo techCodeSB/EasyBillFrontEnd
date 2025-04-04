@@ -276,15 +276,17 @@ const AddItemComponent = ({ mode, save }) => {
                   }} value={u.alert} />
                 </td>
                 <td align='center' className='p-1'>
-                  <RiDeleteBin6Line
-                    className='cursor-pointer text-[16px]'
-                    onClick={() => {
-                      if (unitRow.length === 1) return;
-                      const newUnitRow = [...unitRow];
-                      newUnitRow.splice(i, 1);
-                      setUnitRow(newUnitRow);
-                    }}
-                  />
+                  <div className='delete__icon'>
+                    <RiDeleteBin6Line
+                      className='cursor-pointer text-[16px]'
+                      onClick={() => {
+                        if (unitRow.length === 1) return;
+                        const newUnitRow = [...unitRow];
+                        newUnitRow.splice(i, 1);
+                        setUnitRow(newUnitRow);
+                      }}
+                    />
+                  </div>
                 </td>
               </tr>
             ))}
@@ -293,7 +295,7 @@ const AddItemComponent = ({ mode, save }) => {
             <tr>
               <td colSpan={5}>
                 <button
-                  className='w-full p-[5px] font-bold bg-gray-200 text-gray-800 rounded flex justify-center items-center'
+                  className='w-full p-[5px] font-bold bg-gray-200 text-gray-800 flex justify-center items-center active:bg-gray-300'
                   onClick={() => setUnitRow([...unitRow, unitRowSet])}>
                   <CgPlayListAdd />  Add
                 </button>
@@ -302,7 +304,7 @@ const AddItemComponent = ({ mode, save }) => {
           </tfoot>
         </table>
       </div>
-      <div className='flex justify-center pt-9 mb-6'>
+      <div className='flex justify-center mt-3'>
         <div className='flex rounded-sm bg-green-500 text-white'>
           <FaRegCheckCircle className='mt-3 ml-2' />
           <button className='p-2' onClick={savebutton}>{mode ? "Update" : "Save"}</button>

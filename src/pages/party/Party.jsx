@@ -219,7 +219,7 @@ const Party = () => {
         <div className="content__body">
           {/* top section */}
           <div
-            className={`mb-5 w-full bg-white rounded p-4 shadow-sm add_new_compnent overflow-hidden
+            className={`mb-5 w-full bg-white rounded p-2 shadow-sm add_new_compnent overflow-hidden
             transition-all
           `}>
             <div className='flex justify-between items-center'>
@@ -245,7 +245,7 @@ const Party = () => {
                 </button>
                 <button
                   onClick={() => removeData(false)}
-                  className={`${selected.length > 0 ? 'bg-red-400 text-white' : 'bg-gray-100'} border`}>
+                  className={`${selected.length > 0 ? 'bg-red-500 text-white' : 'bg-gray-100'} border`}>
                   <MdDeleteOutline className='text-lg' />
                   Delete
                 </button>
@@ -354,7 +354,7 @@ const Party = () => {
               </div> */}
 
               {/* Table start */}
-              <div className='overflow-x-auto mt-5 list__table'>
+              <div className='overflow-x-auto mt-4 list__table'>
                 <table className='min-w-full bg-white' id='listOfPartys' ref={tableRef}>
                   <thead className='bg-gray-100'>
                     <tr>
@@ -370,7 +370,7 @@ const Party = () => {
                   <tbody>
                     {
                       partyData.map((data, i) => {
-                        return <tr key={i}>
+                        return <tr key={i} className='text-center'>
                           <td className='py-2 px-4 border-b'>
                             <input type='checkbox' checked={selected.includes(data._id)} onChange={() => handleCheckboxChange(data._id)} />
                           </td>
@@ -398,36 +398,38 @@ const Party = () => {
                     }
                   </tbody>
                 </table>
-                <p className='py-4'>Showing {partyData.length} of {totalData} entries</p>
-                {/* ----- Paginatin ----- */}
-                <div className='flex justify-end gap-2'>
-                  {
-                    activePage > 1 ? <div
-                      onClick={() => setActivePage(activePage - 1)}
-                      className='border bg-blue-600 text-white w-[20px] h-[20px] grid place-items-center rounded cursor-pointer'>
-                      <GrFormPrevious />
-                    </div> : null
-                  }
-                  {
-                    Array.from({ length: Math.ceil((totalData / dataLimit)) }).map((_, i) => {
-                      return <div
-                        onClick={() => setActivePage(i + 1)}
-                        className='border-blue-400 border w-[20px] h-[20px] text-center rounded cursor-pointer'
-                        style={activePage === i + 1 ? { border: "1px solid blue" } : {}}
-                      >
-                        {i + 1}
-                      </div>
-                    })
-                  }
-                  {
-                    (totalData / dataLimit) > activePage ? <div
-                      onClick={() => setActivePage(activePage + 1)}
-                      className='border bg-blue-600 text-white w-[20px] h-[20px] flex items-center justify-center rounded cursor-pointer'>
-                      <GrFormNext />
-                    </div> : null
-                  }
+                <div className='flex justify-between items-center mt-2'>
+                  <p>Showing {partyData.length} of {totalData} entries</p>
+                  {/* ----- Paginatin ----- */}
+                  <div className='flex justify-end gap-2'>
+                    {
+                      activePage > 1 ? <div
+                        onClick={() => setActivePage(activePage - 1)}
+                        className='border bg-[#003E32] text-white w-[20px] h-[20px] grid place-items-center rounded cursor-pointer'>
+                        <GrFormPrevious />
+                      </div> : null
+                    }
+                    {
+                      Array.from({ length: Math.ceil((totalData / dataLimit)) }).map((_, i) => {
+                        return <div
+                          onClick={() => setActivePage(i + 1)}
+                          className='border-[#003E32] border w-[20px] h-[20px] text-center rounded cursor-pointer'
+                          style={activePage === i + 1 ? { border: "1px solid #003E32" } : {}}
+                        >
+                          {i + 1}
+                        </div>
+                      })
+                    }
+                    {
+                      (totalData / dataLimit) > activePage ? <div
+                        onClick={() => setActivePage(activePage + 1)}
+                        className='border bg-[#003E32] text-white w-[20px] h-[20px] flex items-center justify-center rounded cursor-pointer'>
+                        <GrFormNext />
+                      </div> : null
+                    }
+                  </div>
+                  {/* pagination end */}
                 </div>
-                {/* pagination end */}
               </div>
             </div>
               : <AddNew title={"Party"} link={"/admin/party/add"} />

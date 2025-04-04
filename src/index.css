@@ -191,7 +191,7 @@ input[type="checkbox"] {
 }
 
 select {
-  @apply w-full p-[4px] border border-gray-200 rounded outline-none;
+  @apply w-full p-[3px] border border-gray-200 rounded outline-none;
 }
 
 
@@ -407,6 +407,10 @@ select {
   cursor: pointer;
 }
 
+.download__menu:hover{
+  background-color: #F3F4F6;
+}
+
 .raport__table tr:nth-child(even) {
   background-color: lightgray;
 }
@@ -463,4 +467,17 @@ select {
 
 .required__text{
   @apply text-red-600
+}
+
+
+.delete__icon{
+  width: 25px;
+  height: 25px;
+  display: grid;
+  place-items: center;
+  border-radius: 20px;
+  padding: 3px;
+  color: white;
+  font-size: 18px;
+  @apply bg-red-500;
 }

@@ -4,8 +4,6 @@ import useMyToaster from '../hooks/useMyToaster';
 import Cookies from 'js-cookie';
 import { IoIosSearch } from "react-icons/io";
 import { useDispatch, useSelector } from 'react-redux';
-import { toggle as itemToggle } from '../store/itemModalSlice'
-import { toggle } from '../store/partyModalSlice';
 import AddPartyModal from './AddPartyModal';
 import AddItemModal from './AddItemModal';
 import { FaArrowRight } from "react-icons/fa6";
@@ -23,7 +21,6 @@ const MySelect2 = ({ model, onType, value }) => {
   const [showDropDown, setShowDropDown] = useState(false);
   const [searchText, setSearchText] = useState('');
   const [searchList, setSearchList] = useState([]);
-  const dispatch = useDispatch();
   const getPartyModalState = useSelector((store) => store.partyModalSlice.show);
   const getItemModalState = useSelector((store) => store.itemModalSlice.show);
   const [partyDrawer, setPartyDrawer] = useState(false);
@@ -53,7 +50,6 @@ const MySelect2 = ({ model, onType, value }) => {
   // if alredy value define
   useEffect(() => {
     if (value && model !== "item") {
-      console.log('value-->', value)
       const get = async () => {
         try {
           const url = process.env.REACT_APP_API_URL + `/${model}/get`;
@@ -66,12 +62,11 @@ const MySelect2 = ({ model, onType, value }) => {
           })
           const res = await req.json();
 
-          setSelectedData(res.data)
+          setSelectedData(res.data || res)
 
         } catch (error) {
           return toast("Something went wrong", 'error')
         }
-
 
       }
 
@@ -106,6 +101,8 @@ const MySelect2 = ({ model, onType, value }) => {
         const res = await req.json();
         setLoading(false)
 
+        console.log(url)
+        console.log(res)
         if (req.status === 200 && res.data) {
           if (res.data.length > 0) {
             setSearchList([...res.data])
@@ -136,8 +133,6 @@ const MySelect2 = ({ model, onType, value }) => {
   return (
     <>
       <div className='relative'>
-        <AddPartyModal open={getPartyModalState} />
-        <AddItemModal open={getItemModalState} />
 
         {/* Party drawer */}
         <Drawer
@@ -189,7 +184,7 @@ const MySelect2 = ({ model, onType, value }) => {
 
 
         <input type="text"
-          className='w-full border rounded'
+          className='w-full border rounded-[3px]'
           value={selectedValue || searchText}
           onFocus={() => setShowDropDown(true)}
           onBlur={() => setShowDropDown(false)}

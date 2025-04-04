@@ -1,21 +1,26 @@
 import SideNav from '../components/SideNav'
 import Nav from '../components/Nav'
 import { SelectPicker, TagInput } from 'rsuite';
-import { MdUploadFile } from "react-icons/md";
+import { MdEditSquare, MdUploadFile } from "react-icons/md";
 import { LuFileX2 } from "react-icons/lu";
 import { countryList, statesAndUTs } from '../helper/data';
-import { FaRegCheckCircle } from 'react-icons/fa';
+import { FaAddressBook, FaRegCheckCircle } from 'react-icons/fa';
 import { BiReset } from 'react-icons/bi';
 import { useEffect, useState } from 'react';
 import checkfile from '../helper/checkfile'
 import useMyToaster from '../hooks/useMyToaster';
 import Cookies from 'js-cookie'
 import TabView from '../components/TabView';
+import { RiDeleteBin6Line } from "react-icons/ri";
+import AddPartyModal from '../components/AddPartyModal';
+import { useDispatch, useSelector } from 'react-redux';
+import { toggle } from '../store/partyModalSlice';
 
 
 
 const Setting = () => {
   const toast = useMyToaster();
+  const dispatch = useDispatch();
   const [siteData, setSiteData] = useState({
     title: '', moto: '', email: '', allEmail: '', contactNumber: '',
     alternativeContact: "", helplineNumber: '', emergencyNumber: '',
@@ -33,6 +38,13 @@ const Setting = () => {
     deliverChalanInitial: '', salesReturnInitial: '', quotationCount: '', creditNoteCount: '',
     salesReturnCount: '', deliveryChalanCount: '', logoFileName: '', signatureFileName: "",
   })
+
+  const [partyCategory, setPartyCategory] = useState([]);
+  const getPartyModalState = useSelector((store) => store.partyModalSlice.show);
+  const [partyCategoryId, setPartyCategoryId] = useState('');
+
+
+
 
   useEffect(() => {
     const getCompany = async () => {
@@ -57,6 +69,37 @@ const Setting = () => {
 
     getCompany();
   }, [])
+
+
+  useEffect(() => {
+
+    const getPartyCategory = async () => {
+      try {
+        const url = process.env.REACT_APP_API_URL + "/partycategory/get";
+        const req = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": 'application/json'
+          },
+          body: JSON.stringify({ token: Cookies.get("token") })
+        });
+        const res = await req.json();
+
+        if (req.status !== 200) {
+          return toast(res.err, 'error')
+        }
+        setPartyCategory(res);
+        console.log([...res])
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    getPartyCategory();
+
+
+  }, [])
+
 
   const fileUpload = async (e, field) => {
     const validatefile = await checkfile(e.target.files[0]);
@@ -152,6 +195,35 @@ const Setting = () => {
 
 
 
+  const removePartyCategory = async (id) => {
+    const token = Cookies.get("token");
+    const url = process.env.REACT_APP_API_URL + "/partycategory/delete";
+
+    try {
+      const req = await fetch(url, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": 'application/json'
+        },
+        body: JSON.stringify({ id, token })
+      });
+      const res = await req.json();
+      if (req.status !== 200) {
+        return toast(res.err, 'error')
+      }
+
+      const newPartyCategory = partyCategory.filter((data) => data._id !== id);
+      setPartyCategory(newPartyCategory);
+      return toast("Party category removed successfully!", 'success')
+
+    } catch (error) {
+      console.log(error)
+      return toast("Something went wrong", "error")
+    }
+
+  }
+
+
 
   return (
     <>
@@ -161,7 +233,7 @@ const Setting = () => {
         <div className='content__body' id='Settings'>
 
           {/* TabView */}
-          <TabView />
+          {/* <TabView /> */}
 
           {/* site setting */}
           <div className="content__body__main bg-white" >
@@ -506,7 +578,7 @@ const Setting = () => {
                 </div>
               </div>
 
-              <div className='overflow-x-auto'>
+              <div className='overflow-x-auto mt-5'>
                 <table className='table-style w-full'>
                   <thead className='bg-gray-200 h-[30px]'>
                     <tr>
@@ -609,15 +681,12 @@ const Setting = () => {
               <div className='w-full flex justify-center gap-3 my-3'>
                 <button
                   onClick={updateCompany}
-                  className='bg-green-500 hover:bg-green-400 text-md text-white rounded w-[70px] flex items-center justify-center gap-1 py-2
-                  
-                  
-                  
+                  className='bg-green-500 hover:bg-green-400 text-md text-white rounded w-[80px] flex items-center justify-center gap-1 py-2
                   '>
                   <FaRegCheckCircle />
                   Update
                 </button>
-                <button className='bg-blue-800 hover:bg-blue-700 text-md text-white rounded w-[60px] flex items-center justify-center gap-1 py-2'>
+                <button className='bg-blue-800 hover:bg-blue-700 text-md text-white rounded w-[70px] flex items-center justify-center gap-1 py-2'>
                   <BiReset />
                   Reset
                 </button>
@@ -628,36 +697,50 @@ const Setting = () => {
           {/* ==================== Party Category  ===================*/}
           {/* ========================================================*/}
           <div className="content__body__main bg-white mt-5">
-            <p className='font-bold'>Party Category</p>
+            <div className='flex justify-between items-center'>
+              <p className='font-bold'>Party Category</p>
+              <button
+                onClick={() => {
+                  setPartyCategoryId('')
+                  dispatch(toggle(true))
+                }}
+                className='bg-green-500 hover:bg-green-400 text-md text-white 
+                rounded w-[70px] flex items-center justify-center gap-1 py-2'>
+                <FaAddressBook />
+                Add
+              </button>
+            </div>
+            <hr />
 
-            {/* <div className='overflow-x-auto mt-5 list__table'>
-              <table className='min-w-full bg-white' id='listQuotation' ref={tableRef}>
+            <div className='overflow-x-auto mt-5 list__table'>
+              <table className='min-w-full bg-white' id='listQuotation'>
                 <thead className='bg-gray-100'>
                   <tr>
-                    <th className='py-2 px-4 border-b w-[50px]'>
-                      <input type='checkbox' onChange={selectAll} checked={unitData.length > 0 && selected.length === unitData.length} />
-                    </th>
-                    <th className='py-2 px-4 border-b '>Title</th>
+                    <td className='py-2 px-4 border-b'>Name</td>
                     <th className='py-2 px-4 border-b w-[70px]'>Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   {
-                    unitData.map((data, i) =>
+                    partyCategory.map((data, i) =>
                       <tr key={i}>
-                        <td className='py-2 px-4 border-b max-w-[10px]'>
-                          <input type='checkbox' checked={selected.includes(data._id)} onChange={() => handleCheckboxChange(data._id)} />
-                        </td>
-                        <td className='px-4 border-b' align='center'>{data.title}</td>
-
+                        <td className='px-4 py-2 border-b'>{data.name}</td>
 
                         <td className='px-4 border-b' align='center'>
                           <div
                             data-tooltip-id="unitTooltip" data-tooltip-content="Edit"
                             className='flex justify-center flex-col md:flex-row gap-2 mr-2'>
                             <button className='bg-blue-400 grid place-items-center text-white px-2 py-1 rounded w-full text-[16px]'
-                              onClick={() => navigate(`/admin/unit/edit/${data._id}`)}>
+                              onClick={() => {
+                                dispatch(toggle(true))
+                                setPartyCategoryId(data._id)
+                              }}>
                               <MdEditSquare />
+                            </button>
+
+                            <button className='bg-red-500 grid place-items-center text-white px-2 py-1 rounded w-full text-[16px]'
+                              onClick={() => removePartyCategory(data._id)}>
+                              <RiDeleteBin6Line />
                             </button>
                           </div>
                         </td>
@@ -666,11 +749,25 @@ const Setting = () => {
                   }
                 </tbody>
               </table>
-            </div> */}
+            </div>
             {/* table close */}
           </div>
         </div>
       </main>
+
+      <AddPartyModal
+        open={getPartyModalState}
+        id={partyCategoryId}
+        get={(newData) => {
+          if (partyCategoryId === '') {
+            setPartyCategory([newData, ...partyCategory])
+          } else {
+            let newPartyCategory = partyCategory.filter((data) => data._id === partyCategoryId);
+            newPartyCategory[0].name = newData;
+            setPartyCategoryId('')
+          }
+        }}
+      />
     </>
   )
 }
