@@ -183,7 +183,7 @@ textarea {
   @apply w-full p-1 border border-gray-200 outline-none hover:border-[#003E32];
   @apply focus:border-[#003E32];
   line-height: 16px !important;
-  border-radius: 3px
+  border-radius: 3px;
 }
 
 input[type="checkbox"] {
@@ -415,6 +415,10 @@ select {
   background-color: lightgray;
 }
 
+.add_new_compnent{
+  @apply mb-5 w-full bg-white rounded p-2 shadow-sm overflow-hidden
+  transition-all
+}
 
 .add_new_compnent button {
   @apply px-3 py-1 rounded flex items-center gap-2
@@ -480,4 +484,9 @@ select {
   color: white;
   font-size: 18px;
   @apply bg-red-500;
+}
+
+
+.paginate__parent{
+  @apply flex justify-between items-center mt-2;
 }

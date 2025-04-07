@@ -11,10 +11,13 @@ import { Drawer } from 'rsuite';
 import { PartyComponent } from '../pages/party/AddParty';
 import { AddItemComponent } from '../pages/Items/ItemAdd';
 import { CategoryComponent } from '../pages/Item/CategoryAdd';
+import { toggle } from '../store/partyModalSlice';
+import { set } from 'rsuite/esm/internals/utils/date';
 
 
 
 const MySelect2 = ({ model, onType, value }) => {
+  const dispatch = useDispatch()
   const toast = useMyToaster();
   const [selectedValue, setSelectedValue] = useState('');
   const [selectedData, setSelectedData] = useState()
@@ -22,12 +25,19 @@ const MySelect2 = ({ model, onType, value }) => {
   const [searchText, setSearchText] = useState('');
   const [searchList, setSearchList] = useState([]);
   const getPartyModalState = useSelector((store) => store.partyModalSlice.show);
-  const getItemModalState = useSelector((store) => store.itemModalSlice.show);
   const [partyDrawer, setPartyDrawer] = useState(false);
   const [itemDrawer, setItemDrawer] = useState(false);
   const [categoryDrawer, setCategoryDrawer] = useState(false);
   const debounceTime = useRef(null);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
+  const [keyCount, setKeyCount] = useState(0);
+
+
+  // Style
+  const style = {
+    backgroundColor: "gray",
+    padding: "3px"
+  }
 
 
 
@@ -43,7 +53,6 @@ const MySelect2 = ({ model, onType, value }) => {
     }
 
   }, [selectedData])
-
 
 
 
@@ -80,7 +89,11 @@ const MySelect2 = ({ model, onType, value }) => {
   }, [value])
 
 
+
+
+  // Search data
   const searchData = (v) => {
+    // Check debounce time
     if (debounceTime.current) {
       clearTimeout(debounceTime.current);
     }
@@ -88,7 +101,7 @@ const MySelect2 = ({ model, onType, value }) => {
     setLoading(true)
     debounceTime.current = setTimeout(async () => {
 
-      // Search code here
+      // Search code here;
       try {
         const url = process.env.REACT_APP_API_URL + `/${model}/get`;
         const req = await fetch(url, {
@@ -99,16 +112,15 @@ const MySelect2 = ({ model, onType, value }) => {
           body: JSON.stringify({ token: Cookies.get("token"), search: true, searchText: v })
         })
         const res = await req.json();
-        setLoading(false)
+        setLoading(false);
 
-        console.log(url)
-        console.log(res)
-        if (req.status === 200 && res.data) {
-          if (res.data.length > 0) {
-            setSearchList([...res.data])
-          } else {
-            setSearchList(["No result found"])
+        if (req.status === 200) {
+          if (model === "partycategory") {
+            res.length > 0 ? setSearchList([...res]) : setSearchList(["No result found"]);
+            return;
           }
+
+          res.data.length > 0 ? setSearchList([...res.data]) : setSearchList(["No result found"]);
         }
         else {
           setSearchList([])
@@ -129,6 +141,42 @@ const MySelect2 = ({ model, onType, value }) => {
           setItemDrawer(false) : setCategoryDrawer(false);
     }
   }
+
+
+
+  const keyUp = (e) => {
+    if (e.key === "Enter") {
+      if (searchList.length > 0) {
+        setSelectedData(searchList[keyCount]);
+        setShowDropDown(false);
+      }
+    }
+
+    if (e.key === "Escape") {
+      setShowDropDown(false);
+      setKeyCount(0);
+    }
+
+    if (e.key === "ArrowDown") {
+      if (keyCount <= searchList.length - 1) {
+        setKeyCount((prev) => {
+          setSelectedData(searchList[keyCount]);
+          console.log(keyCount)
+          return prev + 1 ? prev + 1 : 0;
+        });
+      }
+    }
+
+
+    if (e.key === "ArrowUp") {
+      if (keyCount > 0) {
+        setKeyCount((prev) => prev - 1);
+        setSelectedData(searchList[keyCount]);
+      }
+    }
+
+  }
+
 
   return (
     <>
@@ -182,26 +230,33 @@ const MySelect2 = ({ model, onType, value }) => {
           </Drawer.Body>
         </Drawer>
 
+        <AddPartyModal open={getPartyModalState} />
 
         <input type="text"
           className='w-full border rounded-[3px]'
           value={selectedValue || searchText}
           onFocus={() => setShowDropDown(true)}
-          onBlur={() => setShowDropDown(false)}
+          onBlur={() => {
+            setShowDropDown(false);
+            setKeyCount(0);
+          }}
           onChange={(e) => {
             setSearchText(e.target.value);
             searchData(e.target.value)
+            setKeyCount(0);
           }}
           placeholder='Search...'
+          onKeyDown={keyUp}
         />
         {selectedValue ? <IoClose
           className='absolute right-2 top-[5px] text-[16px] cursor-pointer'
           onClick={() => {
+            setKeyCount(0);
             setSelectedValue("")
             setSelectedData()
             setSearchText('')
             setSearchList([]);
-            onType('')
+            onType('');
           }}
         /> : <IoIosSearch className='absolute right-2 top-[5px] text-[16px] cursor-pointer' />}
 
@@ -213,9 +268,11 @@ const MySelect2 = ({ model, onType, value }) => {
             {loading && <li className='p-2 text-center'>Searching...</li>}
             {
               searchList.map((d, i) => {
-                return <li key={i}
+                return <li
+                  key={i}
                   onMouseDown={() => setSelectedData(d)}
-                  className={`${model === "item" ? 'p-3' : 'p-1 px-2'}  cursor-pointer`}>
+                  className={`${model === "item" ? 'p-3' : 'p-1 px-2'}  cursor-pointer`}
+                >
                   {(d.title || d.name) || d}
                 </li>
               })
@@ -231,6 +288,9 @@ const MySelect2 = ({ model, onType, value }) => {
               }
               else if (model === "category") {
                 setCategoryDrawer(true)
+              }
+              else if (model === "partycategory") {
+                dispatch(toggle(true))
               }
             }}
             className='select__add__button'>

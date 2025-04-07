@@ -405,40 +405,42 @@ const Transaction = () => {
                     }
                   </tbody >
                 </table>
-                <p className='py-4'>Showing {transactionData.length} of {totalData} entries</p>
-                {/* ----- Paginatin ----- */}
-                <div className='flex justify-end gap-2'>
-                  {
-                    activePage > 1 ? <div
-                      onClick={() => setActivePage(activePage - 1)}
-                      className='border bg-blue-600 text-white w-[20px] h-[20px] grid place-items-center rounded cursor-pointer'>
-                      <GrFormPrevious />
-                    </div> : null
-                  }
-                  {
-                    Array.from({ length: Math.ceil((totalData / dataLimit)) }).map((_, i) => {
-                      return <div
-                        onClick={() => setActivePage(i + 1)}
-                        className='border-blue-400 border w-[20px] h-[20px] text-center rounded cursor-pointer'
-                        style={activePage === i + 1 ? { border: "1px solid blue" } : {}}
-                      >
-                        {i + 1}
-                      </div>
-                    })
-                  }
-                  {
-                    (totalData / dataLimit) > activePage ? <div
-                      onClick={() => setActivePage(activePage + 1)}
-                      className='border bg-blue-600 text-white w-[20px] h-[20px] flex items-center justify-center rounded cursor-pointer'>
-                      <GrFormNext />
-                    </div> : null
-                  }
+                <div className='paginate__parent'>
+                  <p>Showing {transactionData.length} of {totalData} entries</p>
+                  {/* ----- Paginatin ----- */}
+                  <div className='flex justify-end gap-2'>
+                    {
+                      activePage > 1 ? <div
+                        onClick={() => setActivePage(activePage - 1)}
+                        className='border bg-blue-600 text-white w-[20px] h-[20px] grid place-items-center rounded cursor-pointer'>
+                        <GrFormPrevious />
+                      </div> : null
+                    }
+                    {
+                      Array.from({ length: Math.ceil((totalData / dataLimit)) }).map((_, i) => {
+                        return <div
+                          onClick={() => setActivePage(i + 1)}
+                          className='border-blue-400 border w-[20px] h-[20px] text-center rounded cursor-pointer'
+                          style={activePage === i + 1 ? { border: "1px solid blue" } : {}}
+                        >
+                          {i + 1}
+                        </div>
+                      })
+                    }
+                    {
+                      (totalData / dataLimit) > activePage ? <div
+                        onClick={() => setActivePage(activePage + 1)}
+                        className='border bg-blue-600 text-white w-[20px] h-[20px] flex items-center justify-center rounded cursor-pointer'>
+                        <GrFormNext />
+                      </div> : null
+                    }
+                  </div>
                 </div>
                 {/* pagination end */}
               </div>
-            </div> 
-            : <AddNew title={"Transaction"} link={'/admin/other-transaction/add'}/>
-            : <DataShimmer />
+            </div>
+              : <AddNew title={"Transaction"} link={'/admin/other-transaction/add'} />
+              : <DataShimmer />
           }
         </div>
       </main>

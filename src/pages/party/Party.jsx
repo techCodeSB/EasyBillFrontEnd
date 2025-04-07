@@ -218,10 +218,7 @@ const Party = () => {
         <Tooltip id='partyTooltip' />
         <div className="content__body">
           {/* top section */}
-          <div
-            className={`mb-5 w-full bg-white rounded p-2 shadow-sm add_new_compnent overflow-hidden
-            transition-all
-          `}>
+          <div className={`add_new_compnent`}>
             <div className='flex justify-between items-center'>
               <div className='flex flex-col'>
                 <select value={dataLimit} onChange={(e) => setDataLimit(e.target.value)}>
@@ -231,7 +228,7 @@ const Party = () => {
                   <option value={100}>100</option>
                 </select>
               </div>
-              <div className='flex items-center gap-2'>
+              <div className='flex items-center gap-2 listing__btn_grp'>
                 <div className='flex w-full flex-col lg:w-[300px]'>
                   <input type='text'
                     placeholder='Search...'
@@ -398,7 +395,7 @@ const Party = () => {
                     }
                   </tbody>
                 </table>
-                <div className='flex justify-between items-center mt-2'>
+                <div className='paginate__parent'>
                   <p>Showing {partyData.length} of {totalData} entries</p>
                   {/* ----- Paginatin ----- */}
                   <div className='flex justify-end gap-2'>

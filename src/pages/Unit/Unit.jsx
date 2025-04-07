@@ -375,7 +375,8 @@ const Unit = () => {
                     }
                   </tbody>
                 </table>
-                <p className='py-4'>Showing {unitData.length} of {totalData} entries</p>
+                <div className='paginate__parent'>
+                <p>Showing {unitData.length} of {totalData} entries</p>
                 {/* ----- Paginatin ----- */}
                 <div className='flex justify-end gap-2'>
                   {
@@ -403,6 +404,7 @@ const Unit = () => {
                       <GrFormNext />
                     </div> : null
                   }
+                </div>
                 </div>
                 {/* pagination end */}
               </div>

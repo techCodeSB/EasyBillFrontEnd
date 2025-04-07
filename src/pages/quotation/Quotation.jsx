@@ -271,9 +271,7 @@ const Quotation = () => {
 
           {/* top section */}
           <div
-            className={`mb-5 w-full bg-white rounded p-4 shadow-sm add_new_compnent  overflow-hidden
-              transition-all
-            ${filterToggle ? 'h-[265px]' : 'h-[65px]'}`}>
+            className={`add_new_compnent ${filterToggle ? 'h-[265px]' : 'h-[45px]'}`}>
             <div className='flex justify-between items-center'>
               <div className='flex flex-col'>
                 <select value={dataLimit} onChange={(e) => setDataLimit(e.target.value)}>
@@ -548,7 +546,8 @@ const Quotation = () => {
                     }
                   </tbody>
                 </table>
-                <p className='py-4'>Showing {billData.length} of {totalData} entries</p>
+                <div className='paginate__parent'>
+                <p>Showing {billData.length} of {totalData} entries</p>
                 {/* ----- Paginatin ----- */}
                 <div className='flex justify-end gap-2'>
                   {
@@ -576,6 +575,7 @@ const Quotation = () => {
                       <GrFormNext />
                     </div> : null
                   }
+                </div>
                 </div>
                 {/* pagination end */}
               </div>
