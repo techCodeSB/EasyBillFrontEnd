@@ -409,6 +409,7 @@ select {
 
 .download__menu:hover{
   background-color: #F3F4F6;
+  border-radius: 8px;
 }
 
 .raport__table tr:nth-child(even) {
@@ -489,4 +490,65 @@ select {
 
 .paginate__parent{
   @apply flex justify-between items-center mt-2;
+}
+
+.list__table tbody{
+  border: 1px solid #b4d7d0;
+}
+
+.list__table__head{
+  background-color: #003E32;
+  color: white;
+  font-weight: bold;
+  border: 1px solid #003E32;
+}
+.list__table tbody tr:hover {
+  background-color:#e4f8f49e;
+}
+
+.list__table tbody tr{
+  border: 1px solid #efefef !important;
+}
+
+.list__table__edit__icon{
+  @apply bg-blue-600 text-white p-[4px] w-full rounded flex justify-center items-center text-[14px];
+
+}
+
+.table__list__action{
+  width: 25px;
+  height: 25px;
+  border-radius: 100%;
+  margin: 0px auto;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  font-size: 16px;
+  color: #6d6c6c;
+}
+.table__list__action:hover{
+  color: black;
+}
+
+.table__list__action__icon{
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 8px;
+  width: 120px;
+}
+
+.table__list__action__icon:hover{
+  background-color: rgb(245, 244, 244);
+}
+
+
+.customer_badge{
+  background: rgb(42, 116, 42);
+  border-radius: 30px;
+  padding: 1px 5px;
+  color: white;
+  font-size: 12px;
 }

@@ -360,11 +360,15 @@ const Item = ({ mode }) => {
                   <tbody>
                     {
                       itemData.map((data, i) => {
+                        console.log(data);
                         return <tr key={i}>
                           <td className='py-2 px-4 border-b max-w-[10px]'>
                             <input type='checkbox' checked={selected.includes(data._id)} onChange={() => handleCheckboxChange(data._id)} />
                           </td>
-                          <td className='px-4 border-b'>{data.title}</td>
+                          <td className='px-4 border-b'>
+                            {data.title}
+                            <p className="text-[10px]">{data.category.title}</p>
+                          </td>
                           <td className='px-4 border-b' align='center'>{data.category.hsn}</td>
                           <td className='px-4 border-b' align='center'>
                             <div className='flex items-center justify-center gap-2'>

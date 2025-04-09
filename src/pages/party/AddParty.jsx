@@ -34,10 +34,9 @@ const PartyComponent = ({ mode, save }) => {
   const { id } = useParams()
   const toast = useMyToaster()
   const [partyData, setPartyData] = useState({
-    name: "", type: "", contactNumber: "", billingAddress: "",
-    pan: "", gst: "", billingCountry: "", billingState: "", openingBalance: "0",
-    details: '', email: '', shippingAddress: '', shippingCountry: '', shippingState: '',
-    partyCategory: '',
+    name: "", type: "", contactNumber: "", billingAddress: "", shippingAddress: '',
+    pan: "", gst: "", openingBalance: "0", details: '', email: '',
+    partyCategory: '', creditPeriod: '', creditLimit: '', dob: '', partyCategory: ''
   })
 
 
@@ -58,6 +57,7 @@ const PartyComponent = ({ mode, save }) => {
           body: JSON.stringify({ token: cookie, id: id })
         })
         const res = await req.json();
+        console.log(res)
         setPartyData({ ...partyData, ...res.data });
       }
 
@@ -108,7 +108,8 @@ const PartyComponent = ({ mode, save }) => {
     setPartyData({
       name: "", type: "", contactNumber: "", address: "",
       pan: "", gst: "", country: "", state: "", openingBalance: "0",
-      details: '', email: '', billingAddress: '', shippingAddress: ''
+      details: '', email: '', billingAddress: '', shippingAddress: '',
+      creditPeriod: '', creditLimit: '', dob: '', partyCategory: ''
     })
   }
 
@@ -143,15 +144,18 @@ const PartyComponent = ({ mode, save }) => {
 
           <div>
             <p className='mb-1'>Credit Period </p>
-            <input type="text" onChange={(e) => setPartyData({ ...partyData, contactNumber: e.target.value })}
-              value={partyData.contactNumber} />
+            <input type="text"
+              onChange={(e) => setPartyData({ ...partyData, creditPeriod: e.target.value })}
+              value={partyData.creditPeriod}
+            />
           </div>
 
           <div>
             <p className='mb-1'>Party Category </p>
             <MySelect2
               model={"partycategory"}
-              onType={(v) => setPartyData({ ...partyData, type: v })}
+              onType={(v) => setPartyData({ ...partyData, partyCategory: v })}
+              value={partyData.partyCategory}
             />
           </div>
 
@@ -162,22 +166,7 @@ const PartyComponent = ({ mode, save }) => {
               onChange={(e) => setPartyData({ ...partyData, billingAddress: e.target.value })}
             ></textarea>
           </div>
-          {/* <div className='flex md:flex-row flex-col w-full gap-2'>
-            <div className='w-full'>
-              <p className='mb-1'>Select Country</p>
-              <SelectPicker className='w-full' data={countryList}
-                onChange={(v) => setPartyData({ ...partyData, billingCountry: v })}
-                value={partyData.billingCountry}
-              />
-            </div>
-            <div className='w-full'>
-              <p className='mb-1'>Select State</p>
-              <SelectPicker className='w-full' data={statesAndUTs}
-                onChange={(v) => setPartyData({ ...partyData, billingState: v })}
-                value={partyData.billingState}
-              />
-            </div>
-          </div> */}
+
         </div>
 
         {/* Second Column */}
@@ -203,7 +192,8 @@ const PartyComponent = ({ mode, save }) => {
 
           <div>
             <p className='mb-1'>Email</p>
-            <input type="email" onChange={(e) => setPartyData({ ...partyData, email: e.target.value })}
+            <input type="email"
+              onChange={(e) => setPartyData({ ...partyData, email: e.target.value })}
               value={partyData.email} />
           </div>
 
@@ -217,14 +207,18 @@ const PartyComponent = ({ mode, save }) => {
 
           <div>
             <p className='mb-1'>Credit Limit</p>
-            <input type="text" onChange={(e) => setPartyData({ ...partyData, contactNumber: e.target.value })}
-              value={partyData.contactNumber} />
+            <input type="text"
+              onChange={(e) => setPartyData({ ...partyData, creditLimit: e.target.value })}
+              value={partyData.creditLimit}
+            />
           </div>
 
           <div>
             <p className='mb-1'>DOB</p>
-            <input type="date" onChange={(e) => setPartyData({ ...partyData, contactNumber: e.target.value })}
-              value={partyData.contactNumber} />
+            <input type="date"
+              onChange={(e) => setPartyData({ ...partyData, dob: e.target.value })}
+              value={partyData.dob ? new Date(partyData.dob).toISOString().split('T')[0] : ''}
+            />
           </div>
 
           <div>
@@ -244,47 +238,9 @@ const PartyComponent = ({ mode, save }) => {
               onChange={(e) => setPartyData({ ...partyData, shippingAddress: e.target.value })}
             ></textarea>
           </div>
-          {/* <div className='flex md:flex-row flex-col w-full gap-2'>
-            <div className='w-full'>
-              <p className='mb-1'>Select Country</p>
-              <SelectPicker className='w-full' data={countryList}
-                onChange={(v) => setPartyData({ ...partyData, shippingCountry: v })}
-                value={partyData.shippingCountry}
-              />
-            </div>
-            <div className='w-full'>
-              <p className='mb-1'>Select State</p>
-              <SelectPicker className='w-full' data={statesAndUTs}
-                onChange={(v) => setPartyData({ ...partyData, shippingState: v })}
-                value={partyData.shippingState}
-              />
-            </div>
-          </div> */}
+
         </div>
       </div>
-      {/* <p className='my-2'>Details</p>
-      <Editor
-        onEditorChange={(v, editor) => {
-          setPartyData({ ...partyData, details: editor.getContent() })
-        }}
-        value={partyData.details}
-        apiKey='765rof3c4qgyk8u59xk0o3vvhvji0y156uwtbjgezhnbcct7'
-        onInit={(_evt, editor) => editorRef.current = editor}
-        init={{
-          height: 300,
-          menubar: false,
-          plugins: [
-            'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-            'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-            'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'
-          ],
-          toolbar: 'undo redo | blocks | ' +
-            'bold italic forecolor | alignleft aligncenter ' +
-            'alignright alignjustify | bullist numlist outdent indent | ' +
-            'removeformat | help',
-          content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
-        }}
-      /> */}
 
       <div className='w-full flex justify-center gap-3 mt-5 my-3'>
         <button

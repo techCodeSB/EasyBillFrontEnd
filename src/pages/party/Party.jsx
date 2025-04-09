@@ -24,6 +24,12 @@ import { Tooltip } from 'react-tooltip';
 import { IoIosAdd, IoMdMore } from 'react-icons/io';
 import AddNew from '../../components/AddNew';
 import { Popover, Whisper } from 'rsuite';
+import { FiMoreHorizontal } from "react-icons/fi";
+import { FaRegEdit } from "react-icons/fa";
+import { LuBookText } from "react-icons/lu";
+
+
+
 
 
 
@@ -352,43 +358,57 @@ const Party = () => {
 
               {/* Table start */}
               <div className='overflow-x-auto mt-4 list__table'>
-                <table className='min-w-full bg-white' id='listOfPartys' ref={tableRef}>
-                  <thead className='bg-gray-100'>
+                <table className='min-w-full bg-white list__table' id='listOfPartys' ref={tableRef}>
+                  <thead className='list__table__head'>
                     <tr>
-                      <th className='py-2 px-4 border-b w-[50px]'>
+                      <th className='py-2 px-4 w-[50px]'>
                         <input type='checkbox' onChange={selectAll} checked={partyData.length > 0 && selected.length === partyData.length} />
                       </th>
-                      <th className='py-2 px-4 border-b'>Name</th>
-                      <th className='py-2 px-4 border-b'>Type</th>
-                      <th className='py-2 px-4 border-b'>Balance</th>
-                      <th className='py-2 px-4 border-b w-[100px]'>Action</th>
+                      <th className='py-2 px-4'>Name</th>
+                      <th className='py-2 px-4'>Type</th>
+                      <th className='py-2 px-4'>Balance</th>
+                      <th className='py-2 px-4 w-[100px]'>Action</th>
                     </tr>
                   </thead>
                   <tbody>
                     {
                       partyData.map((data, i) => {
                         return <tr key={i} className='text-center'>
-                          <td className='py-2 px-4 border-b'>
+                          <td className='py-2 px-4'>
                             <input type='checkbox' checked={selected.includes(data._id)} onChange={() => handleCheckboxChange(data._id)} />
                           </td>
-                          <td className='px-4 border-b'>{data.name}</td>
-                          <td className='px-4 border-b'>{data.type}</td>
-                          <td className='px-4 border-b'>{data.openingBalance}</td>
-                          <td className='px-4 border-b'>
-                            <div className='flex flex-col md:flex-row gap-2 mr-2'>
-                              <button
-                                data-tooltip-id="partyTooltip" data-tooltip-content="Edit"
-                                onClick={() => navigate("/admin/party/edit/" + data._id)}
-                                className='bg-blue-400 text-white px-2 py-1 rounded w-full text-[16px]'>
-                                <MdEditSquare />
-                              </button>
-                              <button
-                                data-tooltip-id="partyTooltip" data-tooltip-content="Ladger"
-                                onClick={() => navigate("/admin/party/ladger/" + data._id)}
-                                className='bg-red-500 text-white px-2 py-1 rounded w-full text-lg'>
-                                <FaBook />
-                              </button>
-                            </div>
+                          <td className='px-4'>{data.name}</td>
+                          <td className='px-4'>
+                            <span className='customer_badge'>
+                              {data.type}
+                            </span>
+                          </td>
+                          <td className='px-4'>{data.openingBalance}</td>
+                          <td className='px-4 text-center'>
+                            <Whisper
+                              placement='leftStart'
+                              trigger={"click"}
+                              speaker={<Popover full>
+                                <div
+                                  className='table__list__action__icon'
+                                  onClick={() => navigate("/admin/party/edit/" + data._id)}
+                                >
+                                  <FaRegEdit className='text-[16px]' />
+                                  Edit
+                                </div>
+                                <div
+                                  className='table__list__action__icon'
+                                  onClick={() => navigate("/admin/party/ladger/" + data._id)}
+                                >
+                                  <LuBookText className='text-[16px]' />
+                                  Ladger
+                                </div>
+                              </Popover>}
+                            >
+                              <div className='table__list__action' >
+                                <FiMoreHorizontal />
+                              </div>
+                            </Whisper>
                           </td>
                         </tr>
                       })
