@@ -3,7 +3,7 @@ import Nav from '../../components/Nav';
 import SideNav from '../../components/SideNav';
 import { Pagination, Popover, Whisper } from 'rsuite';
 import { BiPrinter } from "react-icons/bi";
-import { FaRegCopy } from "react-icons/fa";
+import { FaRegCopy, FaRegEdit } from "react-icons/fa";
 import { MdEditSquare, MdFilterList } from "react-icons/md";
 import { IoInformationCircle } from "react-icons/io5";
 import { FaRegFilePdf } from "react-icons/fa";
@@ -22,6 +22,7 @@ import DataShimmer from '../../components/DataShimmer';
 import { Tooltip } from 'react-tooltip';
 import { IoIosAdd, IoMdMore } from 'react-icons/io';
 import AddNew from '../../components/AddNew';
+import { FiMoreHorizontal } from 'react-icons/fi';
 
 const Unit = () => {
   const toast = useMyToaster();
@@ -341,7 +342,7 @@ const Unit = () => {
               {/* Table start */}
               <div className='overflow-x-auto mt-5 list__table'>
                 <table className='min-w-full bg-white' id='listQuotation' ref={tableRef}>
-                  <thead className='bg-gray-100'>
+                  <thead className='list__table__head'>
                     <tr>
                       <th className='py-2 px-4 border-b w-[50px]'>
                         <input type='checkbox' onChange={selectAll} checked={unitData.length > 0 && selected.length === unitData.length} />
@@ -358,17 +359,25 @@ const Unit = () => {
                             <input type='checkbox' checked={selected.includes(data._id)} onChange={() => handleCheckboxChange(data._id)} />
                           </td>
                           <td className='px-4 border-b' align='center'>{data.title}</td>
-
-
-                          <td className='px-4 border-b' align='center'>
-                            <div
-                              data-tooltip-id="unitTooltip" data-tooltip-content="Edit"
-                              className='flex justify-center flex-col md:flex-row gap-2 mr-2'>
-                              <button className='bg-blue-400 grid place-items-center text-white px-2 py-1 rounded w-full text-[16px]'
-                                onClick={() => navigate(`/admin/unit/edit/${data._id}`)}>
-                                <MdEditSquare />
-                              </button>
-                            </div>
+                          
+                          <td className='px-4 text-center'>
+                            <Whisper
+                              placement='leftStart'
+                              trigger={"click"}
+                              speaker={<Popover full>
+                                <div
+                                  className='table__list__action__icon'
+                                  onClick={() => navigate(`/admin/unit/edit/${data._id}`)}
+                                >
+                                  <FaRegEdit className='text-[16px]' />
+                                  Edit
+                                </div>
+                              </Popover>}
+                            >
+                              <div className='table__list__action' >
+                                <FiMoreHorizontal />
+                              </div>
+                            </Whisper>
                           </td>
                         </tr>
                       })
@@ -376,35 +385,35 @@ const Unit = () => {
                   </tbody>
                 </table>
                 <div className='paginate__parent'>
-                <p>Showing {unitData.length} of {totalData} entries</p>
-                {/* ----- Paginatin ----- */}
-                <div className='flex justify-end gap-2'>
-                  {
-                    activePage > 1 ? <div
-                      onClick={() => setActivePage(activePage - 1)}
-                      className='border bg-blue-600 text-white w-[20px] h-[20px] grid place-items-center rounded cursor-pointer'>
-                      <GrFormPrevious />
-                    </div> : null
-                  }
-                  {
-                    Array.from({ length: Math.ceil((totalData / dataLimit)) }).map((_, i) => {
-                      return <div
-                        onClick={() => setActivePage(i + 1)}
-                        className='border-blue-400 border w-[20px] h-[20px] text-center rounded cursor-pointer'
-                        style={activePage === i + 1 ? { border: "1px solid blue" } : {}}
-                      >
-                        {i + 1}
-                      </div>
-                    })
-                  }
-                  {
-                    (totalData / dataLimit) > activePage ? <div
-                      onClick={() => setActivePage(activePage + 1)}
-                      className='border bg-blue-600 text-white w-[20px] h-[20px] flex items-center justify-center rounded cursor-pointer'>
-                      <GrFormNext />
-                    </div> : null
-                  }
-                </div>
+                  <p>Showing {unitData.length} of {totalData} entries</p>
+                  {/* ----- Paginatin ----- */}
+                  <div className='flex justify-end gap-2'>
+                    {
+                      activePage > 1 ? <div
+                        onClick={() => setActivePage(activePage - 1)}
+                        className='border bg-blue-600 text-white w-[20px] h-[20px] grid place-items-center rounded cursor-pointer'>
+                        <GrFormPrevious />
+                      </div> : null
+                    }
+                    {
+                      Array.from({ length: Math.ceil((totalData / dataLimit)) }).map((_, i) => {
+                        return <div
+                          onClick={() => setActivePage(i + 1)}
+                          className='border-blue-400 border w-[20px] h-[20px] text-center rounded cursor-pointer'
+                          style={activePage === i + 1 ? { border: "1px solid blue" } : {}}
+                        >
+                          {i + 1}
+                        </div>
+                      })
+                    }
+                    {
+                      (totalData / dataLimit) > activePage ? <div
+                        onClick={() => setActivePage(activePage + 1)}
+                        className='border bg-blue-600 text-white w-[20px] h-[20px] flex items-center justify-center rounded cursor-pointer'>
+                        <GrFormNext />
+                      </div> : null
+                    }
+                  </div>
                 </div>
                 {/* pagination end */}
               </div>

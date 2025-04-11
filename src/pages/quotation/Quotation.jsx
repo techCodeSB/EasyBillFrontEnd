@@ -4,7 +4,7 @@ import SideNav from '../../components/SideNav';
 // import MyBreadCrumb from '../../components/BreadCrumb';
 import { Pagination, Popover, Whisper } from 'rsuite';
 import { BiPrinter } from "react-icons/bi";
-import { FaRegCopy } from "react-icons/fa";
+import { FaRegCopy, FaRegEdit } from "react-icons/fa";
 import { MdEditSquare, MdFilterList } from "react-icons/md";
 import { IoInformationCircle } from "react-icons/io5";
 import { FaRegFilePdf } from "react-icons/fa";
@@ -27,6 +27,9 @@ import { IoMdAddCircle } from "react-icons/io";
 import { TbZoomReset } from "react-icons/tb";
 import { LuSearch } from "react-icons/lu";
 import AddNew from '../../components/AddNew';
+import { FiMoreHorizontal } from 'react-icons/fi';
+import { IoMdInformationCircleOutline } from "react-icons/io";
+
 
 
 
@@ -496,9 +499,9 @@ const Quotation = () => {
               {/* Table start */}
               <div className='overflow-x-auto mt-5 list__table'>
                 <table className='min-w-full bg-white' id='listQuotation' ref={tableRef}>
-                  <thead className='bg-gray-100'>
+                  <thead className='list__table__head'>
                     <tr>
-                      <th className='py-2 px-4 border-b'>
+                      <th className='border-b'>
                         <input type='checkbox' onChange={selectAll} checked={billData.length > 0 && selected.length === billData.length} />
                       </th>
                       <th className='py-2 px-4 border-b'>Date</th>
@@ -519,27 +522,42 @@ const Quotation = () => {
                           <td className='px-4 border-b' align='center'>{new Date(data.estimateDate).toLocaleDateString()}</td>
                           <td className='px-4 border-b' align='center'>{data.quotationNumber}</td>
                           <td className='px-4 border-b' align='center'>{data.party.name}</td>
-                          <td className='px-4 border-b' align='center'>{new Date(data.validDate).toLocaleDateString()}</td>
+                          <td className='px-4 border-b' align='center'>{data.validDate ? new Date(data.validDate).toLocaleDateString() : '--'}</td>
                           <td className='px-4 border-b max-w-[20px]' align='center'>
-                            <span className='bg-green-500 px-2 text-white rounded-lg text-[12px] font-bold'>
-                              {new Date(Date.parse(new Date().toLocaleDateString())).toISOString() > new Date(Date.parse(data.validDate)).toISOString() ? "Expired" : "Valid"}
+                            <span className={`${data.validDate ? 'bg-green-500' : ''} px-2 text-white rounded-lg text-[12px] font-bold`}>
+                              {
+                                data.validDate ?
+                                  new Date(Date.parse(new Date().toLocaleDateString())).toISOString() > new Date(Date.parse(data.validDate)).toISOString() ? "Expired" : "Valid"
+                                  : "--"
+                              }
                             </span>
                           </td>
-                          <td className='px-4 border-b max-w-[70px]'>
-                            <div className='flex flex-col md:flex-row gap-2 mr-2'>
-                              <button
-                                data-tooltip-id="dataTooltip" data-tooltip-content="Edit"
-                                onClick={() => navigate(`/admin/quotation-estimate/edit/${data._id}`)}
-                                className='bg-blue-400 text-white px-2 py-1 rounded w-full text-[16px]'>
-                                <MdEditSquare />
-                              </button>
-                              <button
-                                data-tooltip-id="dataTooltip" data-tooltip-content="Details"
-                                onClick={() => navigate(`/admin/bill/details/quotation/${data._id}`)}
-                                className='bg-red-500 text-white px-2 py-1 rounded w-full text-lg'>
-                                <IoInformationCircle />
-                              </button>
-                            </div>
+
+                          <td className='px-4 text-center'>
+                            <Whisper
+                              placement='leftStart'
+                              trigger={"click"}
+                              speaker={<Popover full>
+                                <div
+                                  className='table__list__action__icon'
+                                  onClick={() => navigate(`/admin/quotation-estimate/edit/${data._id}`)}
+                                >
+                                  <FaRegEdit className='text-[16px]' />
+                                  Edit
+                                </div>
+                                <div
+                                  className='table__list__action__icon'
+                                  onClick={() => navigate(`/admin/bill/details/quotation/${data._id}`)}
+                                >
+                                  <IoMdInformationCircleOutline className='text-[16px]' />
+                                  Details
+                                </div>
+                              </Popover>}
+                            >
+                              <div className='table__list__action' >
+                                <FiMoreHorizontal />
+                              </div>
+                            </Whisper>
                           </td>
                         </tr>
                       })
@@ -547,35 +565,35 @@ const Quotation = () => {
                   </tbody>
                 </table>
                 <div className='paginate__parent'>
-                <p>Showing {billData.length} of {totalData} entries</p>
-                {/* ----- Paginatin ----- */}
-                <div className='flex justify-end gap-2'>
-                  {
-                    activePage > 1 ? <div
-                      onClick={() => setActivePage(activePage - 1)}
-                      className='border bg-blue-600 text-white w-[20px] h-[20px] grid place-items-center rounded cursor-pointer'>
-                      <GrFormPrevious />
-                    </div> : null
-                  }
-                  {
-                    Array.from({ length: Math.ceil((totalData / dataLimit)) }).map((_, i) => {
-                      return <div
-                        onClick={() => setActivePage(i + 1)}
-                        className='border-blue-400 border w-[20px] h-[20px] text-center rounded cursor-pointer'
-                        style={activePage === i + 1 ? { border: "1px solid blue" } : {}}
-                      >
-                        {i + 1}
-                      </div>
-                    })
-                  }
-                  {
-                    (totalData / dataLimit) > activePage ? <div
-                      onClick={() => setActivePage(activePage + 1)}
-                      className='border bg-blue-600 text-white w-[20px] h-[20px] flex items-center justify-center rounded cursor-pointer'>
-                      <GrFormNext />
-                    </div> : null
-                  }
-                </div>
+                  <p>Showing {billData.length} of {totalData} entries</p>
+                  {/* ----- Paginatin ----- */}
+                  <div className='flex justify-end gap-2'>
+                    {
+                      activePage > 1 ? <div
+                        onClick={() => setActivePage(activePage - 1)}
+                        className='border bg-blue-600 text-white w-[20px] h-[20px] grid place-items-center rounded cursor-pointer'>
+                        <GrFormPrevious />
+                      </div> : null
+                    }
+                    {
+                      Array.from({ length: Math.ceil((totalData / dataLimit)) }).map((_, i) => {
+                        return <div
+                          onClick={() => setActivePage(i + 1)}
+                          className='border-blue-400 border w-[20px] h-[20px] text-center rounded cursor-pointer'
+                          style={activePage === i + 1 ? { border: "1px solid blue" } : {}}
+                        >
+                          {i + 1}
+                        </div>
+                      })
+                    }
+                    {
+                      (totalData / dataLimit) > activePage ? <div
+                        onClick={() => setActivePage(activePage + 1)}
+                        className='border bg-blue-600 text-white w-[20px] h-[20px] flex items-center justify-center rounded cursor-pointer'>
+                        <GrFormNext />
+                      </div> : null
+                    }
+                  </div>
                 </div>
                 {/* pagination end */}
               </div>

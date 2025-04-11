@@ -4,7 +4,7 @@ import SideNav from '../../components/SideNav';
 // import MyBreadCrumb from '../../components/BreadCrumb';
 import { Pagination, Popover, Whisper } from 'rsuite';
 import { BiPrinter } from "react-icons/bi";
-import { FaRegCopy } from "react-icons/fa";
+import { FaRegCopy, FaRegEdit } from "react-icons/fa";
 import { MdEditSquare, MdFilterList } from "react-icons/md";
 import { IoInformationCircle } from "react-icons/io5";
 import { FaRegFilePdf } from "react-icons/fa";
@@ -21,10 +21,11 @@ import downloadPdf from '../../helper/downloadPdf';
 import { GrFormNext, GrFormPrevious } from 'react-icons/gr';
 import DataShimmer from '../../components/DataShimmer';
 import { Tooltip } from 'react-tooltip';
-import { IoIosAdd, IoMdMore } from 'react-icons/io';
+import { IoIosAdd, IoMdInformationCircleOutline, IoMdMore } from 'react-icons/io';
 import AddNew from '../../components/AddNew';
 import { TbZoomReset } from 'react-icons/tb';
 import { LuSearch } from 'react-icons/lu';
+import { FiMoreHorizontal } from 'react-icons/fi';
 
 
 
@@ -467,7 +468,7 @@ const CreditNote = () => {
               {/* Table start */}
               <div className='overflow-x-auto mt-5 list__table'>
                 <table className='min-w-full bg-white' id='listQuotation' ref={tableRef}>
-                  <thead className='bg-gray-100'>
+                  <thead className='list__table__head'>
                     <tr>
                       <th className='py-2 px-4 border-b'>
                         <input type='checkbox' onChange={selectAll} checked={billData.length > 0 && selected.length === billData.length} />
@@ -485,24 +486,35 @@ const CreditNote = () => {
                           <td className='py-2 px-4 border-b max-w-[10px]'>
                             <input type='checkbox' checked={selected.includes(data._id)} onChange={() => handleCheckboxChange(data._id)} />
                           </td>
-                          <td className='px-4 border-b' align='center'>{data.creditNoteDate}</td>
+                          <td className='px-4 border-b' align='center'>{new Date(data.creditNoteDate).toLocaleDateString()}</td>
                           <td className='px-4 border-b' align='center'>{data.creditNoteNumber}</td>
                           <td className='px-4 border-b' align='center'>{data.party.name}</td>
-                          <td className='px-4 border-b max-w-[70px]' align='center'>
-                            <div className='flex flex-col md:flex-row gap-2 mr-2 justify-center'>
-                              <button
-                                data-tooltip-id="creditTooltip" data-tooltip-content="Edit"
-                                onClick={() => navigate(`/admin/credit-note/edit/${data._id}`)}
-                                className='bg-blue-400 text-white px-2 flex justify-center py-1 rounded w-[40px] text-[16px]'>
-                                <MdEditSquare />
-                              </button>
-                              <button
-                                data-tooltip-id="creditTooltip" data-tooltip-content="Details"
-                                onClick={() => navigate(`/admin/bill/details/creditnote/${data._id}`)}
-                                className='bg-red-500 text-white px-2 py-1 rounded text-lg flex justify-center w-[40px]'>
-                                <IoInformationCircle />
-                              </button>
-                            </div>
+                          
+                          <td className='px-4 text-center'>
+                            <Whisper
+                              placement='leftStart'
+                              trigger={"click"}
+                              speaker={<Popover full>
+                                <div
+                                  className='table__list__action__icon'
+                                  onClick={() => navigate(`/admin/credit-note/edit/${data._id}`)}
+                                >
+                                  <FaRegEdit className='text-[16px]' />
+                                  Edit
+                                </div>
+                                <div
+                                  className='table__list__action__icon'
+                                  onClick={() => navigate(`/admin/bill/details/creditnote/${data._id}`)}
+                                >
+                                  <IoMdInformationCircleOutline className='text-[16px]' />
+                                  Details
+                                </div>
+                              </Popover>}
+                            >
+                              <div className='table__list__action' >
+                                <FiMoreHorizontal />
+                              </div>
+                            </Whisper>
                           </td>
                         </tr>
                       })

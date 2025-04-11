@@ -4,7 +4,7 @@ import SideNav from '../../components/SideNav';
 // import MyBreadCrumb from '../../components/BreadCrumb';
 import { Pagination, Popover, Whisper } from 'rsuite';
 import { BiPrinter } from "react-icons/bi";
-import { FaRegCopy } from "react-icons/fa";
+import { FaRegCopy, FaRegEdit } from "react-icons/fa";
 import { MdEditSquare, MdFilterList } from "react-icons/md";
 import { IoInformationCircle } from "react-icons/io5";
 import { FaRegFilePdf } from "react-icons/fa";
@@ -26,6 +26,9 @@ import AddNew from '../../components/AddNew';
 import { IoIosAdd, IoMdMore } from 'react-icons/io';
 import { LuSearch } from 'react-icons/lu';
 import { TbZoomReset } from 'react-icons/tb';
+import { FiMoreHorizontal } from 'react-icons/fi';
+import { IoMdInformationCircleOutline } from "react-icons/io";
+
 
 
 
@@ -399,73 +402,11 @@ const Proforma = () => {
                   </div>
                 </Whisper>
               </div>
-              {/* <div className='flex justify-between items-center flex-col lg:flex-row gap-4'>
-                <div className='flex items-center gap-4 justify-between w-full lg:justify-start'>
-                  <div className='flex flex-col'>
-                    <p>Show</p>
-                    <select value={dataLimit} onChange={(e) => setDataLimit(e.target.value)}>
-                      <option value={10}>10</option>
-                      <option value={25}>25</option>
-                      <option value={50}>50</option>
-                      <option value={100}>100</option>
-                    </select>
-                  </div>
-                  <div className='list__icons'>
-                    <div className='list__icon' data-tooltip-id="proformaTooltip" data-tooltip-content="Print"
-                      onClick={() => exportTable('print')}>
-                      <BiPrinter className='text-white text-[16px]' />
-                    </div>
-                    <div className='list__icon' data-tooltip-id="proformaTooltip" data-tooltip-content="Copy Table"
-                      onClick={() => exportTable('copy')} >
-                      <FaRegCopy className='text-white text-[16px]' />
-                    </div>
-                    <div className='list__icon' data-tooltip-id="proformaTooltip" data-tooltip-content="Download PDF"
-                      onClick={() => exportTable('pdf')} >
-                      <FaRegFilePdf className="text-white text-[16px]" />
-                    </div>
-                    <div className='list__icon' data-tooltip-id="proformaTooltip" data-tooltip-content="Download Excel"
-                      onClick={() => exportTable('excel')}>
-                      <FaRegFileExcel className='text-white text-[16px]' />
-                    </div>
-                  </div>
-                </div>
-                <div className='flex w-full flex-col lg:w-[300px]'>
-                  <p>Search</p>
-                  <input type='text' onChange={searchTable} />
-                </div>
-              </div> */}
-
-              {/* Second Row */}
-              {/* <div className='list_buttons'>
-                <button className='bg-teal-500 hover:bg-teal-400' onClick={() => navigate('/admin/proforma-invoice/add')}>
-                  <MdAdd className='text-lg' />
-                  Add New
-                </button>
-                <button className='bg-orange-400 hover:bg-orange-300' onClick={() => removeData(true)}>
-                  <MdOutlineCancel className='text-lg' />
-                  Trash
-                </button>
-                <button onClick={restoreData} className='bg-green-500 hover:bg-green-400'>
-                  <MdOutlineRestorePage className='text-lg' />
-                  Restore
-                </button>
-                <button onClick={() => removeData(false)} className='bg-red-600 hover:bg-red-500'>
-                  <MdDeleteOutline className='text-lg' />
-                  Delete
-                </button>
-                <select value={tableStatusData}
-                  onChange={(e) => setTableStatusData(e.target.value)}
-                  className='bg-blue-500 text-white'>
-                  <option value="all">All</option>
-                  <option value="active">Active</option>
-                  <option value="trash">Trash</option>
-                </select>
-              </div> */}
 
               {/* Table start */}
               <div className='overflow-x-auto mt-5 list__table'>
                 <table className='min-w-full bg-white' id='listQuotation' ref={tableRef}>
-                  <thead className='bg-gray-100'>
+                  <thead className='list__table__head'>
                     <tr>
                       <th className='py-2 px-4 border-b'>
                         <input type='checkbox' onChange={selectAll} checked={billData.length > 0 && selected.length === billData.length} />
@@ -494,27 +435,39 @@ const Proforma = () => {
                               {new Date(Date.parse(new Date().toLocaleDateString())).toISOString() > new Date(Date.parse(data.validDate)).toISOString() ? "Expired" : "Valid"}
                             </span>
                           </td>
-                          <td className='px-4 border-b max-w-[90px]'>
-                            <div className='flex flex-col md:flex-row gap-2 mr-2'>
-                              <button
-                                data-tooltip-id="proformaTooltip" data-tooltip-content="Edit"
-                                onClick={() => navigate(`/admin/proforma-invoice/edit/${data._id}`)}
-                                className='bg-blue-400 text-white px-2 py-1 rounded w-full text-[16px]'>
-                                <MdEditSquare />
-                              </button>
-                              <button
-                                data-tooltip-id="proformaTooltip" data-tooltip-content="Details"
-                                onClick={() => navigate(`/admin/bill/details/proforma/${data._id}`)}
-                                className='bg-red-500 text-white px-2 py-1 rounded w-full text-lg'>
-                                <IoInformationCircle />
-                              </button>
-                              <button
-                                data-tooltip-id="proformaTooltip" data-tooltip-content="Convert to final invoice"
-                                onClick={() => navigate(`/admin/sales-invoice/convert/add/${data._id}`)}
-                                className='bg-green-500 text-white px-2 py-1 rounded w-full text-lg'>
-                                <SiConvertio />
-                              </button>
-                            </div>
+                         
+                          <td className='px-4 text-center'>
+                            <Whisper
+                              placement='leftStart'
+                              trigger={"click"}
+                              speaker={<Popover full>
+                                <div
+                                  className='table__list__action__icon'
+                                  onClick={() => navigate(`/admin/proforma-invoice/edit/${data._id}`)}
+                                >
+                                  <FaRegEdit className='text-[16px]' />
+                                  Edit
+                                </div>
+                                <div
+                                  className='table__list__action__icon'
+                                  onClick={() => navigate(`/admin/bill/details/proforma/${data._id}`)}
+                                >
+                                  <IoMdInformationCircleOutline className='text-[16px]' />
+                                  Details
+                                </div>
+                                <div
+                                  className='table__list__action__icon'
+                                  onClick={() => navigate(`/admin/sales-invoice/convert/add/${data._id}`)}
+                                >
+                                  <SiConvertio className='text-[20px]' />
+                                  Convert to final invoice
+                                </div>
+                              </Popover>}
+                            >
+                              <div className='table__list__action' >
+                                <FiMoreHorizontal />
+                              </div>
+                            </Whisper>
                           </td>
                         </tr>
                       })

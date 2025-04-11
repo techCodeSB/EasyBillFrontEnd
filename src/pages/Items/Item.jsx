@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 import Nav from '../../components/Nav';
 import SideNav from '../../components/SideNav';
 import { BiPrinter } from "react-icons/bi";
-import { FaRegCopy } from "react-icons/fa";
+import { FaRegCopy, FaRegEdit } from "react-icons/fa";
 import { MdEditSquare, MdFilterList } from "react-icons/md";
 import { IoInformationCircle } from "react-icons/io5";
 import { FaRegFilePdf } from "react-icons/fa";
@@ -22,6 +22,7 @@ import { Tooltip } from 'react-tooltip';
 import { IoIosAdd, IoMdMore } from 'react-icons/io';
 import AddNew from '../../components/AddNew';
 import { Popover, Whisper } from 'rsuite';
+import { FiMoreHorizontal } from 'react-icons/fi';
 
 
 document.title = "Items"
@@ -39,7 +40,7 @@ const Item = ({ mode }) => {
   const exportData = useMemo(() => {
     return itemData && itemData.map(({ title, category }, _) => ({
       Title: title,
-      HSN: category.hsn
+      HSN: category?.hsn
     }));
   }, [itemData]);
   const [loading, setLoading] = useState(true);
@@ -280,78 +281,16 @@ const Item = ({ mode }) => {
                   </div>
                 </Whisper>
               </div>
-              {/* <div className='flex justify-between items-center flex-col lg:flex-row gap-4'>
-                <div className='flex items-center gap-4 justify-between w-full lg:justify-start'>
-                  <div className='flex flex-col'>
-                    <p>Show</p>
-                    <select value={dataLimit} onChange={(e) => setDataLimit(e.target.value)}>
-                      <option value={10}>10</option>
-                      <option value={25}>25</option>
-                      <option value={50}>50</option>
-                      <option value={100}>100</option>
-                    </select>
-                  </div>
-                  <div className='list__icons'>
-                    <div className='list__icon' data-tooltip-id="itemTooltip" data-tooltip-content="Print"
-                      onClick={() => exportTable('print')}>
-                      <BiPrinter className='text-white text-[16px]' />
-                    </div>
-                    <div className='list__icon' data-tooltip-id="itemTooltip" data-tooltip-content="Copy Table"
-                      onClick={() => exportTable('copy')}>
-                      <FaRegCopy className='text-white text-[16px]' />
-                    </div>
-                    <div className='list__icon' data-tooltip-id="itemTooltip" data-tooltip-content="Download PDF"
-                      onClick={() => exportTable('pdf')}>
-                      <FaRegFilePdf className='text-white text-[16px]' />
-                    </div>
-                    <div className='list__icon' data-tooltip-id="itemTooltip" data-tooltip-content="Download Excel"
-                      onClick={() => exportTable('excel')}>
-                      <FaRegFileExcel className='text-white text-[16px]' />
-                    </div>
-                  </div>
-                </div>
-                <div className='flex w-full flex-col lg:w-[300px]'>
-                  <p>Search</p>
-                  <input type='text' onChange={searchTable} />
-                </div>
-              </div> */}
-
-              {/* Second Row */}
-              {/* <div className='list_buttons'>
-                <button className='bg-teal-500 hover:bg-teal-400' onClick={() => navigate('/admin/item/add')}>
-                  <MdAdd className='text-lg' />
-                  Add New
-                </button>
-                <button className='bg-orange-400 hover:bg-orange-300' onClick={() => removeData(true)}>
-                  <MdOutlineCancel className='text-lg' />
-                  Trash
-                </button>
-                <button className='bg-green-500 hover:bg-green-400' onClick={restoreData}>
-                  <MdOutlineRestorePage className='text-lg' />
-                  Restore
-                </button>
-                <button className='bg-red-600 hover:bg-red-500' onClick={() => removeData(false)}>
-                  <MdDeleteOutline className='text-lg' />
-                  Delete
-                </button>
-                <select value={tableStatusData}
-                  onChange={(e) => setTableStatusData(e.target.value)}
-                  className='bg-blue-500 text-white'>
-                  <option value="all">All</option>
-                  <option value="active">Active</option>
-                  <option value="trash">Trash</option>
-                </select>
-              </div> */}
 
               {/* Table start */}
               <div className='overflow-x-auto mt-5 list__table'>
                 <table className='min-w-full bg-white' id='itemTable' ref={tableRef}>
-                  <thead className='bg-gray-100'>
+                  <thead className='bg-gray-100 list__table__head'>
                     <tr>
                       <th className='py-2 px-4 border-b w-[50px]'>
                         <input type='checkbox' onChange={selectAll} checked={itemData.length > 0 && selected.length === itemData.length} />
                       </th>
-                      <th className='py-2 px-4 border-b '>Title</th>
+                      <td className='py-2 px-4 border-b '>Title</td>
                       <th className='py-2 px-4 border-b '>HSN</th>
                       <th className='py-2 px-4 border-b '>STOCK</th>
                       <th className='py-2 px-4 border-b w-[100px]'>Action</th>
@@ -367,9 +306,9 @@ const Item = ({ mode }) => {
                           </td>
                           <td className='px-4 border-b'>
                             {data.title}
-                            <p className="text-[10px]">{data.category.title}</p>
+                            <p className="text-[10px]">{data.category?.title}</p>
                           </td>
-                          <td className='px-4 border-b' align='center'>{data.category.hsn}</td>
+                          <td className='px-4 border-b' align='center'>{data.category?.hsn}</td>
                           <td className='px-4 border-b' align='center'>
                             <div className='flex items-center justify-center gap-2'>
                               {
@@ -382,19 +321,26 @@ const Item = ({ mode }) => {
                             </div>
                           </td>
 
-                          <td className='px-4 border-b min-w-[70px]' align='center'>
-                            <div className='flex justify-center flex-col md:flex-row gap-2 mr-2'>
-                              <button
-                                data-tooltip-id="itemTooltip" data-tooltip-content="Edit"
-                                className='bg-blue-400 text-white px-2 py-1 rounded  text-[16px]'
-                                onClick={() => navigate(`/admin/item/edit/${data._id}`)}>
-                                <MdEditSquare />
-                              </button>
-                              {/* <button className='bg-red-500 text-white px-2 py-1 rounded  text-lg'>
-                              <IoInformationCircle />
-                            </button> */}
-                            </div>
+                          <td className='px-4 text-center'>
+                            <Whisper
+                              placement='leftStart'
+                              trigger={"click"}
+                              speaker={<Popover full>
+                                <div
+                                  className='table__list__action__icon'
+                                  onClick={() => navigate("/admin/item/edit/" + data._id)}
+                                >
+                                  <FaRegEdit className='text-[16px]' />
+                                  Edit
+                                </div>
+                              </Popover>}
+                            >
+                              <div className='table__list__action' >
+                                <FiMoreHorizontal />
+                              </div>
+                            </Whisper>
                           </td>
+
                         </tr>
                       })
                     }

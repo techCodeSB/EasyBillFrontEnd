@@ -94,7 +94,10 @@ const PartyComponent = ({ mode, save }) => {
       }
 
       toast(!mode ? "Party create success" : "Party update success", 'success');
-      save(true); // for close sidebar in MySelect2
+      // for close sidebar in MySelect2
+      if (save) {
+        save(true)
+      }
       return;
 
     } catch (error) {

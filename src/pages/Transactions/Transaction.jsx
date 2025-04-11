@@ -3,7 +3,7 @@ import Nav from '../../components/Nav';
 import SideNav from '../../components/SideNav';
 import { Pagination, Popover, Whisper } from 'rsuite';
 import { BiPrinter } from "react-icons/bi";
-import { FaRegCopy } from "react-icons/fa";
+import { FaRegCopy, FaRegEdit } from "react-icons/fa";
 import { MdEditSquare, MdFilterList } from "react-icons/md";
 import { IoInformationCircle } from "react-icons/io5";
 import { FaRegFilePdf } from "react-icons/fa";
@@ -20,8 +20,9 @@ import Cookies from 'js-cookie';
 import { GrFormNext, GrFormPrevious } from 'react-icons/gr';
 import DataShimmer from '../../components/DataShimmer';
 import { Tooltip } from 'react-tooltip';
-import { IoIosAdd, IoMdMore } from 'react-icons/io';
+import { IoIosAdd, IoMdInformationCircleOutline, IoMdMore } from 'react-icons/io';
 import AddNew from '../../components/AddNew';
+import { FiMoreHorizontal } from 'react-icons/fi';
 
 
 
@@ -365,7 +366,7 @@ const Transaction = () => {
               {/* Table start */}
               <div className='overflow-x-auto mt-5 list__table'>
                 <table className='min-w-full bg-white' id='listTransaction'>
-                  <thead className='bg-gray-100'>
+                  <thead className='list__table__head'>
                     <tr>
                       <th className='py-2 px-4 border-b'>
                         <input type='checkbox' onChange={selectAll} checked={selected.length === 10} />
@@ -390,16 +391,26 @@ const Transaction = () => {
                           <td className='px-4 border-b' align='center'>{data.transactionNumber}</td>
                           <td className='px-4 border-b' align='center'>{data.transactionType}</td>
                           <td className='px-4 border-b' align='center'>{data.amount}</td>
-                          <td className='px-4 border-b' align='center'>
-                            <div className='flex-col md:flex-row gap-2 mr-2 flex justify-center'>
-                              <button
-                                data-tooltip-id="transactionTooltip" data-tooltip-content="Edit"
-                                className='bg-blue-400 text-white px-2 py-1 rounded text-[16px] '
-                                onClick={() => navigate(`/admin/other-transaction/edit/${data._id}`)} >
-                                <MdEditSquare className=' flex justify-between items-center' />
-                              </button>
-                            </div>
-                          </td >
+                          <td className='px-4 text-center'>
+                            <Whisper
+                              placement='leftStart'
+                              trigger={"click"}
+                              speaker={<Popover full>
+                                <div
+                                  className='table__list__action__icon'
+                                  onClick={() => navigate(`/admin/other-transaction/edit/${data._id}`)}
+                                >
+                                  <FaRegEdit className='text-[16px]' />
+                                  Edit
+                                </div>
+                              </Popover>}
+                            >
+                              <div className='table__list__action' >
+                                <FiMoreHorizontal />
+                              </div>
+                            </Whisper>
+                          </td>
+
                         </tr >
                       })
                     }

@@ -358,13 +358,13 @@ const Party = () => {
 
               {/* Table start */}
               <div className='overflow-x-auto mt-4 list__table'>
-                <table className='min-w-full bg-white list__table' id='listOfPartys' ref={tableRef}>
+                <table className='min-w-full bg-white' id='listOfPartys' ref={tableRef}>
                   <thead className='list__table__head'>
                     <tr>
                       <th className='py-2 px-4 w-[50px]'>
                         <input type='checkbox' onChange={selectAll} checked={partyData.length > 0 && selected.length === partyData.length} />
                       </th>
-                      <th className='py-2 px-4'>Name</th>
+                      <td className='py-2 px-4'>Name</td>
                       <th className='py-2 px-4'>Type</th>
                       <th className='py-2 px-4'>Balance</th>
                       <th className='py-2 px-4 w-[100px]'>Action</th>
@@ -373,17 +373,17 @@ const Party = () => {
                   <tbody>
                     {
                       partyData.map((data, i) => {
-                        return <tr key={i} className='text-center'>
+                        return <tr key={i}>
                           <td className='py-2 px-4'>
                             <input type='checkbox' checked={selected.includes(data._id)} onChange={() => handleCheckboxChange(data._id)} />
                           </td>
                           <td className='px-4'>{data.name}</td>
-                          <td className='px-4'>
+                          <td className='px-4 text-center'>
                             <span className='customer_badge'>
                               {data.type}
                             </span>
                           </td>
-                          <td className='px-4'>{data.openingBalance}</td>
+                          <td className='px-4 text-center'>{data.openingBalance}</td>
                           <td className='px-4 text-center'>
                             <Whisper
                               placement='leftStart'

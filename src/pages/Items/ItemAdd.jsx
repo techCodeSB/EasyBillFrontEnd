@@ -66,7 +66,7 @@ const AddItemComponent = ({ mode, save }) => {
         const data = res.data;
         setForm({
           title: data.title, type: data.type, salePrice: data.salePrice,
-          category: data.category._id, details: data.details, hsn: data.category.hsn, tax: data.category.tax
+          category: data.category?._id, details: data.details, hsn: data.category?.hsn, tax: data.category?.tax
         });
         setUnitRow([...data.unit]);
       }
@@ -101,8 +101,11 @@ const AddItemComponent = ({ mode, save }) => {
 
 
   const savebutton = async (e) => {
-    if (form.title === "" || form.tax === "" || form.hsn === "" || form.type === "" || form.category === "" || form.salePrice === "") {
-      return toast("fill the blank", "error")
+    if (form.title === "") {
+      return toast("Item name can't be blank", "error")
+    }
+    else if (form.salePrice === "") {
+      return toast("Price can't be blank", "error")
     }
 
     try {
@@ -126,7 +129,10 @@ const AddItemComponent = ({ mode, save }) => {
       if (!mode) clearData();
 
       toast(!mode ? "Item create success" : "Item update success", 'success');
-      save(true); // for close sidebar in MySelect2
+      // for close sidebar in MySelect2
+      if(save){
+        save(true)
+      }
       return;
 
     } catch (error) {
@@ -156,7 +162,7 @@ const AddItemComponent = ({ mode, save }) => {
       <div className='  flex justify-between  gap-5 flex-col lg:flex-row'>
         <div className='w-full'>
           <div >
-            <p className='mb-2 '>Title</p>
+            <p className='mb-2 '>Item Name <span className='required__text'>*</span></p>
             <input type='text' onChange={(e) => setForm({ ...form, title: e.target.value })} value={form.title} />
           </div>
           <div>
@@ -168,7 +174,7 @@ const AddItemComponent = ({ mode, save }) => {
             </select>
           </div>
           <div>
-            <p className='mt-2 mb-2'>Sale Price</p>
+            <p className='mt-2 mb-2'>Price  <span className='required__text'>*</span></p>
             <input type="text" onChange={(e) => setForm({ ...form, salePrice: e.target.value })} value={form.salePrice} />
           </div>
         </div>
@@ -203,31 +209,7 @@ const AddItemComponent = ({ mode, save }) => {
           </div>
         </div>
       </div>
-      <div className='mt-3 '>
-        <p className='ml-2 pb-2'>Details</p>
-        {/* <Editor
-          onEditorChange={(v, editor) => {
-            setForm({ ...form, details: editor.getContent() })
-          }}
-          value={form.details}
-          apiKey='765rof3c4qgyk8u59xk0o3vvhvji0y156uwtbjgezhnbcct7'
-          onInit={(_evt, editor) => editorRef.current = editor}
-          init={{
-            height: 300,
-            menubar: false,
-            plugins: [
-              'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-              'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-              'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'
-            ],
-            toolbar: 'undo redo | blocks | ' +
-              'bold italic forecolor | alignleft aligncenter ' +
-              'alignright alignjustify | bullist numlist outdent indent | ' +
-              'removeformat | help',
-            content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
-          }}
-        /> */}
-      </div>
+
       <div className='w-full overflow-auto mt-2'>
         <table className='w-full border'>
           <thead className='bg-gray-200'>

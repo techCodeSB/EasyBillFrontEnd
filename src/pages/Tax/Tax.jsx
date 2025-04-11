@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 import Nav from '../../components/Nav';
 import SideNav from '../../components/SideNav';
 import { BiPrinter } from "react-icons/bi";
-import { FaRegCopy } from "react-icons/fa";
+import { FaRegCopy, FaRegEdit } from "react-icons/fa";
 import { MdEditSquare, MdFilterList } from "react-icons/md";
 import { IoInformationCircle } from "react-icons/io5";
 import { FaRegFilePdf } from "react-icons/fa";
@@ -22,6 +22,7 @@ import { Tooltip } from 'react-tooltip';
 import { IoIosAdd, IoMdMore } from 'react-icons/io';
 import { Popover, Whisper } from 'rsuite';
 import AddNew from '../../components/AddNew';
+import { FiMoreHorizontal } from 'react-icons/fi';
 
 
 
@@ -348,7 +349,7 @@ const Tax = ({ mode }) => {
               {/* Table start */}
               <div className='overflow-x-auto mt-5 list__table'>
                 <table className='min-w-full bg-white' id='listOfTax' ref={tableRef}>
-                  <thead className='bg-gray-100'>
+                  <thead className='list__table__head'>
                     <tr>
                       <th className='py-2 px-4 border-b w-[50px]'>
                         <input type='checkbox' onChange={selectAll} checked={taxData.length > 0 && selected.length === taxData.length} />
@@ -366,16 +367,25 @@ const Tax = ({ mode }) => {
                           </td>
                           <td className='px-4 border-b' align='center'>{data.title}</td>
 
-                          <td className='px-4 border-b'>
-                            <div className='flex flex-col md:flex-row gap-2 mr-2'>
-                              <button
-                                data-tooltip-id="taxTooltip" data-tooltip-content="Edit"
-                                className='bg-blue-400 text-white px-2 py-1 rounded text-[16px] '
-                                onClick={() => navigate(`/admin/tax/edit/${data._id}`)} >
-                                <MdEditSquare className=' flex justify-between items-center' />
-                              </button>
-                            </div>
-                          </td >
+                          <td className='px-4 text-center'>
+                            <Whisper
+                              placement='leftStart'
+                              trigger={"click"}
+                              speaker={<Popover full>
+                                <div
+                                  className='table__list__action__icon'
+                                  onClick={() => navigate(`/admin/tax/edit/${data._id}`)}
+                                >
+                                  <FaRegEdit className='text-[16px]' />
+                                  Edit
+                                </div>
+                              </Popover>}
+                            >
+                              <div className='table__list__action' >
+                                <FiMoreHorizontal />
+                              </div>
+                            </Whisper>
+                          </td>
                         </tr >
                       })
                     }

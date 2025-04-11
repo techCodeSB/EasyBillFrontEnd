@@ -6,7 +6,7 @@ const useMyToaster = () => {
   const toast = (msg, type) => {
     const message = (
       <Message showIcon type={type} closable>
-        <strong>{type}!</strong> {msg}
+        {msg}
       </Message>
     );
 

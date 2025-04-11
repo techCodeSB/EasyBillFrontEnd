@@ -16,6 +16,8 @@ import { CiCalculator1 } from "react-icons/ci";
 import Calculator from './Calculator';
 import { calcToggle } from '../store/calculatorSlice';
 import Cookies from 'js-cookie';
+import { MdOutlineArrowDropDown } from "react-icons/md";
+
 
 
 const Nav = ({ title }) => {
@@ -104,8 +106,9 @@ const Nav = ({ title }) => {
               </Link>
             </Popover>}>
               <Avatar circle children={<FaUser />} size='sm' src={userDetails.profile} className='border'/>
-              <div className='ml-2 text-gray-800 text-[13px]'>
+              <div className='ml-2 text-gray-800 text-[13px] flex items-center gap-1'>
                 {userDetails.name}
+                <MdOutlineArrowDropDown/>
               </div>
             </Whisper>
           </div>

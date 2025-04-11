@@ -47,7 +47,7 @@ const Quotation = ({ mode }) => {
   const [ItemRows, setItemRows] = useState([itemRowSet]);
   const [additionalRows, setAdditionalRow] = useState([additionalRowSet]); //{ additionalRowsItem: 1 }
   const [formData, setFormData] = useState({
-    party: '', quotationNumber: '', estimateDate: '', validDate: '', items: ItemRows,
+    party: '', quotationNumber: '', estimateDate: new Date().toISOString().split('T')[0], validDate: '', items: ItemRows,
     additionalCharge: additionalRows, note: '', terms: '',
     discountType: '', discountAmount: '', discountPercentage: '',
   })
@@ -358,10 +358,10 @@ const Quotation = ({ mode }) => {
       let taxId = selectedItem[0]?.category?.tax;
       const getTax = tax.filter((t, _) => t._id === taxId)[0];
 
-      item[index].hsn = selectedItem[0]?.category.hsn;
+      item[index].hsn = selectedItem[0]?.category?.hsn;
       item[index].unit = selectedItem[0]?.unit;
       item[index].selectedUnit = selectedItem[0]?.unit[0].unit
-      item[index].tax = getTax?.gst;
+      item[index].tax = getTax?.gst || 0.00;
       selectedItem[0]?.unit.forEach((u, _) => {
         currentUnit.push(u.unit);
       })
@@ -460,23 +460,6 @@ const Quotation = ({ mode }) => {
       const value = e.target.value || (0).toFixed(2);
       let per = ((value / subTotal()('amount')) * 100).toFixed(2) //Get percentage
       setFormData({ ...formData, discountAmount: e.target.value, discountPercentage: per });
-      // console.log(per)
-      // console.log("subtotal", subTotal()("amount"))
-
-      // if (formData.discountType === "before") {
-      //   let items = [...ItemRows];
-      //   items.forEach((i, _) => {
-      //     let amount = parseFloat(value) / parseFloat(items.length);
-      //     console.log(amount)
-      //     i.discountPerAmount = Number.isNaN(amount) ? (0).toFixed(2) : amount;
-      //     console.log(i.discountPerAmount)
-      //     // i.discountPerPercentage = Number.isNaN((amount / (i.price * i.qun)) * 100) ? 0 : (amount / (i.price * i.qun)) * 100;
-      //   })
-
-      //   console.log(items)
-
-      //   setItemRows([...items]);
-      // }
 
     }
 
@@ -492,10 +475,20 @@ const Quotation = ({ mode }) => {
     }
 
     for (let row of ItemRows) {
-      if ([row.itemName, row.qun, row.unit, row.price, row.tax]
-        .some((field) => field === "")) {
-        return toast("Fill the blank in item", "error");
-      }
+      // if ([row.itemName, row.qun, row.unit, row.price, row.tax]
+      //   .some((field) => field === "")) {
+      //   return toast("Fill the blank in item", "error");
+      // }
+
+      if (row.itemName === "") {
+        return toast("Please select item", "error")
+      } else if (row.qun === "") {
+        return toast("Please enter quantity", "error")
+      } else if (row.unit === "") {
+        return toast("Please select unit", "error")
+      } else if (row.price === "") {
+        return toast("Please enter price", "error")
+      } 
     }
 
     try {
@@ -645,7 +638,7 @@ const Quotation = ({ mode }) => {
             </div>
 
             <div className='bill__and__sping__adr'>
-              
+
             </div>
 
             <div className='overflow-x-auto rounded'>
@@ -670,12 +663,6 @@ const Quotation = ({ mode }) => {
                       {/* Item name and description */}
                       <td>
                         <div className='flex flex-col gap-2 text-left'>
-                          {/* <SelectPicker
-                            onChange={(v) => onItemChange(v, index)}
-                            value={ItemRows[index].itemName}
-                            data={itemData}
-                          /> */}
-
                           <MySelect2
                             model={"item"}
                             onType={(v) => onItemChange(v, index)}
