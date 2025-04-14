@@ -246,6 +246,32 @@ const Item = ({ mode }) => {
                   <IoIosAdd className='text-xl text-white' />
                   Add New
                 </button>
+                <div className='flex justify-end'>
+                  <Whisper placement='leftStart' enterable
+                    speaker={<Popover full>
+                      <div className='download__menu' onClick={() => exportTable('print')} >
+                        <BiPrinter className='text-[16px]' />
+                        Print Table
+                      </div>
+                      <div className='download__menu' onClick={() => exportTable('copy')}>
+                        <FaRegCopy className='text-[16px]' />
+                        Copy Table
+                      </div>
+                      <div className='download__menu' onClick={() => exportTable('pdf')}>
+                        <FaRegFilePdf className="text-[16px]" />
+                        Download Pdf
+                      </div>
+                      <div className='download__menu' onClick={() => exportTable('excel')} >
+                        <FaRegFileExcel className='text-[16px]' />
+                        Download Excel
+                      </div>
+                    </Popover>}
+                  >
+                    <div className='record__download' >
+                      <IoMdMore />
+                    </div>
+                  </Whisper>
+                </div>
               </div>
             </div>
 
@@ -254,36 +280,8 @@ const Item = ({ mode }) => {
           </div>
           {
             !loading ? itemData.length > 0 ? <div className='content__body__main'>
-              {/* First Row */}
-              <div className='flex justify-end'>
-                <Whisper placement='leftStart' enterable
-                  speaker={<Popover full>
-                    <div className='download__menu' onClick={() => exportTable('print')} >
-                      <BiPrinter className='text-[16px]' />
-                      Print Table
-                    </div>
-                    <div className='download__menu' onClick={() => exportTable('copy')}>
-                      <FaRegCopy className='text-[16px]' />
-                      Copy Table
-                    </div>
-                    <div className='download__menu' onClick={() => exportTable('pdf')}>
-                      <FaRegFilePdf className="text-[16px]" />
-                      Download Pdf
-                    </div>
-                    <div className='download__menu' onClick={() => exportTable('excel')} >
-                      <FaRegFileExcel className='text-[16px]' />
-                      Download Excel
-                    </div>
-                  </Popover>}
-                >
-                  <div className='record__download' >
-                    <IoMdMore />
-                  </div>
-                </Whisper>
-              </div>
-
               {/* Table start */}
-              <div className='overflow-x-auto mt-5 list__table'>
+              <div className='overflow-x-auto list__table'>
                 <table className='min-w-full bg-white' id='itemTable' ref={tableRef}>
                   <thead className='bg-gray-100 list__table__head'>
                     <tr>
@@ -306,7 +304,10 @@ const Item = ({ mode }) => {
                           </td>
                           <td className='px-4 border-b'>
                             {data.title}
-                            <p className="text-[10px]">{data.category?.title}</p>
+                            {
+                              data.category &&
+                              <p className="text-[10px] bg-gray-100 rounded w-fit px-[2px] border mb-[2p]">{data.category?.title}</p>
+                            }
                           </td>
                           <td className='px-4 border-b' align='center'>{data.category?.hsn}</td>
                           <td className='px-4 border-b' align='center'>

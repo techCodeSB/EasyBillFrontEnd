@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Nav from '../../components/Nav';
 import SideNav from '../../components/SideNav';
 // import MyBreadCrumb from '../../components/BreadCrumb';
-import {  Popover, Whisper } from 'rsuite';
+import { Popover, Whisper } from 'rsuite';
 import { BiPrinter } from "react-icons/bi";
 import { FaRegCopy, FaRegEdit } from "react-icons/fa";
 import { MdFilterList } from "react-icons/md";
@@ -302,6 +302,32 @@ const SalesReturn = () => {
                   <IoIosAdd className='text-xl text-white' />
                   Add New
                 </button>
+                <div className='flex justify-end'>
+                  <Whisper placement='leftStart' enterable
+                    speaker={<Popover full>
+                      <div className='download__menu' onClick={() => exportTable('print')} >
+                        <BiPrinter className='text-[16px]' />
+                        Print Table
+                      </div>
+                      <div className='download__menu' onClick={() => exportTable('copy')}>
+                        <FaRegCopy className='text-[16px]' />
+                        Copy Table
+                      </div>
+                      <div className='download__menu' onClick={() => exportTable('pdf')}>
+                        <FaRegFilePdf className="text-[16px]" />
+                        Download Pdf
+                      </div>
+                      <div className='download__menu' onClick={() => exportTable('excel')} >
+                        <FaRegFileExcel className='text-[16px]' />
+                        Download Excel
+                      </div>
+                    </Popover>}
+                  >
+                    <div className='record__download' >
+                      <IoMdMore />
+                    </div>
+                  </Whisper>
+                </div>
               </div>
             </div>
 
@@ -367,36 +393,9 @@ const SalesReturn = () => {
           </div>
           {
             !loading ? billData.length > 0 ? <div className='content__body__main'>
-              {/* First Row */}
-              <div className='flex justify-end'>
-                <Whisper placement='leftStart' enterable
-                  speaker={<Popover full>
-                    <div className='download__menu' onClick={() => exportTable('print')} >
-                      <BiPrinter className='text-[16px]' />
-                      Print Table
-                    </div>
-                    <div className='download__menu' onClick={() => exportTable('copy')}>
-                      <FaRegCopy className='text-[16px]' />
-                      Copy Table
-                    </div>
-                    <div className='download__menu' onClick={() => exportTable('pdf')}>
-                      <FaRegFilePdf className="text-[16px]" />
-                      Download Pdf
-                    </div>
-                    <div className='download__menu' onClick={() => exportTable('excel')} >
-                      <FaRegFileExcel className='text-[16px]' />
-                      Download Excel
-                    </div>
-                  </Popover>}
-                >
-                  <div className='record__download' >
-                    <IoMdMore />
-                  </div>
-                </Whisper>
-              </div>
-        
+
               {/* Table start */}
-              <div className='overflow-x-auto mt-5 list__table'>
+              <div className='overflow-x-auto list__table'>
                 <table className='min-w-full bg-white' id='listQuotation' ref={tableRef}>
                   <thead className='list__table__head'>
                     <tr>
@@ -419,7 +418,7 @@ const SalesReturn = () => {
                           <td className='px-4 border-b' align='center'>{new Date(data.returnDate).toLocaleDateString()}</td>
                           <td className='px-4 border-b' align='center'>{data.salesReturnNumber}</td>
                           <td className='px-4 border-b' align='center'>{data.party.name}</td>
-                         
+
                           <td className='px-4 text-center'>
                             <Whisper
                               placement='leftStart'

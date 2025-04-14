@@ -309,6 +309,32 @@ const CreditNote = () => {
                   <IoIosAdd className='text-xl text-white' />
                   Add New
                 </button>
+                <div className='flex justify-end'>
+                  <Whisper placement='leftStart' enterable
+                    speaker={<Popover full>
+                      <div className='download__menu' onClick={() => exportTable('print')} >
+                        <BiPrinter className='text-[16px]' />
+                        Print Table
+                      </div>
+                      <div className='download__menu' onClick={() => exportTable('copy')}>
+                        <FaRegCopy className='text-[16px]' />
+                        Copy Table
+                      </div>
+                      <div className='download__menu' onClick={() => exportTable('pdf')}>
+                        <FaRegFilePdf className="text-[16px]" />
+                        Download Pdf
+                      </div>
+                      <div className='download__menu' onClick={() => exportTable('excel')} >
+                        <FaRegFileExcel className='text-[16px]' />
+                        Download Excel
+                      </div>
+                    </Popover>}
+                  >
+                    <div className='record__download' >
+                      <IoMdMore />
+                    </div>
+                  </Whisper>
+                </div>
               </div>
             </div>
 
@@ -376,32 +402,7 @@ const CreditNote = () => {
           {
             !loading ? billData.length > 0 ? <div className='content__body__main'>
               {/* First Row */}
-              <div className='flex justify-end'>
-                <Whisper placement='leftStart' enterable
-                  speaker={<Popover full>
-                    <div className='download__menu' onClick={() => exportTable('print')} >
-                      <BiPrinter className='text-[16px]' />
-                      Print Table
-                    </div>
-                    <div className='download__menu' onClick={() => exportTable('copy')}>
-                      <FaRegCopy className='text-[16px]' />
-                      Copy Table
-                    </div>
-                    <div className='download__menu' onClick={() => exportTable('pdf')}>
-                      <FaRegFilePdf className="text-[16px]" />
-                      Download Pdf
-                    </div>
-                    <div className='download__menu' onClick={() => exportTable('excel')} >
-                      <FaRegFileExcel className='text-[16px]' />
-                      Download Excel
-                    </div>
-                  </Popover>}
-                >
-                  <div className='record__download' >
-                    <IoMdMore />
-                  </div>
-                </Whisper>
-              </div>
+
               {/* <div className='flex justify-between items-center flex-col lg:flex-row gap-4'>
                 <div className='flex items-center gap-4 justify-between w-full lg:justify-start'>
                   <div className='flex flex-col'>
@@ -466,7 +467,7 @@ const CreditNote = () => {
               </div> */}
 
               {/* Table start */}
-              <div className='overflow-x-auto mt-5 list__table'>
+              <div className='overflow-x-auto list__table'>
                 <table className='min-w-full bg-white' id='listQuotation' ref={tableRef}>
                   <thead className='list__table__head'>
                     <tr>
@@ -489,7 +490,7 @@ const CreditNote = () => {
                           <td className='px-4 border-b' align='center'>{new Date(data.creditNoteDate).toLocaleDateString()}</td>
                           <td className='px-4 border-b' align='center'>{data.creditNoteNumber}</td>
                           <td className='px-4 border-b' align='center'>{data.party.name}</td>
-                          
+
                           <td className='px-4 text-center'>
                             <Whisper
                               placement='leftStart'

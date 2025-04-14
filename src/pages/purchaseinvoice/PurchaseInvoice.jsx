@@ -6,12 +6,8 @@ import { Pagination, Popover, Whisper } from 'rsuite';
 import { BiPrinter } from "react-icons/bi";
 import { FaRegCopy, FaRegEdit } from "react-icons/fa";
 import { MdEditSquare, MdFilterList } from "react-icons/md";
-import { IoInformationCircle } from "react-icons/io5";
 import { FaRegFilePdf } from "react-icons/fa";
 import { FaRegFileExcel } from "react-icons/fa";
-import { MdAdd } from "react-icons/md";
-import { MdOutlineCancel } from "react-icons/md";
-import { MdOutlineRestorePage } from "react-icons/md";
 import { MdDeleteOutline } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import useExportTable from '../../hooks/useExportTable';
@@ -19,7 +15,6 @@ import useMyToaster from '../../hooks/useMyToaster';
 import Cookies from 'js-cookie';
 import downloadPdf from '../../helper/downloadPdf';
 import { GrFormNext, GrFormPrevious } from 'react-icons/gr';
-import { SiConvertio } from "react-icons/si";
 import DataShimmer from '../../components/DataShimmer';
 import { Tooltip } from 'react-tooltip';
 import AddNew from '../../components/AddNew';
@@ -330,6 +325,33 @@ const PurchaseInvoice = () => {
 									<IoIosAdd className='text-xl text-white' />
 									Add New
 								</button>
+
+								<div className='flex justify-end'>
+									<Whisper placement='leftStart' enterable
+										speaker={<Popover full>
+											<div className='download__menu' onClick={() => exportTable('print')} >
+												<BiPrinter className='text-[16px]' />
+												Print Table
+											</div>
+											<div className='download__menu' onClick={() => exportTable('copy')}>
+												<FaRegCopy className='text-[16px]' />
+												Copy Table
+											</div>
+											<div className='download__menu' onClick={() => exportTable('pdf')}>
+												<FaRegFilePdf className="text-[16px]" />
+												Download Pdf
+											</div>
+											<div className='download__menu' onClick={() => exportTable('excel')} >
+												<FaRegFileExcel className='text-[16px]' />
+												Download Excel
+											</div>
+										</Popover>}
+									>
+										<div className='record__download' >
+											<IoMdMore />
+										</div>
+									</Whisper>
+								</div>
 							</div>
 						</div>
 
@@ -420,36 +442,9 @@ const PurchaseInvoice = () => {
 
 					{
 						!loading ? billData.length > 0 ? <div className='content__body__main bg-white'>
-							{/* First Row */}
-							<div className='flex justify-end'>
-								<Whisper placement='leftStart' enterable
-									speaker={<Popover full>
-										<div className='download__menu' onClick={() => exportTable('print')} >
-											<BiPrinter className='text-[16px]' />
-											Print Table
-										</div>
-										<div className='download__menu' onClick={() => exportTable('copy')}>
-											<FaRegCopy className='text-[16px]' />
-											Copy Table
-										</div>
-										<div className='download__menu' onClick={() => exportTable('pdf')}>
-											<FaRegFilePdf className="text-[16px]" />
-											Download Pdf
-										</div>
-										<div className='download__menu' onClick={() => exportTable('excel')} >
-											<FaRegFileExcel className='text-[16px]' />
-											Download Excel
-										</div>
-									</Popover>}
-								>
-									<div className='record__download' >
-										<IoMdMore />
-									</div>
-								</Whisper>
-							</div>
 
 							{/* Table start */}
-							<div className='overflow-x-auto mt-5 list__table'>
+							<div className='overflow-x-auto list__table'>
 								<table className='min-w-full bg-white' id='listQuotation' ref={tableRef}>
 									<thead className='list__table__head'>
 										<tr>

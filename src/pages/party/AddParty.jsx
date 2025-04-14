@@ -8,7 +8,7 @@ import { BiReset } from 'react-icons/bi';
 import { FaRegCheckCircle } from 'react-icons/fa';
 import useMyToaster from '../../hooks/useMyToaster';
 import Cookies from 'js-cookie';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import MySelect2 from '../../components/MySelect2';
 
 
@@ -38,6 +38,7 @@ const PartyComponent = ({ mode, save }) => {
     pan: "", gst: "", openingBalance: "0", details: '', email: '',
     partyCategory: '', creditPeriod: '', creditLimit: '', dob: '', partyCategory: ''
   })
+  const navigate = useNavigate();
 
 
 
@@ -96,9 +97,11 @@ const PartyComponent = ({ mode, save }) => {
       toast(!mode ? "Party create success" : "Party update success", 'success');
       // for close sidebar in MySelect2
       if (save) {
-        save(true)
+        save(true);
+        return
+      } else {
+        return navigate("/admin/party")
       }
-      return;
 
     } catch (error) {
       console.log(error)
