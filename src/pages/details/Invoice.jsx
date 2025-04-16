@@ -17,6 +17,14 @@ import Loading from '../../components/Loading';
 import MailModal from '../../components/MailModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggle } from '../../store/mailSlice';
+import { Popover, Whisper } from 'rsuite';
+import { MdOutlineArrowDropDown } from "react-icons/md";
+import { IoIosShareAlt } from "react-icons/io";
+import { HiOutlineMail } from "react-icons/hi";
+import { MdOutlineWhatsapp } from "react-icons/md";
+import { BiShare } from "react-icons/bi";
+
+
 
 
 
@@ -37,6 +45,8 @@ const Invoice = () => {
   const openModal = useSelector((state) => state.mailModalSlice.show)
   const dispatch = useDispatch();
   const [pdfData, setPdfData] = useState(null);
+  const [billName, setBillName] = useState('')
+
 
 
 
@@ -44,32 +54,42 @@ const Invoice = () => {
   useEffect(() => {
     if (bill === "quotation") {
       setUrlRoute("quotation");
+      setBillName("Qutation");
     } else if (bill === "proforma") {
-      setUrlRoute('proforma')
+      setUrlRoute('proforma');
+      setBillName("Proforma");
     } else if (bill === 'po') {
       setUrlRoute('po')
+      setBillName("Purchase Order");
     } else if (bill === 'purchaseinvoice') {
-      setUrlRoute("purchaseinvoice")
+      setUrlRoute("purchaseinvoice");
+      setBillName("Purchase Invoice");
     } else if (bill === "purchasereturn") {
-      setUrlRoute('purchasereturn')
+      setUrlRoute('purchasereturn');
+      setBillName("Purchase Return");
     } else if (bill === 'debitnote') {
-      setUrlRoute("debitnote")
+      setUrlRoute("debitnote");
+      setBillName("Debitnote");
     } else if (bill === 'salesinvoice') {
-      setUrlRoute("salesinvoice")
+      setUrlRoute("salesinvoice");
+      setBillName("Sales Invoice");
     } else if (bill === 'salesreturn') {
-      setUrlRoute("salesreturn")
+      setUrlRoute("salesreturn");
+      setBillName("Sales Return");
     } else if (bill === 'creditnote') {
-      setUrlRoute("creditnote")
+      setUrlRoute("creditnote");
+      setBillName("Creditnote");
     } else if (bill === 'deliverychalan') {
-      setUrlRoute("deliverychalan")
-    } else if (bill === 'deliverychalan') {
-      setUrlRoute("deliverychalan")
+      setUrlRoute("deliverychalan");
+      setBillName("Delivery Chalan");
     }
   }, [bill])
 
 
 
   useEffect(() => {
+
+    // Get bill information
     const getData = async () => {
       try {
 
@@ -84,6 +104,7 @@ const Invoice = () => {
             body: JSON.stringify({ token: Cookies.get("token"), id: id })
           });
           const res = await req.json();
+          console.log(res.data)
           setBillData(res.data)
           return res;
         }
@@ -94,6 +115,7 @@ const Invoice = () => {
       }
     }
 
+    // Get company information;
     const getCompanyDetails = async () => {
       try {
         const url = process.env.REACT_APP_API_URL + `/company/get`;
@@ -232,26 +254,46 @@ const Invoice = () => {
                 <button
                   onClick={() => {
                     downloadPdf(
-                      InvoicePdf({ companyDetails, billData, billDetails, hsnData, totalAmountInText, billname: urlRoute.toUpperCase() })
+                      InvoicePdf({ companyDetails, billData, billDetails, hsnData, totalAmountInText, billname: billName.toUpperCase() })
                     );
                   }}
                   title='PDF'
-                  className='bg-blue-700 text-white rounded-[5px] flex justify-center items-center p-2'>
+                  className='bg-blue-700 text-white rounded-[5px] flex justify-center items-center px-2 py-[5px]'>
                   <FaRegFilePdf className="text-white text-[15px] mr-1" />
                   Download
                 </button>
 
-                <button
-                  onClick={sendViaMail}
-                  className='flex items-center gap-1 bg-orange-600 text-white rounded-[5px] p-2'
+
+                <Whisper
+                  trigger={'hover'}
+                  enterable
+                  placement='bottomEnd'
+                  speaker={<Popover>
+                    <div
+                      onClick={sendViaMail}
+                      className='flex items-center gap-2 w-[120px] p-1 cursor-pointer hover:bg-gray-100 rounded'>
+                      <HiOutlineMail className='text-[16px]' />
+                      Email
+                    </div>
+                    <div className='flex items-center gap-2 w-[120px] p-1 cursor-pointer hover:bg-gray-100 rounded'>
+                      <MdOutlineWhatsapp className='text-[16px]' />
+                      WhatsApp
+                    </div>
+                  </Popover>}
                 >
-                  <LuSend />
-                  Send Email
-                </button>
+                  <div
+                    className='flex items-center gap-3 bg-orange-600 text-white rounded-[5px] px-2 py-[5px] cursor-pointer'>
+                    <div className='flex items-center gap-1'>
+                      <IoIosShareAlt />
+                      Share
+                    </div>
+                    <MdOutlineArrowDropDown />
+                  </div>
+                </Whisper>
               </div>
 
               <div>
-                <p className='font-bold'>{urlRoute.toUpperCase()}</p>
+                <p className='font-bold text-center'>{urlRoute.toUpperCase()}</p>
                 <div className='border-black border border-b-0 w-full mt-3'>
                   <div className='flex w-full border-b border-black h-[130px]'>
                     <div className='p-3 w-[60%] flex items-center gap-5 border border-r' style={{ borderRight: "1px solid black" }}>
@@ -262,7 +304,7 @@ const Invoice = () => {
                         <p className='text-blue-700 font-bold text-[16px] leading-none'>
                           {companyDetails?.name}
                         </p>
-                        <p className='leading-[30px]'>{companyDetails?.address}</p>
+                        <p>{companyDetails?.address}</p>
                         <p className='leading-[0]'>
                           <span className='font-bold'>GSTIN</span>:  {companyDetails?.gst}
                           <span className='font-bold ml-5'>Mobile</span>:  {companyDetails?.phone}</p>
@@ -270,13 +312,13 @@ const Invoice = () => {
                       </div>
                     </div>
                     <div className='w-[40%] flex flex-col justify-center px-3 text-[12px]'>
-                      <p><span className='font-bold'>Invoice No. </span>{
+                      <p><span className='font-bold'>{billName} No: </span>{
                         billData?.quotationNumber || billData?.proformaNumber || billData?.poNumber || billData?.purchaseInvoiceNumber ||
                         billData?.purchaseReturnNumber || billData?.debitNoteNumber ||
                         billData?.salesInvoiceNumber || billData?.salesReturnNumber || billData?.creditNoteNumber ||
                         billData?.deliveryChalanNumber
                       }</p>
-                      <p><span className='font-bold'>Invoice Date </span>
+                      <p><span className='font-bold'>{billName} Date: </span>
                         {
                           new Date(
                             billData?.estimateDate || billData?.invoiceDate || billData?.debitNoteDate ||
@@ -299,7 +341,7 @@ const Invoice = () => {
                     </p>
                   </div>
                 </div>
-                <table className='w-full text-[12px]'>
+                <table className='w-full text-[12px] '>
                   <thead className='bg-gray-100'>
                     <tr>
                       <td className='p-2'>S.NO.</td>
@@ -315,7 +357,7 @@ const Invoice = () => {
                   <tbody>
                     {
                       billData && billData.items.map((data, index) => {
-                        return <tr key={index}>
+                        return <tr key={index} className=''>
                           <td className='p-2'>{index + 1}</td>
                           <td>{data.itemName}</td>
                           <td>{data.hsn}</td>
@@ -341,9 +383,10 @@ const Invoice = () => {
                         </tr>
                       })
                     }
+
                   </tbody>
                   <tfoot>
-                    <tr className='font-bold'>
+                    <tr className='font-bold bg-[#F3F4F6]'>
                       <td colSpan={3} align='right'>TOTAL</td>
                       <td>{billDetails.qun}</td>
                       <td></td>
@@ -372,13 +415,13 @@ const Invoice = () => {
                             <td rowSpan={2}>{data.hsn}</td>
                             <td>SGST</td>
                             <td>{data.rate / 2}%</td>
-                            <td>{data.price}</td>
+                            <td>{data.price / 2}</td>
                             <td>{(data.taxAmount).toFixed(2)}</td>
                           </tr>
                           <tr key={`${i}-cgst`}>
                             <td>CGST</td>
                             <td>{data.rate / 2}%</td>
-                            <td>{data.price}</td>
+                            <td>{data.price / 2}</td>
                             <td>{(data.taxAmount).toFixed(2)}</td>
                           </tr>
                         </>
@@ -397,11 +440,19 @@ const Invoice = () => {
                     </p>
                   </div>
                   <div className='w-full flex'>
-                    <div className='w-full p-2'></div>
+                    <div className='w-full p-2'>
+                      <p className='font-semibold text-md'>Note:</p>
+                      <p>{billData?.note}</p>
+
+                      <br />
+
+                      <p className='font-semibold text-md'>Terms:</p>
+                      <p>{billData?.terms}</p>
+                    </div>
                     <div className='border-l border-black w-full text-center p-2'>
                       <img src={companyDetails?.signature} alt="signature" className='mx-auto' />
                       <p className='text-[10px] leading-[0] mt-5'>Authorised Signatory For</p>
-                      <p className='text-[10px]'>Techinnovator Solutions PVT LTD</p>
+                      <p className='text-[10px]'>{companyDetails?.name}</p>
                     </div>
                   </div>
                 </div>
@@ -416,6 +467,12 @@ const Invoice = () => {
   );
 }
 
+
+
+
+// :::::::::::::::::::::::::
+// PDF Generate component
+// :::::::::::::::::::::::::
 
 
 const InvoicePdf = ({ companyDetails, billData, billDetails, hsnData, totalAmountInText, billname }) => {
@@ -445,7 +502,7 @@ const InvoicePdf = ({ companyDetails, billData, billDetails, hsnData, totalAmoun
       <Page size="A4" style={styles.page}>
         {/* Header */}
         <View style={styles.section}>
-          <Text style={[styles.bold, { marginBottom: 10 }]}>{billname}</Text>
+          <Text style={[styles.bold, { marginBottom: 10, textAlign: 'center' }]}>{billname}</Text>
           <View style={[styles.border, { borderBottomWidth: 0 }]}>
             <View style={[styles.flexRow, { borderBottom: '1px solid black', height: 90 }]}>
               <View style={{ width: '60%', padding: 10, flexDirection: 'row', borderRight: '1px solid black' }}>
@@ -463,13 +520,13 @@ const InvoicePdf = ({ companyDetails, billData, billDetails, hsnData, totalAmoun
                 </View>
               </View>
               <View style={[styles.flexCol, { width: '40%', padding: 10, justifyContent: 'center' }, styles.textSmall]}>
-                <Text style={styles.partyText}><Text style={styles.bold}>Invoice No: </Text>{
+                <Text style={styles.partyText}><Text style={styles.bold}>{billname} No: </Text>{
                   billData?.quotationNumber || billData?.proformaNumber || billData?.poNumber || billData?.purchaseInvoiceNumber ||
                   billData?.purchaseReturnNumber || billData?.debitNoteNumber ||
                   billData?.salesInvoiceNumber || billData?.salesReturnNumber || billData?.creditNoteNumber ||
                   billData?.deliveryChalanNumber
                 }</Text>
-                <Text style={styles.partyText}><Text style={styles.bold}>Invoice Date: </Text>  {
+                <Text style={styles.partyText}><Text style={styles.bold}>{billname} Date: </Text>  {
                   new Date(
                     billData?.estimateDate || billData?.invoiceDate || billData?.debitNoteDate ||
                     billData?.returnDate || billData?.poDate || billData?.purchaseInvoiceDate
@@ -485,7 +542,7 @@ const InvoicePdf = ({ companyDetails, billData, billDetails, hsnData, totalAmoun
             <View style={{ padding: 10 }}>
               <Text style={[styles.textSmall, styles.partyText]}>TO</Text>
               <Text style={[styles.bold, styles.textSmall, styles.partyText]}>{billData?.party.name?.toUpperCase()}</Text>
-              <Text style={[styles.textSmall, styles.partyText, {flexWrap: 'wrap'}]}>
+              <Text style={[styles.textSmall, styles.partyText, { flexWrap: 'wrap' }]}>
                 <Text>Address:</Text> {billData?.party.address}
               </Text>
               <Text style={[styles.textSmall, styles.partyText, { textTransform: 'uppercase' }]}>
@@ -531,7 +588,7 @@ const InvoicePdf = ({ companyDetails, billData, billDetails, hsnData, totalAmoun
               </View>
             </View>
           ))}
-          <View style={[styles.tableRow, styles.bold]}>
+          <View style={[styles.tableRow, styles.bold, { backgroundColor: '#F3F4F6' }]}>
             <View style={[styles.tableCol, { width: '50%' }]}><Text style={styles.textSmall}>TOTAL</Text></View>
             <View style={[styles.tableCol, { width: '10%' }]}><Text style={styles.textSmall}>{billDetails.qun}</Text></View>
             <View style={[styles.tableCol, { width: '10%' }]}><Text style={styles.textSmall}></Text></View>
@@ -598,11 +655,17 @@ const InvoicePdf = ({ companyDetails, billData, billDetails, hsnData, totalAmoun
             </Text>
           </View>
           <View style={styles.flexRow}>
-            <View style={{ width: '50%' }}></View>
+            <View style={{ width: '50%', padding: 5 }}>
+              <Text style={styles.textSmall}>Note:</Text>
+              <Text style={styles.textSmall}>{billData?.note}</Text>
+
+              <Text style={[styles.textSmall, { marginTop: '10px' }]}>Terms:</Text>
+              <Text style={styles.textSmall}>{billData?.terms}</Text>
+            </View>
             <View style={{ width: '50%', borderLeft: '1px solid black', textAlign: 'center', padding: 5 }}>
               <Image src={companyDetails?.signature} style={{ height: 30, marginBottom: 10 }} />
               <Text style={styles.textSmall}>Authorised Signatory For</Text>
-              <Text style={styles.textSmall}>Techinnovator Solutions PVT LTD</Text>
+              <Text style={styles.textSmall}>{companyDetails?.name}</Text>
             </View>
           </View>
         </View>

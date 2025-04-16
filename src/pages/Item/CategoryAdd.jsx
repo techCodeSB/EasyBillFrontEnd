@@ -7,7 +7,7 @@ import { FaRegCheckCircle } from "react-icons/fa";
 import { LuRefreshCcw } from "react-icons/lu";
 import useMyToaster from '../../hooks/useMyToaster';
 import { SelectPicker } from 'rsuite';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
 
@@ -19,7 +19,7 @@ const CategoryAdd = ({ mode }) => {
       <main id='main'>
         <SideNav />
         <div className='content__body'>
-          <CategoryComponent mode={mode}/>
+          <CategoryComponent mode={mode} />
         </div>
       </main>
     </>
@@ -33,6 +33,7 @@ const CategoryComponent = ({ mode, save }) => {
   const [taxData, setTaxData] = useState([]);
   const { id } = useParams();
   const toast = useMyToaster();
+  const navigate = useNavigate();
 
 
 
@@ -103,8 +104,14 @@ const CategoryComponent = ({ mode, save }) => {
       }
 
       toast(!mode ? "Category create success" : "Category update success", 'success');
-      save(true); // for close sidebar in MySelect2
-      return;
+
+      if (save) {
+        save(true); // for close sidebar in MySelect2
+        return;
+      }else{
+        return navigate("/admin/item-category")
+      }
+
 
     } catch (error) {
       return toast("Something went wrong", "error")
@@ -197,5 +204,5 @@ const CategoryComponent = ({ mode, save }) => {
   )
 }
 
-export {CategoryComponent}
+export { CategoryComponent }
 export default CategoryAdd

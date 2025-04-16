@@ -5,7 +5,7 @@ import SideNav from '../../components/SideNav';
 import { Pagination, Popover, Whisper } from 'rsuite';
 import { BiPrinter } from "react-icons/bi";
 import { FaRegCopy, FaRegEdit } from "react-icons/fa";
-import { MdEditSquare, MdFilterList } from "react-icons/md";
+import { MdEditSquare, MdFilterList, MdOutlineArrowDropDown } from "react-icons/md";
 import { IoInformationCircle } from "react-icons/io5";
 import { FaRegFilePdf } from "react-icons/fa";
 import { FaRegFileExcel } from "react-icons/fa";
@@ -25,6 +25,7 @@ import { Tooltip } from 'react-tooltip';
 import { IoIosAdd, IoMdInformationCircleOutline, IoMdMore } from 'react-icons/io';
 import AddNew from '../../components/AddNew';
 import { FiMoreHorizontal } from 'react-icons/fi';
+import { RiArrowDropUpFill } from "react-icons/ri";
 
 
 
@@ -50,6 +51,7 @@ const PaymentOut = () => {
     }));
   }, [billData]);
   const [loading, setLoading] = useState(true);
+  const [ascending, setAscending] = useState(true);
 
 
   // Get data;
@@ -80,6 +82,16 @@ const PaymentOut = () => {
     }
     getParty();
   }, [tableStatusData, dataLimit, activePage])
+
+  const sortByDate = () => {
+    const sorted = [...billData].sort((a, b) => {
+      const dateA = new Date(a.paymentOutDate);
+      const dateB = new Date(b.paymentOutDate);
+      return ascending ? dateA - dateB : dateB - dateA;
+    });
+    setBillData(sorted);
+    setAscending(!ascending);
+  };
 
 
   const searchTable = (e) => {
@@ -300,7 +312,11 @@ const PaymentOut = () => {
                       <th className='py-2 px-4 border-b'>
                         <input type='checkbox' onChange={selectAll} checked={billData.length > 0 && selected.length === billData.length} />
                       </th>
-                      <th className='py-2 px-4 border-b'>Date</th>
+                      <th className='py-2 px-4 border-b cursor-pointer'>
+                        <div className='flex items-center justify-center' onClick={sortByDate}>
+                          Date {ascending ? <MdOutlineArrowDropDown /> : <RiArrowDropUpFill />}
+                        </div>
+                      </th>
                       <th className='py-2 px-4 border-b'>Payment Out Number</th>
                       <th className='py-2 px-4 border-b'>Party Name</th>
                       <th className='py-2 px-4 border-b'>Amount</th>
@@ -312,9 +328,13 @@ const PaymentOut = () => {
                       billData.map((data, i) => {
                         return <tr key={i}>
                           <td className='py-2 px-4 border-b max-w-[10px]'>
-                            <input type='checkbox' checked={selected.includes(data._id)} onChange={() => handleCheckboxChange(data._id)} />
+                            <input type='checkbox'
+                              checked={selected.includes(data._id)}
+                              onChange={() => handleCheckboxChange(data._id)}
+                              onClick={(e) => e.stopPropagation()}
+                            />
                           </td>
-                          <td className='px-4 border-b' align='center'>{data.paymentOutDate}</td>
+                          <td className='px-4 border-b' align='center'>{new Date(data.paymentOutDate).toLocaleDateString()}</td>
                           <td className='px-4 border-b' align='center'>{data.paymentOutNumber}</td>
                           <td className='px-4 border-b' align='center'>{data.party.name}</td>
                           <td className='px-4 border-b' align='center'>{data.amount}</td>

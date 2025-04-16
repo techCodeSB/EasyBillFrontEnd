@@ -17,7 +17,7 @@ import useExportTable from '../../hooks/useExportTable';
 
 const Role = () => {
 
-    const copyTable = useExportTable()
+  const copyTable = useExportTable()
   const [activePage, setActivePage] = useState(1);
   const [selected, setSelected] = useState([]);
   const navigate = useNavigate();
@@ -63,7 +63,7 @@ const Role = () => {
 
   return (
     <>
-     <Nav title={"Tax"} />
+      <Nav title={"Tax"} />
       <main id='main'>
         <SideNav />
         <div className='content__body'>
@@ -154,13 +154,13 @@ const Role = () => {
                           <input type='checkbox' checked={selected.includes(i)} onChange={() => handleCheckboxChange(i)} />
                         </td>
                         <td className='px-4 border-b'>Admin</td>
-                       
-                      
+
+
                         <td className='px-4 border-b min-w-[70px]'>
                           <div className='flex  justify-center flex-col md:flex-row gap-2 mr-2'>
                             <button className='bg-blue-400 text-white px-2 py-1 rounded  text-[16px] '
-                             onClick={() => navigate('/admin/role/edit')}>
-                              <MdEditSquare  className=' flex justify-between items-center ml-2'/>
+                              onClick={() => navigate('/admin/role/edit')}>
+                              <MdEditSquare className=' flex justify-between items-center ml-2' />
                             </button>
                             <button className='bg-red-500 text-white px-2 py-1 rounded  text-lg'>
                               <IoInformationCircle className='flex justify-between items-center ml-2' />

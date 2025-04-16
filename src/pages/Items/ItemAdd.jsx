@@ -9,7 +9,7 @@ import { CgPlayListAdd } from "react-icons/cg";
 import useMyToaster from '../../hooks/useMyToaster';
 import { SelectPicker } from 'rsuite';
 import Cookies from 'js-cookie';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import useApi from '../../hooks/useApi';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import MySelect2 from '../../components/MySelect2';
@@ -46,6 +46,7 @@ const AddItemComponent = ({ mode, save }) => {
     unit: "", conversion: '', opening: '', alert: ''
   }
   const [unitRow, setUnitRow] = useState([unitRowSet]);
+  const navigate = useNavigate();
 
 
 
@@ -132,8 +133,10 @@ const AddItemComponent = ({ mode, save }) => {
       // for close sidebar in MySelect2
       if(save){
         save(true)
+        return
+      }else{
+        return navigate("/admin/item")
       }
-      return;
 
     } catch (error) {
       console.log(error);

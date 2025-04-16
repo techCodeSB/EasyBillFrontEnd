@@ -6,7 +6,7 @@ import { Editor } from '@tinymce/tinymce-react';
 import { FaRegCheckCircle } from "react-icons/fa";
 import { LuRefreshCcw } from "react-icons/lu";
 import useMyToaster from '../../hooks/useMyToaster';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
 const TaxAdd = ({ mode }) => {
@@ -14,6 +14,8 @@ const TaxAdd = ({ mode }) => {
     const editorRef = useRef(null);
     const [form, setForm] = useState({ title: '', details: '', gst: '0', cess: '0' });
     const { id } = useParams();
+    const navigate = useNavigate();
+
 
     useEffect(() => {
         if (mode) {
@@ -60,7 +62,10 @@ const TaxAdd = ({ mode }) => {
                 setForm({ title: '', details: '', gst: '0', cess: '0' });
             }
 
-            return toast(!mode ? "Tax create success" : "Tax update success", 'success');
+            
+            toast(!mode ? "Tax create success" : "Tax update success", 'success');
+            navigate("/admin/tax");
+            return 
 
 
         } catch (error) {
@@ -100,31 +105,6 @@ const TaxAdd = ({ mode }) => {
                                 </div>
                             </div>
                         </div>
-                        {/* <div className='mt-3 '>
-                            <p className='ml-2 pb-2'>Details</p>
-                            <Editor
-                                onEditorChange={(v, editor) => {
-                                    setForm({ ...form, details: editor.getContent() })
-                                }}
-                                value={form.details}
-                                apiKey='765rof3c4qgyk8u59xk0o3vvhvji0y156uwtbjgezhnbcct7'
-                                onInit={(_evt, editor) => editorRef.current = editor}
-                                init={{
-                                    height: 300,
-                                    menubar: false,
-                                    plugins: [
-                                        'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-                                        'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-                                        'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'
-                                    ],
-                                    toolbar: 'undo redo | blocks | ' +
-                                        'bold italic forecolor | alignleft aligncenter ' +
-                                        'alignright alignjustify | bullist numlist outdent indent | ' +
-                                        'removeformat | help',
-                                    content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
-                                }}
-                            />
-                        </div> */}
                         <div className='flex justify-center pt-9 mb-6'>
                             <div className='flex rounded-sm bg-green-500 text-white'>
                                 <FaRegCheckCircle className='mt-3 ml-2' />

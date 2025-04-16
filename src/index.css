@@ -631,3 +631,11 @@ input[type="checkbox"]:checked::before{
   gap: 2px;
   font-size: 15px;
 }
+
+.custom-disabled:disabled{
+  cursor: auto;
+}
+.custom-disabled:disabled:hover {
+  cursor: auto;
+  border:1px solid rgb(229, 231, 23539);
+}

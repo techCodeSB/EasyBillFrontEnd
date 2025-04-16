@@ -7,7 +7,7 @@ import { FaRegCheckCircle } from "react-icons/fa";
 import { LuRefreshCcw } from "react-icons/lu";
 import useMyToaster from '../../hooks/useMyToaster';
 import Cookies from 'js-cookie';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 
 
@@ -15,12 +15,12 @@ import { useParams } from 'react-router-dom';
 
 const AddAccount = ({ mode }) => {
     const toast = useMyToaster();
-    const editorRef = useRef(null);
     const { id } = useParams();
     const [from, setForm] = useState({
         title: '', accountName: '', accountNumber: '', ifscCode: '', bankName: '', openingBalance: '',
-         type: '', details: ''
+        type: '', details: ''
     })
+    const navigate = useNavigate()
 
 
 
@@ -74,10 +74,14 @@ const AddAccount = ({ mode }) => {
 
             if (mode) {
                 return toast("Account updated successfully", 'success')
-            } else {
-                toast("Account created successfully", 'success')
-                clearData()
             }
+
+
+            toast("Account created successfully", 'success')
+            navigate("/admin/account")
+            clearData()
+            return;
+
 
 
         } catch (error) {
@@ -141,31 +145,6 @@ const AddAccount = ({ mode }) => {
                                 </div>
                             </div>
                         </div>
-                        {/* <div className='mt-3 '>
-                            <p className='ml-2 pb-2'>Details</p>
-                            <Editor
-                                value={from.details}
-                                onEditorChange={(v, editor) => {
-                                    setForm({ ...from, details: editor.getContent() })
-                                }}
-                                apiKey='765rof3c4qgyk8u59xk0o3vvhvji0y156uwtbjgezhnbcct7'
-                                onInit={(_evt, editor) => editorRef.current = editor}
-                                init={{
-                                    height: 300,
-                                    menubar: false,
-                                    plugins: [
-                                        'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-                                        'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-                                        'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'
-                                    ],
-                                    toolbar: 'undo redo | blocks | ' +
-                                        'bold italic forecolor | alignleft aligncenter ' +
-                                        'alignright alignjustify | bullist numlist outdent indent | ' +
-                                        'removeformat | help',
-                                    content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
-                                }}
-                            />
-                        </div> */}
                         <div className='flex justify-center pt-9 mb-6'>
                             <button
                                 className='p-2 flex rounded-sm bg-green-500 text-white items-center gap-2'

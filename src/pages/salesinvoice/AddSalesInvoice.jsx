@@ -49,7 +49,7 @@ const SalesInvoice = ({ mode }) => {
     party: '', salesInvoiceNumber: '', invoiceDate: '', DueDate: '',
     items: ItemRows, additionalCharge: additionalRows, note: '', terms: '',
     discountType: '', discountAmount: '', discountPercentage: '', paymentStatus: '0',
-    paymentAccount: '', finalAmount: '',
+    paymentAccount: '', finalAmount: '', paymentAmount: '',
   })
 
   const [perPrice, setPerPrice] = useState(null);
@@ -330,14 +330,14 @@ const SalesInvoice = ({ mode }) => {
     if (selectedItem.length >= 0) {
       let item = [...ItemRows];
       let currentUnit = [];
-      let taxId = selectedItem[0].category.tax;
+      let taxId = selectedItem[0].category?.tax;
       const getTax = tax.filter((t, _) => t._id === taxId)[0];
 
       item[index].itemId = selectedItem[0]._id;
-      item[index].hsn = selectedItem[0].category.hsn;
+      item[index].hsn = selectedItem[0].category?.hsn;
       item[index].unit = selectedItem[0].unit;
       item[index].selectedUnit = selectedItem[0].unit[0].unit
-      item[index].tax = getTax.gst;
+      item[index].tax = getTax?.gst;
       selectedItem[0].unit.forEach((u, _) => {
         currentUnit.push(u.unit);
       })
@@ -500,7 +500,9 @@ const SalesInvoice = ({ mode }) => {
       }
 
 
-      return toast('Invoice add successfully', 'success');
+      toast('Invoice add successfully', 'success');
+      navigate('/admin/sales-invoice')
+      return
 
 
     } catch (error) {
@@ -535,16 +537,6 @@ const SalesInvoice = ({ mode }) => {
           <div className='content__body__main bg-white' id='addQuotationTable'>
 
             <div className='top__btn__grp'>
-              {/* <div className='add__btns'>
-                <button onClick={() => {
-                  dispatch(toggle(!getPartyModalState))
-                }}><MdOutlineAdd /> Add Party</button>
-
-                <button onClick={() => {
-                  dispatch(itemToggle(!getItemModalState))
-                }}><MdOutlineAdd /> Add Item</button>
-              </div> */}
-
               {
                 mode === "edit" && <div className='extra__btns'>
                   <button onClick={() => {
@@ -768,7 +760,8 @@ const SalesInvoice = ({ mode }) => {
                         <div>
                           <input type="text"
                             value={calculatePerAmount(index)}
-                            className='bg-gray-100'
+                            className='bg-gray-100 custom-disabled'
+                            disabled
                           />
                         </div>
                       </td>
@@ -828,11 +821,15 @@ const SalesInvoice = ({ mode }) => {
                     <td className='min-w-[150px]'>
                       <input type="text" name="total_taxable_amount"
                         value={(subTotal()('amount') - subTotal()('tax')).toFixed(2)}
+                        className='bg-gray-100 custom-disabled'
+                        disabled
                       />
                     </td>
                     <td className='min-w-[150px]'>
                       <input type="text" name='total_tax_amount'
                         value={subTotal()('tax')}
+                        className='bg-gray-100 custom-disabled'
+                        disabled
                       />
                     </td>
                     <td className='min-w-[180px]'>
@@ -848,7 +845,8 @@ const SalesInvoice = ({ mode }) => {
                         <input
                           id='discountAmount'
                           type="text"
-                          className={`${discountToggler ? 'bg-gray-100' : ''}`}
+                          className={`${discountToggler ? 'bg-gray-100 custom-disabled' : ''}`}
+                          disabled={discountToggler ? true : false}
                           onChange={(e) => discountToggler ? null : onDiscountAmountChange(e)}
                           value={formData.discountAmount}
                         />
@@ -860,7 +858,8 @@ const SalesInvoice = ({ mode }) => {
                         <input
                           type="text"
                           id='discountPercentage'
-                          className={`${discountToggler ? 'bg-gray-100' : ''}`}
+                          className={`${discountToggler ? 'bg-gray-100 custom-disabled' : ''}`}
+                          disabled={discountToggler ? true : false}
                           onChange={discountToggler ? null : (e) => {
                             let amount = ((subTotal()('amount') / 100) * e.target.value).toFixed(2);
                             setFormData({
@@ -884,7 +883,8 @@ const SalesInvoice = ({ mode }) => {
                     </td>
                     <td className='min-w-[150px]'>
                       <input type="text" name="total_amount"
-                        className='bg-gray-100'
+                        className='bg-gray-100 custom-disabled'
+                        disabled
                         value={subTotal()('amount')}
                         onChange={null}
                       />
@@ -910,7 +910,7 @@ const SalesInvoice = ({ mode }) => {
                     value={formData.terms}
                   />
                 </div>
-                {/* <div>
+                <div>
                   <p>Payment Status:</p>
                   <select
                     onChange={(e) => {
@@ -921,23 +921,33 @@ const SalesInvoice = ({ mode }) => {
                     <option value="0">Not Paid</option>
                     <option value="1">Paid</option>
                   </select>
-                </div> */}
-                {/* <div>
-                  <p>Select Account:</p>
-                  <select
-                    onChange={(e) => {
-                      setFormData({ ...formData, paymentAccount: e.target.value })
-                    }}
-                    value={formData.paymentAccount}
-                  >
-                    <option value="">--Select Account--</option>
-                    {
-                      account.map((a, _) => {
-                        return <option value={a._id} key={_}>{a.title}</option>
-                      })
-                    }
-                  </select>
-                </div> */}
+                </div>
+                <div className='flex items-center gap-2'>
+                  <div className='w-full'>
+                    <p>Amount:</p>
+                    <input type="text"
+                      onChange={(e) => setFormData({ ...formData, paymentAmount: e.target.value })}
+                      value={formData.paymentAmount}
+                    />
+                  </div>
+
+                  <div className='w-full'>
+                    <p>Select Account:</p>
+                    <select
+                      onChange={(e) => {
+                        setFormData({ ...formData, paymentAccount: e.target.value })
+                      }}
+                      value={formData.paymentAccount}
+                    >
+                      <option value="">--Select Account--</option>
+                      {
+                        account.map((a, _) => {
+                          return <option value={a._id} key={_}>{a.title}</option>
+                        })
+                      }
+                    </select>
+                  </div>
+                </div>
               </div>
               <div className='w-full'>
                 <div className='uppercase font-bold border border-dashed p-2 rounded'>
@@ -999,7 +1009,9 @@ const SalesInvoice = ({ mode }) => {
                   </table>
                 </div>
                 <p className='font-bold mt-4 mb-2'>Final Amount</p>
-                <input type="text" name="final_amount" className='w-full'
+                <input type="text" name="final_amount"
+                  className='bg-gray-100 custom-disabled w-full'
+                  disabled
                   value={calculateFinalAmount()}
                 />
               </div>

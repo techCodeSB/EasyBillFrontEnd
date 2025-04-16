@@ -441,7 +441,10 @@ const CreditNote = ({ mode }) => {
       }
 
       clearForm();
-      return toast('Credit Note add successfully', 'success');
+
+      toast('Credit Note add successfully', 'success');
+      navigate('/admin/credit-note');
+      return
 
 
     } catch (error) {
@@ -702,7 +705,8 @@ const CreditNote = ({ mode }) => {
                         <div>
                           <input type="text"
                             value={calculatePerAmount(index)}
-                            className='bg-gray-100'
+                            className='bg-gray-100 custom-disabled'
+                            disabled
                           />
                         </div>
                       </td>
@@ -762,11 +766,15 @@ const CreditNote = ({ mode }) => {
                     <td className='min-w-[150px]'>
                       <input type="text" name="total_taxable_amount"
                         value={(subTotal()('amount') - subTotal()('tax')).toFixed(2)}
+                        className='bg-gray-100 custom-disabled'
+                        disabled
                       />
                     </td>
                     <td className='min-w-[150px]'>
                       <input type="text" name='total_tax_amount'
                         value={subTotal()('tax')}
+                        className='bg-gray-100 custom-disabled'
+                        disabled
                       />
                     </td>
                     <td className='min-w-[180px]'>
@@ -782,7 +790,8 @@ const CreditNote = ({ mode }) => {
                         <input
                           id='discountAmount'
                           type="text"
-                          className={`${discountToggler ? 'bg-gray-100' : ''}`}
+                          className={`${discountToggler ? 'bg-gray-100 custom-disabled' : ''}`}
+                          disabled={discountToggler ? true : false}
                           onChange={(e) => discountToggler ? null : onDiscountAmountChange(e)}
                           value={formData.discountAmount}
                         />
@@ -794,7 +803,8 @@ const CreditNote = ({ mode }) => {
                         <input
                           type="text"
                           id='discountPercentage'
-                          className={`${discountToggler ? 'bg-gray-100' : ''}`}
+                          className={`${discountToggler ? 'bg-gray-100 custom-disabled' : ''}`}
+                          disabled={discountToggler ? true : false}
                           onChange={discountToggler ? null : (e) => {
                             let amount = ((subTotal()('amount') / 100) * e.target.value).toFixed(2);
                             setFormData({
@@ -818,7 +828,8 @@ const CreditNote = ({ mode }) => {
                     </td>
                     <td className='min-w-[150px]'>
                       <input type="text" name="total_amount"
-                        className='bg-gray-100'
+                        className='bg-gray-100 custom-disabled'
+                        disabled
                         value={subTotal()('amount')}
                       />
                     </td>
@@ -904,7 +915,10 @@ const CreditNote = ({ mode }) => {
                   </table>
                 </div>
                 <p className='font-bold mt-4 mb-2'>Final Amount</p>
-                <input type="text" name="final_amount" className='w-full'
+                <input type="text"
+                  name="final_amount"
+                  className='bg-gray-100 custom-disabled w-full'
+                  disabled
                   value={calculateFinalAmount()}
                 />
               </div>

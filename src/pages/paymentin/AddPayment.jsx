@@ -8,7 +8,7 @@ import { BiReset } from 'react-icons/bi'
 import useApi from '../../hooks/useApi'
 import useMyToaster from '../../hooks/useMyToaster'
 import Cookies from 'js-cookie';
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import MySelect2 from '../../components/MySelect2'
 
 
@@ -31,6 +31,7 @@ const AddPayment = ({ mode }) => {
   const [account, setAccount] = useState([]);
   // Store invoice number
   const [invoice, setInvoice] = useState([]);
+  const navigate = useNavigate();
 
 
 
@@ -141,7 +142,10 @@ const AddPayment = ({ mode }) => {
       }
 
       clear();
-      return toast('Payment add successfully', 'success');
+      
+      toast('Payment add successfully', 'success');
+      navigate('/admin/payment-in');
+      return 
 
 
     } catch (error) {
@@ -254,31 +258,6 @@ const AddPayment = ({ mode }) => {
                 </div>
               </div>
             </div>
-            {/* <div>
-              <p className='my-2'>Details</p>
-              <Editor
-                onEditorChange={(v, editor) => {
-                  setFormData({ ...formData, details: editor.getContent() })
-                }}
-                value={formData.details}
-                apiKey='765rof3c4qgyk8u59xk0o3vvhvji0y156uwtbjgezhnbcct7'
-                onInit={(_evt, editor) => editorRef.current = editor}
-                init={{
-                  height: 300,
-                  menubar: false,
-                  plugins: [
-                    'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-                    'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-                    'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'
-                  ],
-                  toolbar: 'undo redo | blocks | ' +
-                    'bold italic forecolor | alignleft aligncenter ' +
-                    'alignright alignjustify | bullist numlist outdent indent | ' +
-                    'removeformat | help',
-                  content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
-                }}
-              />
-            </div> */}
             <div className='w-full flex justify-center gap-3 mt-3'>
               <button
                 onClick={savePayment}

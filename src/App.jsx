@@ -1,5 +1,5 @@
 import React, { Suspense, useEffect } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { ProtectRoute, UnProtectRoute } from "./components/ProtectRoute";
 import ProtectCP from "./components/ProtectCP";
 
@@ -63,6 +63,7 @@ const Ladger = React.lazy(()=>import("./pages/party/Ladger"));
 
 const App = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
 
 
@@ -78,6 +79,12 @@ const App = () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [navigate]);
+
+
+  useEffect(()=>{
+    console.log(location.pathname)
+    
+  }, [location])
 
   
 

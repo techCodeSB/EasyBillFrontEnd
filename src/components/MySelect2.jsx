@@ -262,7 +262,7 @@ const MySelect2 = ({ model, onType, value }) => {
 
         {/* List dropdown */}
         {showDropDown && <div
-          className='w-full max-h-[250px] overflow-y-auto bg-white absolute z-50 rounded mt-1'
+          className='w-full max-h-[250px] overflow-y-auto bg-white absolute z-[9999999] rounded mt-1'
           style={{ boxShadow: "0px 0px 5px lightgray" }}>
           <ul>
             {loading && <li className='p-2 text-center'>Searching...</li>}
@@ -293,7 +293,7 @@ const MySelect2 = ({ model, onType, value }) => {
                 dispatch(toggle(true))
               }
             }}
-            className='select__add__button'>
+            className='select__add__button z-50'>
             <IoAddCircleSharp className='text-lg' />
             Add New
             <FaArrowRight className='text-[15px]' />

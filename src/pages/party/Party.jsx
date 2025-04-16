@@ -59,6 +59,8 @@ const Party = () => {
     }));
   }, [partyData]);
   const [loading, setLoading] = useState(true)
+  const [totalCollection, setTotalCollection] = useState(null)
+  const [totalPay, setTotalPay] = useState(null)
 
 
 
@@ -90,6 +92,40 @@ const Party = () => {
     }
     getParty();
   }, [tableStatusData, dataLimit, activePage])
+
+
+  useEffect(() => {
+    const getTotaoCollectAndPay = async (whichType) => {
+      try {
+        const url = process.env.REACT_APP_API_URL + `/${whichType}/get`;
+        const req = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": 'application/json'
+          },
+          body: JSON.stringify({token: Cookies.get("token"), totalPayment: true})
+        });
+        const res = await req.json();
+        
+        if(req.status === 200){
+          if(whichType === "paymentin"){
+            setTotalCollection(res.totalAmount);
+          }else{
+            setTotalPay(res.totalAmount);
+          }
+        }
+
+      } catch (error) {
+        return toast("Can't get total collection", 'error')
+      }
+
+    }
+
+    getTotaoCollectAndPay("paymentin");
+    getTotaoCollectAndPay("paymentout");
+
+
+  }, [])
 
 
 
@@ -247,10 +283,10 @@ const Party = () => {
                     className='p-[6px]'
                   />
                 </div>
-                <button className='bg-gray-100 border'>
+                {/* <button className='bg-gray-100 border'>
                   <MdFilterList className='text-xl' />
                   Filter
-                </button>
+                </button> */}
                 <button
                   onClick={() => removeData(false)}
                   className={`${selected.length > 0 ? 'bg-red-500 text-white' : 'bg-gray-100'} border`}>
@@ -299,16 +335,16 @@ const Party = () => {
             !loading ? partyData.length > 0 ? <div className='content__body__main'>
               <div className='flex flex-col md:flex-row justify-between items-center mb-5 gap-8'>
                 <div className='party__data'>
-                  <h6><FaUsers/> Total Parties</h6>
-                  <p><MdOutlineCurrencyRupee/>254.20</p>
+                  <h6><FaUsers /> Total Parties</h6>
+                  <p>{totalData}</p>
                 </div>
                 <div className='party__data'>
-                  <h6><MdOutlineTrendingUp/> Total Pay</h6>
-                  <p><MdOutlineCurrencyRupee/>125.00</p>
+                  <h6><MdOutlineTrendingUp /> Total Pay</h6>
+                  <p><MdOutlineCurrencyRupee />{totalPay}</p>
                 </div>
                 <div className='party__data'>
-                  <h6><IoMdTrendingDown/> Total Collect</h6>
-                  <p><MdOutlineCurrencyRupee/> 2154.20</p>
+                  <h6><IoMdTrendingDown /> Total Collect</h6>
+                  <p><MdOutlineCurrencyRupee /> {totalCollection}</p>
                 </div>
               </div>
 
@@ -321,6 +357,7 @@ const Party = () => {
                         <input type='checkbox' onChange={selectAll} checked={partyData.length > 0 && selected.length === partyData.length} />
                       </th>
                       <td className='py-2 px-4'>Name</td>
+                      <td className='py-2 px-4'>Phone</td>
                       <th className='py-2 px-4'>Type</th>
                       <th className='py-2 px-4'>Balance</th>
                       <th className='py-2 px-4 w-[100px]'>Action</th>
@@ -334,6 +371,7 @@ const Party = () => {
                             <input type='checkbox' checked={selected.includes(data._id)} onChange={() => handleCheckboxChange(data._id)} />
                           </td>
                           <td className='px-4'>{data.name}</td>
+                          <td className='px-4'>{data.contactNumber}</td>
                           <td className='px-4 text-center'>
                             <span className='customer_badge'>
                               {data.type}

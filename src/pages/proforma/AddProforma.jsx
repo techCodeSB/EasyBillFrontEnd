@@ -446,7 +446,10 @@ const Proforma = ({ mode }) => {
       }
 
       clearForm();
-      return toast('Proforma add successfully', 'success');
+
+      toast('Proforma add successfully', 'success');
+      navigate('/admin/proforma-invoice');
+      return
 
 
     } catch (error) {
@@ -716,7 +719,8 @@ const Proforma = ({ mode }) => {
                         <div>
                           <input type="text"
                             value={calculatePerAmount(index)}
-                            className='bg-gray-100'
+                            className='bg-gray-100 custom-disabled'
+                            disabled
                           />
                         </div>
                       </td>
@@ -776,11 +780,15 @@ const Proforma = ({ mode }) => {
                     <td className='min-w-[150px]'>
                       <input type="text" name="total_taxable_amount"
                         value={(subTotal()('amount') - subTotal()('tax')).toFixed(2)}
+                        className='bg-gray-100 custom-disabled'
+                        disabled
                       />
                     </td>
                     <td className='min-w-[150px]'>
                       <input type="text" name='total_tax_amount'
                         value={subTotal()('tax')}
+                        className='bg-gray-100 custom-disabled'
+                        disabled
                       />
                     </td>
                     <td className='min-w-[180px]'>
@@ -796,7 +804,8 @@ const Proforma = ({ mode }) => {
                         <input
                           id='discountAmount'
                           type="text"
-                          className={`${discountToggler ? 'bg-gray-100' : ''}`}
+                          className={`${discountToggler ? 'bg-gray-100 custom-disabled' : ''}`}
+                          disabled={discountToggler ? true : false}
                           onChange={(e) => discountToggler ? null : onDiscountAmountChange(e)}
                           value={formData.discountAmount}
                         />
@@ -808,7 +817,8 @@ const Proforma = ({ mode }) => {
                         <input
                           type="text"
                           id='discountPercentage'
-                          className={`${discountToggler ? 'bg-gray-100' : ''}`}
+                          className={`${discountToggler ? 'bg-gray-100 custom-disabled' : ''}`}
+                          disabled={discountToggler ? true : false}
                           onChange={discountToggler ? null : (e) => {
                             let amount = ((subTotal()('amount') / 100) * e.target.value).toFixed(2);
                             setFormData({
@@ -831,8 +841,10 @@ const Proforma = ({ mode }) => {
                       </div>
                     </td>
                     <td className='min-w-[150px]'>
-                      <input type="text" name="total_amount"
-                        className='bg-gray-100'
+                      <input type="text"
+                        name="total_amount"
+                        className='bg-gray-100 custom-disabled'
+                        disabled
                         value={subTotal()('amount')}
                       />
                     </td>
@@ -918,7 +930,9 @@ const Proforma = ({ mode }) => {
                   </table>
                 </div>
                 <p className='font-bold mt-4 mb-2'>Final Amount</p>
-                <input type="text" name="final_amount" className='w-full'
+                <input type="text" name="final_amount"
+                  className='bg-gray-100 custom-disabled w-full'
+                  disabled
                   value={calculateFinalAmount()}
                 />
               </div>

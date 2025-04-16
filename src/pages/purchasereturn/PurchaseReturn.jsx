@@ -5,7 +5,7 @@ import SideNav from '../../components/SideNav';
 import { Pagination, Popover, Whisper } from 'rsuite';
 import { BiPrinter } from "react-icons/bi";
 import { FaRegCopy, FaRegEdit } from "react-icons/fa";
-import { MdEditSquare, MdFilterList } from "react-icons/md";
+import { MdEditSquare, MdFilterList, MdOutlineArrowDropDown } from "react-icons/md";
 import { IoInformationCircle } from "react-icons/io5";
 import { FaRegFilePdf } from "react-icons/fa";
 import { FaRegFileExcel } from "react-icons/fa";
@@ -26,6 +26,8 @@ import AddNew from '../../components/AddNew';
 import { TbZoomReset } from 'react-icons/tb';
 import { LuSearch } from 'react-icons/lu';
 import { FiMoreHorizontal } from 'react-icons/fi';
+import { RiArrowDropUpFill } from "react-icons/ri";
+
 
 
 
@@ -54,7 +56,9 @@ const PurchaseReturn = () => {
   const [filterData, setFilterData] = useState({
     productName: "", fromDate: '', toDate: '', billNo: '', party: '',
     gst: "", billDate: ''
-  })
+  });
+  const [ascending, setAscending] = useState(true);
+
 
 
 
@@ -87,6 +91,16 @@ const PurchaseReturn = () => {
 
     getData();
   }, [tableStatusData, dataLimit, activePage])
+
+  const sortByDate = () => {
+    const sorted = [...billData].sort((a, b) => {
+      const dateA = new Date(a.returnDate);
+      const dateB = new Date(b.returnDate);
+      return ascending ? dateA - dateB : dateB - dateA;
+    });
+    setBillData(sorted);
+    setAscending(!ascending);
+  };
 
 
   const searchTable = (e) => {
@@ -470,7 +484,11 @@ const PurchaseReturn = () => {
                       <th className='py-2 px-4 border-b'>
                         <input type='checkbox' onChange={selectAll} checked={billData.length > 0 && selected.length === billData.length} />
                       </th>
-                      <th className='py-2 px-4 border-b'>Date</th>
+                      <th className='py-2 px-4 border-b cursor-pointer'>
+                        <div className='flex items-center justify-center' onClick={sortByDate}>
+                          Date {ascending ? <MdOutlineArrowDropDown /> : <RiArrowDropUpFill />}
+                        </div>
+                      </th>
                       <th className='py-2 px-4 border-b'>Purchase Return Number</th>
                       <th className='py-2 px-4 border-b'>Party Name</th>
                       <th className='py-2 px-4 border-b'>Action</th>
@@ -479,9 +497,14 @@ const PurchaseReturn = () => {
                   <tbody>
                     {
                       billData.map((data, i) => {
-                        return <tr key={i}>
+                        return <tr key={i}
+                          onClick={() => navigate(`/admin/bill/details/purchasereturn/${data._id}`)}>
                           <td className='py-2 px-4 border-b max-w-[10px]'>
-                            <input type='checkbox' checked={selected.includes(data._id)} onChange={() => handleCheckboxChange(data._id)} />
+                            <input type='checkbox'
+                              checked={selected.includes(data._id)}
+                              onChange={() => handleCheckboxChange(data._id)}
+                              onClick={(e) => e.stopPropagation()}
+                            />
                           </td>
                           <td className='px-4 border-b' align='center'>{new Date(data.returnDate).toLocaleDateString()}</td>
                           <td className='px-4 border-b' align='center'>{data.purchaseReturnNumber}</td>
@@ -493,21 +516,27 @@ const PurchaseReturn = () => {
                               speaker={<Popover full>
                                 <div
                                   className='table__list__action__icon'
-                                  onClick={() => navigate(`/admin/purchase-return/edit/${data._id}`)}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    navigate(`/admin/purchase-return/edit/${data._id}`)
+                                  }}
                                 >
                                   <FaRegEdit className='text-[16px]' />
                                   Edit
                                 </div>
                                 <div
                                   className='table__list__action__icon'
-                                  onClick={() => navigate(`/admin/bill/details/purchasereturn/${data._id}`)}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    navigate(`/admin/bill/details/purchasereturn/${data._id}`)
+                                  }}
                                 >
                                   <IoMdInformationCircleOutline className='text-[16px]' />
                                   Details
                                 </div>
                               </Popover>}
                             >
-                              <div className='table__list__action' >
+                              <div className='table__list__action' onClick={(e) => e.stopPropagation()}>
                                 <FiMoreHorizontal />
                               </div>
                             </Whisper>

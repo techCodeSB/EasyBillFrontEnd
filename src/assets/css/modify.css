@@ -107,3 +107,8 @@ a:active, a:focus, a:hover{
 .rs-drawer-body{
   padding: 0px !important;
 }
+
+.rs-picker-toggle-placeholder{
+  font-size: 13px !important;
+  font-weight: normal !important;
+}

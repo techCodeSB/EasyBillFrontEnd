@@ -230,10 +230,10 @@ const Item = ({ mode }) => {
                     className='p-[6px]'
                   />
                 </div>
-                <button className='bg-gray-100 border'>
+                {/* <button className='bg-gray-100 border'>
                   <MdFilterList className='text-xl' />
                   Filter
-                </button>
+                </button> */}
                 <button
                   onClick={() => removeData(false)}
                   className={`${selected.length > 0 ? 'bg-red-400 text-white' : 'bg-gray-100'} border`}>

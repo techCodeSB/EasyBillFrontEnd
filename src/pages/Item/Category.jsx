@@ -289,7 +289,7 @@ const Category = () => {
                       <th className='py-2 px-4 border-b w-[50px]'>
                         <input type='checkbox' onChange={selectAll} checked={categoryData.length > 0 && selected.length === categoryData.length} />
                       </th>
-                      <th className='py-2 px-4 border-b'>Title</th>
+                      <td className='py-2 px-4 border-b'>Title</td>
                       <th className='py-2 px-4 border-b'>HSN/SAC</th>
                       <th className='py-2 px-4 border-b w-[100px]'>Action</th>
                     </tr>
@@ -301,7 +301,7 @@ const Category = () => {
                           <td className='py-2 px-4 border-b max-w-[10px]'>
                             <input type='checkbox' checked={selected.includes(data._id)} onChange={() => handleCheckboxChange(data._id)} />
                           </td>
-                          <td className='px-4 border-b' align='center'>{data.title}</td>
+                          <td className='px-4 border-b'>{data.title}</td>
                           <td className='px-4 border-b' align='center'>{data.hsn}</td>
                           <td className='px-4 text-center'>
                             <Whisper

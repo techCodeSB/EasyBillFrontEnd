@@ -5,7 +5,7 @@ import SideNav from '../../components/SideNav';
 import { Pagination, Popover, Whisper } from 'rsuite';
 import { BiPrinter } from "react-icons/bi";
 import { FaRegCopy, FaRegEdit } from "react-icons/fa";
-import { MdEditSquare, MdFilterList } from "react-icons/md";
+import { MdEditSquare, MdFilterList, MdOutlineArrowDropDown } from "react-icons/md";
 import { IoInformationCircle } from "react-icons/io5";
 import { FaRegFilePdf } from "react-icons/fa";
 import { FaRegFileExcel } from "react-icons/fa";
@@ -28,6 +28,8 @@ import { LuSearch } from 'react-icons/lu';
 import { TbZoomReset } from 'react-icons/tb';
 import { FiMoreHorizontal } from 'react-icons/fi';
 import { IoMdInformationCircleOutline } from "react-icons/io";
+import { RiArrowDropUpFill } from "react-icons/ri";
+
 
 
 
@@ -60,6 +62,7 @@ const Proforma = () => {
     productName: "", fromDate: '', toDate: '', billNo: '', party: '',
     gst: "", billDate: ''
   })
+  const [ascending, setAscending] = useState(true);
 
 
 
@@ -92,6 +95,17 @@ const Proforma = () => {
   useEffect(() => {
     getData();
   }, [tableStatusData, dataLimit, activePage])
+
+
+  const sortByDate = () => {
+    const sorted = [...billData].sort((a, b) => {
+      const dateA = new Date(a.estimateDate);
+      const dateB = new Date(b.estimateDate);
+      return ascending ? dateA - dateB : dateB - dateA;
+    });
+    setBillData(sorted);
+    setAscending(!ascending);
+  };
 
 
   const searchTable = (e) => {
@@ -409,9 +423,17 @@ const Proforma = () => {
                   <thead className='list__table__head'>
                     <tr>
                       <th className='py-2 px-4 border-b'>
-                        <input type='checkbox' onChange={selectAll} checked={billData.length > 0 && selected.length === billData.length} />
+                        <input type='checkbox'
+                          onChange={selectAll}
+                          checked={billData.length > 0 && selected.length === billData.length}
+                          onClick={(e) => e.stopPropagation()}
+                        />
                       </th>
-                      <th className='py-2 px-4 border-b'>Date</th>
+                      <th className='py-2 px-4 border-b cursor-pointer' onClick={sortByDate}>
+                        <div className='flex items-center justify-center'>
+                          Date {ascending ? <MdOutlineArrowDropDown /> : <RiArrowDropUpFill />}
+                        </div>
+                      </th>
                       <th className='py-2 px-4 border-b'>Proforma Number</th>
                       <th className='py-2 px-4 border-b'>Party Name</th>
                       <th className='py-2 px-4 border-b'>Valid To</th>
@@ -422,9 +444,14 @@ const Proforma = () => {
                   <tbody>
                     {
                       billData.map((data, i) => {
-                        return <tr key={i}>
+                        return <tr key={i}
+                          onClick={() => navigate(`/admin/bill/details/proforma/${data._id}`)}>
                           <td className='py-2 px-4 border-b max-w-[10px]'>
-                            <input type='checkbox' checked={selected.includes(data._id)} onChange={() => handleCheckboxChange(data._id)} />
+                            <input type='checkbox'
+                              checked={selected.includes(data._id)}
+                              onChange={() => handleCheckboxChange(data._id)}
+                              onClick={(e) => e.stopPropagation()}
+                            />
                           </td>
                           <td className='px-4 border-b' align='center'>{new Date(data.estimateDate).toLocaleDateString()}</td>
                           <td className='px-4 border-b' align='center'>{data.proformaNumber}</td>
@@ -450,21 +477,27 @@ const Proforma = () => {
                                 </div>
                                 <div
                                   className='table__list__action__icon'
-                                  onClick={() => navigate(`/admin/bill/details/proforma/${data._id}`)}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    navigate(`/admin/bill/details/proforma/${data._id}`)
+                                  }}
                                 >
                                   <IoMdInformationCircleOutline className='text-[16px]' />
                                   Details
                                 </div>
                                 <div
                                   className='table__list__action__icon'
-                                  onClick={() => navigate(`/admin/sales-invoice/convert/add/${data._id}`)}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    navigate(`/admin/sales-invoice/convert/add/${data._id}`)
+                                  }}
                                 >
                                   <SiConvertio className='text-[20px]' />
                                   Convert to final invoice
                                 </div>
                               </Popover>}
                             >
-                              <div className='table__list__action' >
+                              <div className='table__list__action' onClick={(e) => e.stopPropagation()}>
                                 <FiMoreHorizontal />
                               </div>
                             </Whisper>

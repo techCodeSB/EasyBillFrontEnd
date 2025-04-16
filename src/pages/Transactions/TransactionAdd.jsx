@@ -8,7 +8,7 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 import useMyToaster from '../../hooks/useMyToaster';
 import useApi from '../../hooks/useApi';
 import Cookies from 'js-cookie';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 
 const TransactionAdd = ({ mode }) => {
@@ -21,6 +21,7 @@ const TransactionAdd = ({ mode }) => {
   const [account, setAccount] = useState([]);
   const toast = useMyToaster();
   const { id } = useParams();
+  const navigate = useNavigate();
 
 
 
@@ -87,7 +88,10 @@ const TransactionAdd = ({ mode }) => {
       }
 
       clearForm();
-      return toast('Transaction add successfully', 'success');
+      
+      toast('Transaction add successfully', 'success');
+      navigate("/admin/other-transaction")
+      return 
 
 
     } catch (error) {
