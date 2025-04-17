@@ -26,6 +26,7 @@ import { FiMoreHorizontal } from 'react-icons/fi';
 import { IoMdInformationCircleOutline } from "react-icons/io";
 import { MdOutlineArrowDropDown } from "react-icons/md";
 import { RiArrowDropUpFill } from "react-icons/ri";
+import moment from 'moment';
 
 
 
@@ -60,6 +61,7 @@ const Quotation = () => {
     gst: "", billDate: ''
   })
   const [ascending, setAscending] = useState(true);
+  const [advanceFilterMore, setAdvanceFilterMore] = useState(false);
 
 
 
@@ -275,6 +277,46 @@ const Quotation = () => {
     })
   }
 
+
+  const advaneFilter = (filterUnit) => {
+    let singleDate;
+    let fromDate;
+    let toDate;
+
+    if(filterUnit === 'today'){
+      singleDate = moment().format("YYYY-MM-DD");
+    }
+    else if(filterUnit === "previousday"){
+      singleDate = moment().subtract(1, 'day').format('YYYY-MM-DD');
+    }
+    else if(filterUnit === "7day"){
+      fromDate = moment().subtract(7, 'day');
+      toDate = moment().format("YYYY-MM-DD");
+    }
+    else if(filterUnit === "lastweek"){
+      fromDate = moment().subtract(1, 'weeks').startOf('isoWeek').format('YYYY-MM-DD');
+      toDate = moment().subtract(1, 'weeks').endOf('isoWeek').format('YYYY-MM-DD');
+    }
+    else if(filterUnit === "thismonth"){
+      fromDate = moment().startOf('month').format('YYYY-MM-DD');
+      toDate = moment().endOf('month').format('YYYY-MM-DD');
+    }
+    else if(filterUnit === "prevmonth"){
+      fromDate = moment().subtract(1, 'months').startOf('month').format('YYYY-MM-DD');
+      toDate = moment().subtract(1, 'months').endOf('month').format('YYYY-MM-DD');
+    }
+    else if(filterUnit === "30day"){
+      fromDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
+      toDate = moment().format('YYYY-MM-DD');
+    }
+
+
+    console.log(moment().subtract(7, "day").format('YYYY-MM-DD'))
+
+  }
+
+
+
   return (
     <>
       <Nav title={"Quotation"} />
@@ -311,6 +353,37 @@ const Quotation = () => {
                   <MdFilterList className='text-xl' />
                   Filter
                 </button>
+                <Whisper
+                  placement='bottom'
+                  trigger={'click'}
+                  onClose={() => setAdvanceFilterMore(false)}
+                  speaker={<Popover>
+                    <div className='advance__filter'>
+                      <p onClick={advaneFilter}>Today</p>
+                      <p>Yesterday</p>
+                      <p>This Week</p>
+                      <p>Last Week</p>
+                      <p>Last 7 Days</p>
+                      <p>This Month</p>
+                      <p>Previous Month</p>
+                      <div className={`${advanceFilterMore ? 'block' : 'hidden'}`}>
+                        <p>Last 30 Day</p>
+                        <p>Last 365 DAy</p>
+                        <p>This Qutar</p>
+                        <p>Last Qutar</p>
+                        <p>Current Fiscal Year</p>
+                        <p>Prev Fiscal Year</p>
+                      </div>
+                      <div className={`advance__filter__more`}
+                        onClick={() => setAdvanceFilterMore(!advanceFilterMore)}>
+                        Load {advanceFilterMore ? 'less' : 'more'}
+                      </div>
+                    </div>
+                  </Popover>}>
+                  <button className='advance__filter__btn'>
+                    Advance Filter
+                  </button>
+                </Whisper>
                 <button
                   onClick={() => removeData(false)}
                   className={`${selected.length > 0 ? 'bg-red-400 text-white' : 'bg-gray-100'} border`}>
@@ -447,7 +520,7 @@ const Quotation = () => {
                             <input type='checkbox'
                               checked={selected.includes(data._id)}
                               onChange={() => handleCheckboxChange(data._id)}
-                              onClick={(e)=>e.stopPropagation()}
+                              onClick={(e) => e.stopPropagation()}
                             />
                           </td>
                           <td className='px-4 border-b' align='center'>{new Date(data.estimateDate).toLocaleDateString()}</td>

@@ -423,7 +423,7 @@ select {
 }
 
 .add_new_compnent button {
-  @apply px-3 py-1 rounded flex items-center gap-2
+  @apply px-3 py-1 rounded flex items-center gap-2 text-[13px]
 }
 
 .admin__area span {
@@ -638,4 +638,31 @@ input[type="checkbox"]:checked::before{
 .custom-disabled:disabled:hover {
   cursor: auto;
   border:1px solid rgb(229, 231, 23539);
+}
+
+.advance__filter{
+  @apply w-[200px]
+}
+.advance__filter p{
+  padding: 5px 10px;
+  margin-top: 0px !important;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.advance__filter p:hover{
+  background-color: rgb(245, 244, 244);
+}
+
+.advance__filter__btn{
+  background-color: #003628;
+  border-radius: 5px;
+  color: white;
+}
+
+.advance__filter__more{
+  text-align: center;
+  color: rgb(12, 12, 114);
+  width: 100%;
+  cursor: pointer;
+  padding: 5px 0px;
 }
