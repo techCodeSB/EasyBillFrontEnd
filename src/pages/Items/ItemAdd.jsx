@@ -13,6 +13,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import useApi from '../../hooks/useApi';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import MySelect2 from '../../components/MySelect2';
+import { Icons } from '../../helper/icons';
 
 
 
@@ -262,7 +263,7 @@ const AddItemComponent = ({ mode, save }) => {
                 </td>
                 <td align='center' className='p-1'>
                   <div className='delete__icon'>
-                    <RiDeleteBin6Line
+                    <Icons.DELETE
                       className='cursor-pointer text-[16px]'
                       onClick={() => {
                         if (unitRow.length === 1) return;
@@ -282,7 +283,7 @@ const AddItemComponent = ({ mode, save }) => {
                 <button
                   className='w-full p-[5px] font-bold bg-gray-200 text-gray-800 flex justify-center items-center active:bg-gray-300'
                   onClick={() => setUnitRow([...unitRow, unitRowSet])}>
-                  <CgPlayListAdd />  Add
+                  <Icons.ADD_LIST />  Add
                 </button>
               </td>
             </tr>
@@ -291,11 +292,11 @@ const AddItemComponent = ({ mode, save }) => {
       </div>
       <div className='flex justify-center mt-3'>
         <div className='flex rounded-sm bg-green-500 text-white'>
-          <FaRegCheckCircle className='mt-3 ml-2' />
+          <Icons.CHECK className='mt-3 ml-2' />
           <button className='p-2' onClick={savebutton}>{mode ? "Update" : "Save"}</button>
         </div>
         <div className='flex rounded-sm ml-4 bg-blue-500 text-white'>
-          <LuRefreshCcw className='mt-3 ml-2' />
+          <Icons.RESET className='mt-3 ml-2' />
           <button className='p-2' onClick={clearData}>Reset</button>
         </div>
       </div>

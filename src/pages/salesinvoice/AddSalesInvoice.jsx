@@ -2,24 +2,17 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { SelectPicker, DatePicker, Button } from 'rsuite';
 import Nav from '../../components/Nav';
 import SideNav from '../../components/SideNav';
-import { RiDeleteBin6Line } from "react-icons/ri";
-import { MdOutlinePlaylistAdd } from "react-icons/md";
-import { FaRegCheckCircle } from "react-icons/fa";
-import { BiReset } from "react-icons/bi";
 import useMyToaster from '../../hooks/useMyToaster';
 import useApi from '../../hooks/useApi';
 import useBillPrefix from '../../hooks/useBillPrefix';
 import Cookies from 'js-cookie';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { toggle } from '../../store/partyModalSlice';
-import { toggle as itemToggle } from '../../store/itemModalSlice';
 import swal from 'sweetalert';
-import { HiOutlineDocumentDuplicate } from 'react-icons/hi';
 import AddPartyModal from '../../components/AddPartyModal';
 import AddItemModal from '../../components/AddItemModal';
-import { MdCurrencyRupee, MdOutlineAdd } from "react-icons/md";
 import MySelect2 from '../../components/MySelect2';
+import { Icons } from '../../helper/icons';
 
 
 
@@ -125,7 +118,6 @@ const SalesInvoice = ({ mode }) => {
   // Set invoice number;
   useEffect(() => {
     if ((getBillPrefix && mode === "convert") || (getBillPrefix && !mode)) {
-      console.log("----set----")
       setFormData(prev => ({ ...prev, salesInvoiceNumber: getBillPrefix[0] + getBillPrefix[1] }));
       console.log(formData)
     }
@@ -553,8 +545,8 @@ const SalesInvoice = ({ mode }) => {
                           navigate(`/admin/sales-invoice/add/${id}`)
                         }
                       });
-                  }}><HiOutlineDocumentDuplicate />Duplicate invoice</button>
-                  <button onClick={saveBill}><FaRegCheckCircle />Update</button>
+                  }}><Icons.COPY />Duplicate invoice</button>
+                  <button onClick={saveBill}><Icons.CHECK />Update</button>
                 </div>
               }
             </div>
@@ -716,7 +708,7 @@ const SalesInvoice = ({ mode }) => {
                               value={ItemRows[index].discountPerAmount}
                             // value={calculatePerDiscountAmount(index)}
                             />
-                            <div><MdCurrencyRupee /></div>
+                            <div><Icons.RUPES /></div>
                           </div>
                           <div className='add-table-discount-input' >
                             <input type="text"
@@ -766,7 +758,7 @@ const SalesInvoice = ({ mode }) => {
                         </div>
                       </td>
                       <td align='center' className='w-[20px]'>
-                        <RiDeleteBin6Line
+                        <Icons.DELETE
                           className='cursor-pointer text-[16px]'
                           onClick={() => ItemRows.length > 1 && deleteItem(1, index)}
                         />
@@ -778,7 +770,7 @@ const SalesInvoice = ({ mode }) => {
                   <tr>
                     <td colSpan={9}>
                       <Button color='blue' className='float-right w-full font-bold' onClick={() => addItem(1)}>
-                        <MdOutlinePlaylistAdd className='text-lg mr-1' />
+                        <Icons.ADD_LIST className='text-lg mr-1' />
                         Add Item
                       </Button>
                     </td>
@@ -850,7 +842,7 @@ const SalesInvoice = ({ mode }) => {
                           onChange={(e) => discountToggler ? null : onDiscountAmountChange(e)}
                           value={formData.discountAmount}
                         />
-                        <div><MdCurrencyRupee /></div>
+                        <div><Icons.RUPES /></div>
                       </div>
                     </td>
                     <td className='min-w-[200px]'>
@@ -987,7 +979,7 @@ const SalesInvoice = ({ mode }) => {
                               />
                             </td>
                             <td align='center'>
-                              <RiDeleteBin6Line
+                              <Icons.DELETE
                                 className='cursor-pointer text-lg'
                                 onClick={() => deleteItem(2, index)}
                               />
@@ -1000,7 +992,7 @@ const SalesInvoice = ({ mode }) => {
                       <tr>
                         <td colSpan={3}>
                           <Button color='blue' className='float-right w-full font-bold' onClick={() => addItem(2)}>
-                            <MdOutlinePlaylistAdd className='text-lg mr-1' />
+                            <Icons.ADD_LIST className='text-lg mr-1' />
                             Add Item
                           </Button>
                         </td>
@@ -1021,11 +1013,11 @@ const SalesInvoice = ({ mode }) => {
               <button
                 onClick={saveBill}
                 className='add-bill-btn'>
-                <FaRegCheckCircle />
+                <Icons.CHECK />
                 {!mode || mode === "convert" ? "Save" : "Update"}
               </button>
               <button className='reset-bill-btn' onClick={clearForm}>
-                <BiReset />
+                <Icons.RESET />
                 Reset
               </button>
             </div>

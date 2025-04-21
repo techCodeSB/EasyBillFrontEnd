@@ -17,6 +17,7 @@ import Calculator from './Calculator';
 import { calcToggle } from '../store/calculatorSlice';
 import Cookies from 'js-cookie';
 import { MdOutlineArrowDropDown } from "react-icons/md";
+import { Icons } from '../helper/icons'
 
 
 
@@ -33,7 +34,7 @@ const Nav = ({ title }) => {
     getUserData();
 
   }, [])
-  
+
 
   const toggleSideBar = () => {
     // setSideBar((prev) => {
@@ -79,6 +80,32 @@ const Nav = ({ title }) => {
         <div className='flex items-center justify-between w-[calc(100%-175px)]'>
           <h6 className='text-black ml-5'>{title}</h6>
           <div className="admin__area px-4 py-2 flex items-center cursor-pointer gap-3">
+            <Whisper
+              trigger={'click'}
+              placement='bottomEnd'
+              speaker={<Popover>
+                <div className='create__drpdwn'>
+                  <Link to="/admin/sales-invoice/add">Sales Invoice</Link>
+                  <Link to={"/admin/purchase-invoice/add"}>Purchase Invoice</Link>
+                  <Link to={'/admin/quotation-estimate/add'}>Quotation</Link>
+                  <Link to={"/admin/proforma-invoice/add"}>Proforma</Link>
+                  <Link to={'/admin/purchase-order/add'}>Purchase Order</Link>
+                  <Link to={'/admin/sales-return/add'}>Sales Return</Link>
+                  <Link to={'/admin/delivery-chalan/add'}>Delivery Chalan</Link>
+                  <Link to={'/admin/credit-note/add'}>Credit Note</Link>
+                  <Link to={"/admin/debit-note/add"}>Debit Note</Link>
+                </div>
+              </Popover>}
+            >
+              <button
+                className='text-[13px] flex items-center justify-between bg-[#003E32] text-white py-1
+               px-3 rounded gap-2'
+              >
+                Create
+                <Icons.DROPDOWN />
+              </button>
+            </Whisper>
+
             <div
               className='flex items-center justify-between bg-[#003E32] text-white py-1 px-3 rounded'
               onClick={() => {
@@ -105,10 +132,10 @@ const Nav = ({ title }) => {
                 <span>Logout</span>
               </Link>
             </Popover>}>
-              <Avatar circle children={<FaUser />} size='sm' src={userDetails.profile} className='border'/>
+              <Avatar circle children={<FaUser />} size='sm' src={userDetails.profile} className='border' />
               <div className='ml-2 text-gray-800 text-[13px] flex items-center gap-1'>
                 {userDetails.name}
-                <MdOutlineArrowDropDown/>
+                <MdOutlineArrowDropDown />
               </div>
             </Whisper>
           </div>

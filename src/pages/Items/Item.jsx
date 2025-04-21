@@ -1,28 +1,16 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import Nav from '../../components/Nav';
 import SideNav from '../../components/SideNav';
-import { BiPrinter } from "react-icons/bi";
-import { FaRegCopy, FaRegEdit } from "react-icons/fa";
-import { MdEditSquare, MdFilterList } from "react-icons/md";
-import { IoInformationCircle } from "react-icons/io5";
-import { FaRegFilePdf } from "react-icons/fa";
-import { FaRegFileExcel } from "react-icons/fa";
-import { MdAdd } from "react-icons/md";
-import { MdOutlineCancel } from "react-icons/md";
-import { MdOutlineRestorePage } from "react-icons/md";
-import { MdDeleteOutline } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import useExportTable from '../../hooks/useExportTable';
 import useMyToaster from '../../hooks/useMyToaster';
 import Cookies from 'js-cookie';
 import downloadPdf from '../../helper/downloadPdf';
-import { GrFormNext, GrFormPrevious } from 'react-icons/gr';
 import DataShimmer from '../../components/DataShimmer';
 import { Tooltip } from 'react-tooltip';
-import { IoIosAdd, IoMdMore } from 'react-icons/io';
 import AddNew from '../../components/AddNew';
 import { Popover, Whisper } from 'rsuite';
-import { FiMoreHorizontal } from 'react-icons/fi';
+import { Icons } from '../../helper/icons';
 
 
 document.title = "Items"
@@ -237,38 +225,38 @@ const Item = ({ mode }) => {
                 <button
                   onClick={() => removeData(false)}
                   className={`${selected.length > 0 ? 'bg-red-400 text-white' : 'bg-gray-100'} border`}>
-                  <MdDeleteOutline className='text-lg' />
+                  <Icons.DELETE className='text-lg' />
                   Delete
                 </button>
                 <button
                   onClick={() => navigate("/admin/item/add")}
                   className='bg-[#003E32] text-white '>
-                  <IoIosAdd className='text-xl text-white' />
+                  <Icons.ADD className='text-xl text-white' />
                   Add New
                 </button>
                 <div className='flex justify-end'>
                   <Whisper placement='leftStart' enterable
                     speaker={<Popover full>
                       <div className='download__menu' onClick={() => exportTable('print')} >
-                        <BiPrinter className='text-[16px]' />
+                        <Icons.PRINTER className='text-[16px]' />
                         Print Table
                       </div>
                       <div className='download__menu' onClick={() => exportTable('copy')}>
-                        <FaRegCopy className='text-[16px]' />
+                        <Icons.COPY className='text-[16px]' />
                         Copy Table
                       </div>
                       <div className='download__menu' onClick={() => exportTable('pdf')}>
-                        <FaRegFilePdf className="text-[16px]" />
+                        <Icons.PDF className="text-[16px]" />
                         Download Pdf
                       </div>
                       <div className='download__menu' onClick={() => exportTable('excel')} >
-                        <FaRegFileExcel className='text-[16px]' />
+                        <Icons.EXCEL className='text-[16px]' />
                         Download Excel
                       </div>
                     </Popover>}
                   >
                     <div className='record__download' >
-                      <IoMdMore />
+                      <Icons.MORE />
                     </div>
                   </Whisper>
                 </div>
@@ -331,13 +319,13 @@ const Item = ({ mode }) => {
                                   className='table__list__action__icon'
                                   onClick={() => navigate("/admin/item/edit/" + data._id)}
                                 >
-                                  <FaRegEdit className='text-[16px]' />
+                                  <Icons.EDIT className='text-[16px]' />
                                   Edit
                                 </div>
                               </Popover>}
                             >
                               <div className='table__list__action' >
-                                <FiMoreHorizontal />
+                                <Icons.HORIZONTAL_MORE />
                               </div>
                             </Whisper>
                           </td>
@@ -355,7 +343,7 @@ const Item = ({ mode }) => {
                       activePage > 1 ? <div
                         onClick={() => setActivePage(activePage - 1)}
                         className='border bg-blue-600 text-white w-[20px] h-[20px] grid place-items-center rounded cursor-pointer'>
-                        <GrFormPrevious />
+                        <Icons.PREV_PAGE_ARROW />
                       </div> : null
                     }
                     {
@@ -373,7 +361,7 @@ const Item = ({ mode }) => {
                       (totalData / dataLimit) > activePage ? <div
                         onClick={() => setActivePage(activePage + 1)}
                         className='border bg-blue-600 text-white w-[20px] h-[20px] flex items-center justify-center rounded cursor-pointer'>
-                        <GrFormNext />
+                        <Icons.NEXT_PAGE_ARROW />
                       </div> : null
                     }
                   </div>

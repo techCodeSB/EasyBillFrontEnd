@@ -2,33 +2,16 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Nav from '../../components/Nav';
 import SideNav from '../../components/SideNav';
 // import MyBreadCrumb from '../../components/BreadCrumb';
-import { Pagination, Popover, Whisper } from 'rsuite';
-import { BiPrinter } from "react-icons/bi";
-import { FaRegCopy, FaRegEdit } from "react-icons/fa";
-import { MdEditSquare, MdFilterList, MdOutlineArrowDropDown } from "react-icons/md";
-import { IoInformationCircle } from "react-icons/io5";
-import { FaRegFilePdf } from "react-icons/fa";
-import { FaRegFileExcel } from "react-icons/fa";
-import { MdAdd } from "react-icons/md";
-import { MdOutlineCancel } from "react-icons/md";
-import { MdOutlineRestorePage } from "react-icons/md";
-import { MdDeleteOutline } from "react-icons/md";
+import {Popover, Whisper } from 'rsuite';
 import { data, useNavigate } from 'react-router-dom';
 import useExportTable from '../../hooks/useExportTable';
 import useMyToaster from '../../hooks/useMyToaster';
 import Cookies from 'js-cookie';
 import downloadPdf from '../../helper/downloadPdf';
-import { GrFormNext, GrFormPrevious } from 'react-icons/gr';
-import { SiConvertio } from "react-icons/si";
 import DataShimmer from '../../components/DataShimmer';
 import { Tooltip } from 'react-tooltip';
 import AddNew from '../../components/AddNew';
-import { IoIosAdd, IoMdMore } from 'react-icons/io';
-import { LuSearch } from 'react-icons/lu';
-import { TbZoomReset } from 'react-icons/tb';
-import { FiMoreHorizontal } from 'react-icons/fi';
-import { IoMdInformationCircleOutline } from "react-icons/io";
-import { RiArrowDropUpFill } from "react-icons/ri";
+import { Icons } from '../../helper/icons';
 
 
 
@@ -309,44 +292,44 @@ const Proforma = () => {
                   setFilterToggle(!filterToggle)
                 }}
                   className={`${filterToggle ? 'bg-gray-200 border-gray-300' : 'bg-gray-100'} border`}>
-                  <MdFilterList className='text-xl' />
+                  <Icons.FILTER className='text-xl' />
                   Filter
                 </button>
                 <button
                   onClick={() => removeData(false)}
                   className={`${selected.length > 0 ? 'bg-red-400 text-white' : 'bg-gray-100'} border`}>
-                  <MdDeleteOutline className='text-lg' />
+                  <Icons.DELETE className='text-lg' />
                   Delete
                 </button>
                 <button
                   onClick={() => navigate("/admin/proforma-invoice/add")}
                   className='bg-[#003E32] text-white '>
-                  <IoIosAdd className='text-xl text-white' />
+                  <Icons.ADD className='text-xl text-white' />
                   Add New
                 </button>
                 <div className='flex justify-end'>
                   <Whisper placement='leftStart' enterable
                     speaker={<Popover full>
                       <div className='download__menu' onClick={() => exportTable('print')} >
-                        <BiPrinter className='text-[16px]' />
+                        <Icons.PRINTER className='text-[16px]' />
                         Print Table
                       </div>
                       <div className='download__menu' onClick={() => exportTable('copy')}>
-                        <FaRegCopy className='text-[16px]' />
+                        <Icons.COPY className='text-[16px]' />
                         Copy Table
                       </div>
                       <div className='download__menu' onClick={() => exportTable('pdf')}>
-                        <FaRegFilePdf className="text-[16px]" />
+                        <Icons.PDF className="text-[16px]" />
                         Download Pdf
                       </div>
                       <div className='download__menu' onClick={() => exportTable('excel')} >
-                        <FaRegFileExcel className='text-[16px]' />
+                        <Icons.EXCEL className='text-[16px]' />
                         Download Excel
                       </div>
                     </Popover>}
                   >
                     <div className='record__download' >
-                      <IoMdMore />
+                      <Icons.MORE />
                     </div>
                   </Whisper>
                 </div>
@@ -403,11 +386,11 @@ const Proforma = () => {
 
               <div className='w-full flex justify-end gap-2 mt-5' id='filterBtnGrp'>
                 <button onClick={getFilterData}>
-                  <LuSearch />
+                  <Icons.SEARCH />
                   Search
                 </button>
                 <button onClick={clearFilterData}>
-                  <TbZoomReset />
+                  <Icons.RESET />
                   Reset
                 </button>
               </div>
@@ -431,7 +414,7 @@ const Proforma = () => {
                       </th>
                       <th className='py-2 px-4 border-b cursor-pointer' onClick={sortByDate}>
                         <div className='flex items-center justify-center'>
-                          Date {ascending ? <MdOutlineArrowDropDown /> : <RiArrowDropUpFill />}
+                          Date {ascending ? <Icons.DROPDOWN /> : <Icons.DROPUP />}
                         </div>
                       </th>
                       <th className='py-2 px-4 border-b'>Proforma Number</th>
@@ -459,7 +442,7 @@ const Proforma = () => {
                           <td className='px-4 border-b' align='center'>{new Date(data.validDate).toLocaleDateString()}</td>
                           <td className='px-4 border-b max-w-[20px]' align='center'>
                             <span className='bg-green-500 px-2 text-white rounded-lg text-[12px] font-bold'>
-                              {new Date(Date.parse(new Date().toLocaleDateString())).toISOString() > new Date(Date.parse(data.validDate)).toISOString() ? "Expired" : "Valid"}
+                              {/* {new Date(Date.parse(new Date().toLocaleDateString())).toISOString() > new Date(Date.parse(data.validDate)).toISOString() ? "Expired" : "Valid"} */}
                             </span>
                           </td>
 
@@ -470,9 +453,13 @@ const Proforma = () => {
                               speaker={<Popover full>
                                 <div
                                   className='table__list__action__icon'
-                                  onClick={() => navigate(`/admin/proforma-invoice/edit/${data._id}`)}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    navigate(`/admin/proforma-invoice/edit/${data._id}`)
+
+                                  }}
                                 >
-                                  <FaRegEdit className='text-[16px]' />
+                                  <Icons.EDIT className='text-[16px]' />
                                   Edit
                                 </div>
                                 <div
@@ -482,7 +469,7 @@ const Proforma = () => {
                                     navigate(`/admin/bill/details/proforma/${data._id}`)
                                   }}
                                 >
-                                  <IoMdInformationCircleOutline className='text-[16px]' />
+                                  <Icons.INFO_DETAILS className='text-[16px]' />
                                   Details
                                 </div>
                                 <div
@@ -492,13 +479,13 @@ const Proforma = () => {
                                     navigate(`/admin/sales-invoice/convert/add/${data._id}`)
                                   }}
                                 >
-                                  <SiConvertio className='text-[20px]' />
+                                  <Icons.CONVERT className='text-[20px]' />
                                   Convert to final invoice
                                 </div>
                               </Popover>}
                             >
                               <div className='table__list__action' onClick={(e) => e.stopPropagation()}>
-                                <FiMoreHorizontal />
+                                <Icons.HORIZONTAL_MORE />
                               </div>
                             </Whisper>
                           </td>
@@ -515,7 +502,7 @@ const Proforma = () => {
                       activePage > 1 ? <div
                         onClick={() => setActivePage(activePage - 1)}
                         className='border bg-blue-600 text-white w-[20px] h-[20px] grid place-items-center rounded cursor-pointer'>
-                        <GrFormPrevious />
+                        <Icons.PREV_PAGE_ARROW />
                       </div> : null
                     }
                     {
@@ -533,7 +520,7 @@ const Proforma = () => {
                       (totalData / dataLimit) > activePage ? <div
                         onClick={() => setActivePage(activePage + 1)}
                         className='border bg-blue-600 text-white w-[20px] h-[20px] flex items-center justify-center rounded cursor-pointer'>
-                        <GrFormNext />
+                        <Icons.NEXT_PAGE_ARROW />
                       </div> : null
                     }
                   </div>

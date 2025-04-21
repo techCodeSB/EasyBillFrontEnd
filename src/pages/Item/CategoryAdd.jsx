@@ -3,12 +3,11 @@ import Nav from '../../components/Nav';
 import SideNav from '../../components/SideNav'
 import { useRef } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
-import { FaRegCheckCircle } from "react-icons/fa";
-import { LuRefreshCcw } from "react-icons/lu";
 import useMyToaster from '../../hooks/useMyToaster';
 import { SelectPicker } from 'rsuite';
 import { useNavigate, useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import { Icons } from '../../helper/icons';
 
 
 const CategoryAdd = ({ mode }) => {
@@ -191,11 +190,11 @@ const CategoryComponent = ({ mode, save }) => {
         </div> */}
         <div className='flex justify-center pt-9 mb-6'>
           <div className='flex rounded-sm bg-green-500 text-white'>
-            <FaRegCheckCircle className='mt-3 ml-2' />
+            <Icons.CHECK className='mt-3 ml-2' />
             <button className='p-2' onClick={savebutton}>{!mode ? "Save" : "Update"}</button>
           </div>
           <div className='flex rounded-sm ml-4 bg-blue-500 text-white'>
-            <LuRefreshCcw className='mt-3 ml-2' />
+            <Icons.RESET className='mt-3 ml-2' />
             <button className='p-2' onClick={fromvalueclear}>Reset</button>
           </div>
         </div>

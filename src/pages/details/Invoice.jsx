@@ -45,7 +45,8 @@ const Invoice = () => {
   const openModal = useSelector((state) => state.mailModalSlice.show)
   const dispatch = useDispatch();
   const [pdfData, setPdfData] = useState(null);
-  const [billName, setBillName] = useState('')
+  const [billName, setBillName] = useState('');
+  const [shareDrpdwn, setShareDrpdwn] = useState(false);
 
 
 
@@ -254,7 +255,10 @@ const Invoice = () => {
                 <button
                   onClick={() => {
                     downloadPdf(
-                      InvoicePdf({ companyDetails, billData, billDetails, hsnData, totalAmountInText, billname: billName.toUpperCase() })
+                      InvoicePdf({
+                        companyDetails, billData, billDetails, hsnData,
+                        totalAmountInText, billname: billName.toUpperCase()
+                      })
                     );
                   }}
                   title='PDF'
@@ -265,12 +269,17 @@ const Invoice = () => {
 
 
                 <Whisper
-                  trigger={'hover'}
+                  trigger={'click'}
                   enterable
                   placement='bottomEnd'
+                  open={shareDrpdwn}
+                  onClick={() => setShareDrpdwn(!shareDrpdwn)}
                   speaker={<Popover>
                     <div
-                      onClick={sendViaMail}
+                      onClick={()=>{
+                        sendViaMail()
+                        setShareDrpdwn(false)
+                      }}
                       className='flex items-center gap-2 w-[120px] p-1 cursor-pointer hover:bg-gray-100 rounded'>
                       <HiOutlineMail className='text-[16px]' />
                       Email

@@ -2,13 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Nav from '../../components/Nav';
 import SideNav from '../../components/SideNav';
 // import MyBreadCrumb from '../../components/BreadCrumb';
-import { Pagination, Popover, Whisper } from 'rsuite';
-import { BiPrinter } from "react-icons/bi";
-import { FaRegCopy, FaRegEdit } from "react-icons/fa";
-import { MdEditSquare, MdFilterList } from "react-icons/md";
-import { FaRegFilePdf } from "react-icons/fa";
-import { FaRegFileExcel } from "react-icons/fa";
-import { MdDeleteOutline } from "react-icons/md";
+import { Popover, Whisper } from 'rsuite';
 import { useNavigate } from 'react-router-dom';
 import useExportTable from '../../hooks/useExportTable';
 import useMyToaster from '../../hooks/useMyToaster';
@@ -17,16 +11,9 @@ import downloadPdf from '../../helper/downloadPdf';
 import { GrFormNext, GrFormPrevious } from 'react-icons/gr';
 import DataShimmer from '../../components/DataShimmer';
 import { Tooltip } from 'react-tooltip';
-import { IoIosAdd, IoMdMore } from 'react-icons/io';
-import { IoMdAddCircle } from "react-icons/io";
-import { TbZoomReset } from "react-icons/tb";
-import { LuSearch } from "react-icons/lu";
 import AddNew from '../../components/AddNew';
-import { FiMoreHorizontal } from 'react-icons/fi';
-import { IoMdInformationCircleOutline } from "react-icons/io";
-import { MdOutlineArrowDropDown } from "react-icons/md";
-import { RiArrowDropUpFill } from "react-icons/ri";
-import moment from 'moment';
+import { getAdvanceFilterData } from '../../helper/advanceFilter';
+import { Icons } from '../../helper/icons';
 
 
 
@@ -278,40 +265,14 @@ const Quotation = () => {
   }
 
 
-  const advaneFilter = (filterUnit) => {
-    let singleDate;
-    let fromDate;
-    let toDate;
+  const advaneFilter = async (filterUnit) => {
 
-    if(filterUnit === 'today'){
-      singleDate = moment().format("YYYY-MM-DD");
-    }
-    else if(filterUnit === "previousday"){
-      singleDate = moment().subtract(1, 'day').format('YYYY-MM-DD');
-    }
-    else if(filterUnit === "7day"){
-      fromDate = moment().subtract(7, 'day');
-      toDate = moment().format("YYYY-MM-DD");
-    }
-    else if(filterUnit === "lastweek"){
-      fromDate = moment().subtract(1, 'weeks').startOf('isoWeek').format('YYYY-MM-DD');
-      toDate = moment().subtract(1, 'weeks').endOf('isoWeek').format('YYYY-MM-DD');
-    }
-    else if(filterUnit === "thismonth"){
-      fromDate = moment().startOf('month').format('YYYY-MM-DD');
-      toDate = moment().endOf('month').format('YYYY-MM-DD');
-    }
-    else if(filterUnit === "prevmonth"){
-      fromDate = moment().subtract(1, 'months').startOf('month').format('YYYY-MM-DD');
-      toDate = moment().subtract(1, 'months').endOf('month').format('YYYY-MM-DD');
-    }
-    else if(filterUnit === "30day"){
-      fromDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
-      toDate = moment().format('YYYY-MM-DD');
-    }
-
-
-    console.log(moment().subtract(7, "day").format('YYYY-MM-DD'))
+    const filterData = await getAdvanceFilterData(
+      filterUnit, "quotation", activePage, dataLimit
+    );
+    console.log(filterData)
+    setTotalData(filterData.totalData);
+    setBillData([...filterData.data])
 
   }
 
@@ -350,50 +311,19 @@ const Quotation = () => {
                     setFilterToggle(!filterToggle)
                   }}
                   className={`${filterToggle ? 'bg-gray-200 border-gray-300' : 'bg-gray-100'} border`}>
-                  <MdFilterList className='text-xl' />
+                  <Icons.FILTER className='text-xl' />
                   Filter
                 </button>
-                <Whisper
-                  placement='bottom'
-                  trigger={'click'}
-                  onClose={() => setAdvanceFilterMore(false)}
-                  speaker={<Popover>
-                    <div className='advance__filter'>
-                      <p onClick={advaneFilter}>Today</p>
-                      <p>Yesterday</p>
-                      <p>This Week</p>
-                      <p>Last Week</p>
-                      <p>Last 7 Days</p>
-                      <p>This Month</p>
-                      <p>Previous Month</p>
-                      <div className={`${advanceFilterMore ? 'block' : 'hidden'}`}>
-                        <p>Last 30 Day</p>
-                        <p>Last 365 DAy</p>
-                        <p>This Qutar</p>
-                        <p>Last Qutar</p>
-                        <p>Current Fiscal Year</p>
-                        <p>Prev Fiscal Year</p>
-                      </div>
-                      <div className={`advance__filter__more`}
-                        onClick={() => setAdvanceFilterMore(!advanceFilterMore)}>
-                        Load {advanceFilterMore ? 'less' : 'more'}
-                      </div>
-                    </div>
-                  </Popover>}>
-                  <button className='advance__filter__btn'>
-                    Advance Filter
-                  </button>
-                </Whisper>
                 <button
                   onClick={() => removeData(false)}
                   className={`${selected.length > 0 ? 'bg-red-400 text-white' : 'bg-gray-100'} border`}>
-                  <MdDeleteOutline className='text-lg' />
+                  <Icons.DELETE className='text-lg' />
                   Delete
                 </button>
                 <button
                   onClick={() => navigate("/admin/quotation-estimate/add")}
                   className='bg-[#003E32] text-white '>
-                  <IoIosAdd className='text-xl text-white' />
+                  <Icons.ADD className='text-xl text-white' />
                   Add New
                 </button>
 
@@ -401,25 +331,25 @@ const Quotation = () => {
                   <Whisper placement='leftStart' enterable
                     speaker={<Popover full>
                       <div className='download__menu' onClick={() => exportTable('print')} >
-                        <BiPrinter className='text-[16px]' />
+                        <Icons.PRINTER className='text-[16px]' />
                         Print Table
                       </div>
                       <div className='download__menu' onClick={() => exportTable('copy')}>
-                        <FaRegCopy className='text-[16px]' />
+                        <Icons.COPY className='text-[16px]' />
                         Copy Table
                       </div>
                       <div className='download__menu' onClick={() => exportTable('pdf')}>
-                        <FaRegFilePdf className="text-[16px]" />
+                        <Icons.PDF className="text-[16px]" />
                         Download Pdf
                       </div>
                       <div className='download__menu' onClick={() => exportTable('excel')} >
-                        <FaRegFileExcel className='text-[16px]' />
+                        <Icons.EXCEL className='text-[16px]' />
                         Download Excel
                       </div>
                     </Popover>}
                   >
                     <div className='record__download' >
-                      <IoMdMore />
+                      <Icons.MORE />
                     </div>
                   </Whisper>
                 </div>
@@ -429,7 +359,7 @@ const Quotation = () => {
             <div id='filterToggle'>
               <hr />
 
-              <div className='grid gap-4 lg:grid-cols-5 sm:grid-cols-2 grid-cols-1' id='filterBill'>
+              <div className='grid gap-4 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1' id='filterBill'>
                 <div>
                   <p>Item Name</p>
                   <input type="text"
@@ -450,6 +380,40 @@ const Quotation = () => {
                     value={filterData.billNo}
                     onChange={(e) => setFilterData({ ...filterData, billNo: e.target.value })}
                   />
+                </div>
+                <div>
+                  <p>Filter</p>
+                  <Whisper
+                    placement='bottom'
+                    trigger={'click'}
+                    onClose={() => setAdvanceFilterMore(false)}
+                    speaker={<Popover>
+                      <div className='advance__filter'>
+                        <p onClick={() => advaneFilter('today')}>Today</p>
+                        <p onClick={() => advaneFilter('yesterday')}>Yesterday</p>
+                        <p onClick={() => advaneFilter('thisweek')}>This Week</p>
+                        <p onClick={() => advaneFilter('lastweek')}>Last Week</p>
+                        <p onClick={() => advaneFilter('last7day')}>Last 7 Days</p>
+                        <p onClick={() => advaneFilter('thismonth')}>This Month</p>
+                        <p onClick={() => advaneFilter('previousmonth')}>Previous Month</p>
+                        <div className={`${advanceFilterMore ? 'block' : 'hidden'}`}>
+                          <p onClick={() => advaneFilter('last30day')}>Last 30 Day</p>
+                          <p onClick={() => advaneFilter('last365day')}>Last 365 Day</p>
+                          <p onClick={() => advaneFilter('thisquarter')}>This Quarter</p>
+                          <p onClick={() => advaneFilter('lastquarter')}>Last Quarter</p>
+                          <p onClick={() => advaneFilter('currentfiscal')}>Current Fiscal Year</p>
+                          <p onClick={() => advaneFilter('lastfiscal')}>Prev Fiscal Year</p>
+                        </div>
+                        <div className={`advance__filter__more`}
+                          onClick={() => setAdvanceFilterMore(!advanceFilterMore)}>
+                          Load {advanceFilterMore ? 'less' : 'more'}
+                        </div>
+                      </div>
+                    </Popover>}>
+                    <button className='advance__filter__btn'>
+                      Advance Filter
+                    </button>
+                  </Whisper>
                 </div>
                 <div>
                   <p>From Date</p>
@@ -474,13 +438,13 @@ const Quotation = () => {
                 </div> */}
               </div>
 
-              <div className='w-full flex justify-end gap-2 mt-10' id='filterBtnGrp'>
+              <div className='w-full flex justify-end gap-2 mt-5' id='filterBtnGrp'>
                 <button onClick={getFilterData}>
-                  <LuSearch />
+                  <Icons.SEARCH />
                   Search
                 </button>
                 <button onClick={clearFilterData}>
-                  <TbZoomReset />
+                  {<Icons.RESET />}
                   Reset
                 </button>
               </div>
@@ -501,7 +465,7 @@ const Quotation = () => {
                       </th>
                       <th className='py-2 px-4 border-b cursor-pointer' onClick={sortByDate}>
                         <div className='flex items-center justify-center'>
-                          Date {ascending ? <MdOutlineArrowDropDown /> : <RiArrowDropUpFill />}
+                          Date {ascending ? <Icons.DROPDOWN /> : <Icons.DROPUP />}
                         </div>
                       </th>
                       <th className='py-2 px-4 border-b'>Quotation / Estimate Number</th>
@@ -549,7 +513,7 @@ const Quotation = () => {
                                     navigate(`/admin/quotation-estimate/edit/${data._id}`)
                                   }}
                                 >
-                                  <FaRegEdit className='text-[16px]' />
+                                  <Icons.EDIT className='text-[16px]' />
                                   Edit
                                 </div>
                                 <div
@@ -559,13 +523,13 @@ const Quotation = () => {
                                     navigate(`/admin/bill/details/quotation/${data._id}`)
                                   }}
                                 >
-                                  <IoMdInformationCircleOutline className='text-[16px]' />
+                                  <Icons.INFO_DETAILS className='text-[16px]' />
                                   Details
                                 </div>
                               </Popover>}
                             >
                               <div className='table__list__action' onClick={(e) => e.stopPropagation()}>
-                                <FiMoreHorizontal />
+                                <Icons.HORIZONTAL_MORE />
                               </div>
                             </Whisper>
                           </td>

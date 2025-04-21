@@ -1,15 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Nav from '../../components/Nav';
 import SideNav from '../../components/SideNav';
-import { SelectPicker } from 'rsuite';
-import { countryList, statesAndUTs } from '../../helper/data';
-import { Editor } from '@tinymce/tinymce-react';
-import { BiReset } from 'react-icons/bi';
-import { FaRegCheckCircle } from 'react-icons/fa';
 import useMyToaster from '../../hooks/useMyToaster';
 import Cookies from 'js-cookie';
 import { useNavigate, useParams } from 'react-router-dom';
 import MySelect2 from '../../components/MySelect2';
+import { Icons } from '../../helper/icons';
 
 
 
@@ -69,8 +65,7 @@ const PartyComponent = ({ mode, save }) => {
 
 
   const saveParty = async () => {
-    if ([partyData.name, partyData.type, partyData.contactNumber, partyData.billingAddress,
-    partyData.gst, partyData.pan]
+    if ([partyData.name, partyData.type, partyData.contactNumber, partyData.billingAddress,]
       .some((field) => field === "")) {
       return toast("fill the require", "error")
     }
@@ -252,13 +247,13 @@ const PartyComponent = ({ mode, save }) => {
         <button
           onClick={saveParty}
           className='bg-green-500 hover:bg-green-400 text-md text-white rounded w-[90px] flex items-center justify-center gap-1 py-2'>
-          <FaRegCheckCircle />
+          <Icons.CHECK />
           {!mode ? "Save" : "Update"}
         </button>
         <button
           onClick={clear}
           className='bg-blue-800 hover:bg-blue-700 text-md text-white rounded w-[90px] flex items-center justify-center gap-1 py-2'>
-          <BiReset />
+          <Icons.RESET />
           Reset
         </button>
       </div>

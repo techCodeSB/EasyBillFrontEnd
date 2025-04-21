@@ -1,37 +1,16 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import Nav from '../../components/Nav';
 import SideNav from '../../components/SideNav';
-import { BiPrinter } from "react-icons/bi";
-import { FaRegCopy } from "react-icons/fa";
-import { MdEditSquare, MdFilterList } from "react-icons/md";
-import { IoInformationCircle } from "react-icons/io5";
-import { FaRegFilePdf } from "react-icons/fa";
-import { FaRegFileExcel } from "react-icons/fa";
-import { MdAdd } from "react-icons/md";
-import { MdOutlineCancel } from "react-icons/md";
-import { MdOutlineRestorePage } from "react-icons/md";
-import { MdDeleteOutline } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import useExportTable from '../../hooks/useExportTable';
 import Cookies from 'js-cookie';
 import useMyToaster from '../../hooks/useMyToaster';
 import downloadPdf from '../../helper/downloadPdf';
-import { GrFormNext } from "react-icons/gr";
-import { GrFormPrevious } from "react-icons/gr";
-import { FaBook } from "react-icons/fa6";
 import DataShimmer from '../../components/DataShimmer';
 import { Tooltip } from 'react-tooltip';
-import { IoIosAdd, IoMdMore } from 'react-icons/io';
 import AddNew from '../../components/AddNew';
 import { Popover, Whisper } from 'rsuite';
-import { FiMoreHorizontal } from "react-icons/fi";
-import { FaRegEdit } from "react-icons/fa";
-import { LuBookText } from "react-icons/lu";
-import { FaUsers } from "react-icons/fa6";
-
-import { MdOutlineTrendingUp } from "react-icons/md";
-import { IoMdTrendingDown } from "react-icons/io";
-import { MdOutlineCurrencyRupee } from "react-icons/md";
+import { Icons } from '../../helper/icons';
 
 
 
@@ -290,38 +269,38 @@ const Party = () => {
                 <button
                   onClick={() => removeData(false)}
                   className={`${selected.length > 0 ? 'bg-red-500 text-white' : 'bg-gray-100'} border`}>
-                  <MdDeleteOutline className='text-lg' />
+                  <Icons.DELETE className='text-lg' />
                   Delete
                 </button>
                 <button
                   onClick={() => navigate("/admin/party/add")}
                   className='bg-[#003E32] text-white '>
-                  <IoIosAdd className='text-xl text-white' />
+                  <Icons.ADD className='text-xl text-white' />
                   Add New
                 </button>
                 <div className='flex justify-end'>
                   <Whisper placement='leftStart' enterable
                     speaker={<Popover full>
                       <div className='download__menu' onClick={() => exportTable('print')} >
-                        <BiPrinter className='text-[16px]' />
+                        <Icons.PRINTER className='text-[16px]' />
                         Print Table
                       </div>
                       <div className='download__menu' onClick={() => exportTable('copy')}>
-                        <FaRegCopy className='text-[16px]' />
+                        <Icons.COPY className='text-[16px]' />
                         Copy Table
                       </div>
                       <div className='download__menu' onClick={() => exportTable('pdf')}>
-                        <FaRegFilePdf className="text-[16px]" />
+                        <Icons.PDF className="text-[16px]" />
                         Download Pdf
                       </div>
                       <div className='download__menu' onClick={() => exportTable('excel')} >
-                        <FaRegFileExcel className='text-[16px]' />
+                        <Icons.EXCEL className='text-[16px]' />
                         Download Excel
                       </div>
                     </Popover>}
                   >
                     <div className='record__download' >
-                      <IoMdMore />
+                      <Icons.MORE />
                     </div>
                   </Whisper>
                 </div>
@@ -335,16 +314,16 @@ const Party = () => {
             !loading ? partyData.length > 0 ? <div className='content__body__main'>
               <div className='flex flex-col md:flex-row justify-between items-center mb-5 gap-8'>
                 <div className='party__data'>
-                  <h6><FaUsers /> Total Parties</h6>
+                  <h6><Icons.USERS /> Total Parties</h6>
                   <p>{totalData}</p>
                 </div>
                 <div className='party__data'>
-                  <h6><MdOutlineTrendingUp /> Total Pay</h6>
-                  <p><MdOutlineCurrencyRupee />{totalPay}</p>
+                  <h6><Icons.TREDING_UP /> Total Pay</h6>
+                  <p><Icons.RUPES />{totalPay}</p>
                 </div>
                 <div className='party__data'>
-                  <h6><IoMdTrendingDown /> Total Collect</h6>
-                  <p><MdOutlineCurrencyRupee /> {totalCollection}</p>
+                  <h6><Icons.TREDING_DOWN /> Total Collect</h6>
+                  <p><Icons.RUPES /> {totalCollection}</p>
                 </div>
               </div>
 
@@ -387,20 +366,20 @@ const Party = () => {
                                   className='table__list__action__icon'
                                   onClick={() => navigate("/admin/party/edit/" + data._id)}
                                 >
-                                  <FaRegEdit className='text-[16px]' />
+                                  <Icons.EDIT className='text-[16px]' />
                                   Edit
                                 </div>
                                 <div
                                   className='table__list__action__icon'
                                   onClick={() => navigate("/admin/party/ladger/" + data._id)}
                                 >
-                                  <LuBookText className='text-[16px]' />
+                                  <Icons.BOOK className='text-[16px]' />
                                   Ladger
                                 </div>
                               </Popover>}
                             >
                               <div className='table__list__action' >
-                                <FiMoreHorizontal />
+                                <Icons.HORIZONTAL_MORE />
                               </div>
                             </Whisper>
                           </td>
@@ -417,7 +396,7 @@ const Party = () => {
                       activePage > 1 ? <div
                         onClick={() => setActivePage(activePage - 1)}
                         className='border bg-[#003E32] text-white w-[20px] h-[20px] grid place-items-center rounded cursor-pointer'>
-                        <GrFormPrevious />
+                        <Icons.PREV_PAGE_ARROW />
                       </div> : null
                     }
                     {
@@ -435,7 +414,7 @@ const Party = () => {
                       (totalData / dataLimit) > activePage ? <div
                         onClick={() => setActivePage(activePage + 1)}
                         className='border bg-[#003E32] text-white w-[20px] h-[20px] flex items-center justify-center rounded cursor-pointer'>
-                        <GrFormNext />
+                        <Icons.NEXT_PAGE_ARROW />
                       </div> : null
                     }
                   </div>
