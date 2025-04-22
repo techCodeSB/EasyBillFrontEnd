@@ -51,7 +51,6 @@ const AddPayment = ({ mode }) => {
           body: JSON.stringify({ token: cookie, invoice: true, party: formData.party })
         })
         const res = await req.json();
-        console.log(res)
         const inv = res.data.map((inv) => ({
           value: inv.purchaseInvoiceNumber, label: inv.purchaseInvoiceNumber,
           due: inv.dueAmount

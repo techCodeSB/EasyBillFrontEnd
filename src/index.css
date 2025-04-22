@@ -358,7 +358,7 @@ select {
 
 .add__btns,
 .extra__btns {
-  @apply flex items-center gap-2;
+  @apply flex items-center gap-2 w-full;
 }
 
 .add__btns button {

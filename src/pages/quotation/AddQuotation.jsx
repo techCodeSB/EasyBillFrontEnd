@@ -22,6 +22,7 @@ import AddItemModal from '../../components/AddItemModal';
 import swal from 'sweetalert';
 import { IoSettingsOutline } from 'react-icons/io5';
 import MySelect2 from '../../components/MySelect2';
+import { Icons } from '../../helper/icons';
 
 
 
@@ -121,7 +122,6 @@ const Quotation = ({ mode }) => {
 
 
   const get = async () => {
-    console.log("runn")
     const url = process.env.REACT_APP_API_URL + "/quotation/get";
     const cookie = Cookies.get("token");
 
@@ -469,9 +469,15 @@ const Quotation = ({ mode }) => {
   // *Save bill
   const saveBill = async () => {
 
-    if ([formData.party, formData.estimateDate]
-      .some((field) => field === "")) {
-      return toast("Fill the blank", "error");
+    // if ([formData.party, formData.estimateDate]
+    //   .some((field) => field === "")) {
+    //   return toast("Fill the blank", "error");
+    // }
+
+    if (formData.party === "") {
+      return toast("Please select party", "error")
+    } else if (formData.estimateDate === "") {
+      return toast("Please enter sales return number", "error")
     }
 
     for (let row of ItemRows) {
@@ -553,29 +559,32 @@ const Quotation = ({ mode }) => {
           <div className='content__body__main bg-white' id='addQuotationTable'>
 
             <div className='top__btn__grp'>
-              {
-                mode && <div className='extra__btns'>
-                  <button onClick={() => {
-                    swal({
-                      title: "Are you sure?",
-                      icon: "warning",
-                      buttons: true,
-                    })
-                      .then((cnv) => {
-                        if (cnv) {
-                          swal("Quotation successfully duplicate", {
-                            icon: "success",
-                          });
-                          navigate(`/admin/quotation-estimate/add/${id}`)
-                        }
-                      });
-                  }}><HiOutlineDocumentDuplicate />Duplicate invoice</button>
-                  <button onClick={saveBill}><FaRegCheckCircle />Update</button>
-                </div>
-              }
-              {/* <div>
-                <IoSettingsOutline />
-              </div> */}
+
+              <div className='extra__btns'>
+                {mode && <button onClick={() => {
+                  swal({
+                    title: "Are you sure?",
+                    icon: "warning",
+                    buttons: true,
+                  })
+                    .then((cnv) => {
+                      if (cnv) {
+                        swal("Quotation successfully duplicate", {
+                          icon: "success",
+                        });
+                        navigate(`/admin/quotation-estimate/add/${id}`)
+                      }
+                    });
+                }}>
+                  <Icons.COPY />Duplicate invoice
+                </button>}
+
+                <button onClick={saveBill}><Icons.CHECK />{mode ? "Update" : "Save"}</button>
+              </div>
+
+              <div className='flex justify-end w-full'>
+                {/* <IoSettingsOutline /> */}
+              </div>
             </div>
 
             <div className='flex flex-col lg:flex-row items-center justify-around gap-4'>

@@ -112,3 +112,7 @@ a:active, a:focus, a:hover{
   font-size: 13px !important;
   font-weight: normal !important;
 }
+
+.rs-message-body{
+  font-size: 13px !important;
+}

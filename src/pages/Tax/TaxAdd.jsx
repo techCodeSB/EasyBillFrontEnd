@@ -39,8 +39,10 @@ const TaxAdd = ({ mode }) => {
     }, [mode])
 
     const savebutton = async (e) => {
-        if (form.title === "" || form.gst === "" || form.cess === "") {
-            return toast("fill the blank", "error")
+        if (form.title === "") {
+            return toast("Please enter title", "error")
+        }else if (form.gst === "") {
+            return toast("Please enter GST", "error")
         }
 
         try {
@@ -90,13 +92,13 @@ const TaxAdd = ({ mode }) => {
                         <div className='flex flex-col'>
                             <div className='w-full'>
                                 <div className='p-2'>
-                                    <p className='pb-1'>Title</p>
+                                    <p className='pb-1'>Title <span className='required__text'>*</span></p>
                                     <input type='text' onChange={(e) => setForm({ ...form, title: e.target.value })} value={form.title} />
                                 </div>
                             </div>
                             <div className='w-full flex flex-col lg:flex-row'>
                                 <div className='p-2 w-full'>
-                                    <p className='pb-1'>{"GST (%)"}</p>
+                                    <p className='pb-1'>{"GST (%)"} <span className='required__text'>*</span></p>
                                     <input type='text' onChange={(e) => setForm({ ...form, gst: e.target.value })} value={form.gst} />
                                 </div>
                                 <div className='p-2 w-full'>

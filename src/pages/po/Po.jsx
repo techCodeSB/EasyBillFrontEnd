@@ -456,9 +456,12 @@ const PO = () => {
                             {new Date(data.validDate).toLocaleDateString()}
                           </td>
                           <td className='px-4 border-b max-w-[20px]' align='center'>
-                            <span className='bg-green-500 px-2 text-white rounded-lg text-[12px] font-bold'>
-                              {new Date(Date.parse(new Date().toLocaleDateString())).toISOString() > new Date(Date.parse(data.validDate)).toISOString() ? "Expired" : "Valid"}
-                            </span>
+                            {
+                              data.validDate ? <span className={`${data.validDate ? 'bg-green-500' : ''} px-2 text-white rounded-lg text-[12px] font-bold`}>
+                                {new Date(Date.parse(new Date().toLocaleDateString())).toISOString() > new Date(Date.parse(data.validDate)).toISOString() ? "Expired" : "Valid"}
+                              </span>
+                                : "--"
+                            }
                           </td>
 
                           <td className='px-4 text-center'>

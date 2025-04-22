@@ -65,10 +65,20 @@ const PartyComponent = ({ mode, save }) => {
 
 
   const saveParty = async () => {
-    if ([partyData.name, partyData.type, partyData.contactNumber, partyData.billingAddress,]
-      .some((field) => field === "")) {
-      return toast("fill the require", "error")
+    if (partyData.name === "") {
+      return toast("Name is required", "error");
     }
+    if (partyData.type === "") {
+      return toast("Type is required", "error");
+    }
+    if (partyData.contactNumber === "") {
+      return toast("Contact Number is required", "error");
+    }
+    if (partyData.billingAddress === "") {
+      return toast("Billing Address is required", "error");
+    }
+
+
 
     try {
       const url = process.env.REACT_APP_API_URL + "/party/add";
@@ -121,19 +131,19 @@ const PartyComponent = ({ mode, save }) => {
         {/* First Column */}
         <div className='flex flex-col gap-2'>
           <div>
-            <p className='mb-1'>Party Name <span className='text-red-600'>*</span></p>
+            <p className='mb-1'>Party Name <span className='required__text'>*</span></p>
             <input type="text"
               onChange={(e) => setPartyData({ ...partyData, name: e.target.value })}
               value={partyData.name}
             />
           </div>
           <div>
-            <p className='mb-1'>Contact Number <span className='text-red-600'>*</span></p>
+            <p className='mb-1'>Contact Number <span className='required__text'>*</span></p>
             <input type="text" onChange={(e) => setPartyData({ ...partyData, contactNumber: e.target.value })}
               value={partyData.contactNumber} />
           </div>
           <div>
-            <p className='mb-1'>Type</p>
+            <p className='mb-1'>Type <span className='required__text'>*</span></p>
             <select onChange={(e) => setPartyData({ ...partyData, type: e.target.value })}
               value={partyData.type}>
               <option value="none">--Select--</option>
@@ -161,7 +171,7 @@ const PartyComponent = ({ mode, save }) => {
           </div>
 
           <div>
-            <p className='mb-1'>Billing Address</p>
+            <p className='mb-1'>Billing Address <span className='required__text'>*</span></p>
             <textarea rows={3}
               value={partyData.billingAddress}
               onChange={(e) => setPartyData({ ...partyData, billingAddress: e.target.value })}

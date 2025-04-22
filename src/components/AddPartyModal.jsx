@@ -87,7 +87,9 @@ const AddPartyModal = ({ open, get, id }) => {
         return;
       }
 
-      id ? get(data.name) : get(res);
+      if(get){
+        id ? get(data.name) : get(res);
+      }
       setData({ name: '' });
       toast('Party category added successfully!', 'success')
       dispatch(toggle(false));

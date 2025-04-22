@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Nav from '../../components/Nav';
 import SideNav from '../../components/SideNav';
 // import MyBreadCrumb from '../../components/BreadCrumb';
-import {Popover, Whisper } from 'rsuite';
+import { Popover, Whisper } from 'rsuite';
 import { data, useNavigate } from 'react-router-dom';
 import useExportTable from '../../hooks/useExportTable';
 import useMyToaster from '../../hooks/useMyToaster';
@@ -441,9 +441,12 @@ const Proforma = () => {
                           <td className='px-4 border-b' align='center'>{data.party.name}</td>
                           <td className='px-4 border-b' align='center'>{new Date(data.validDate).toLocaleDateString()}</td>
                           <td className='px-4 border-b max-w-[20px]' align='center'>
-                            <span className='bg-green-500 px-2 text-white rounded-lg text-[12px] font-bold'>
-                              {/* {new Date(Date.parse(new Date().toLocaleDateString())).toISOString() > new Date(Date.parse(data.validDate)).toISOString() ? "Expired" : "Valid"} */}
-                            </span>
+                            {
+                              data.validDate ? <span className={`${data.validDate ? 'bg-green-500' : ''} px-2 text-white rounded-lg text-[12px] font-bold`}>
+                                {new Date(Date.parse(new Date().toLocaleDateString())).toISOString() > new Date(Date.parse(data.validDate)).toISOString() ? "Expired" : "Valid"}
+                              </span>
+                                : "--"
+                            }
                           </td>
 
                           <td className='px-4 text-center'>

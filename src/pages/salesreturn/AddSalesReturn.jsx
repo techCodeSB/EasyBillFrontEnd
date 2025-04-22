@@ -37,7 +37,7 @@ const SalesReturn = ({ mode }) => {
   const [ItemRows, setItemRows] = useState([itemRowSet]);
   const [additionalRows, setAdditionalRow] = useState([additionalRowSet]); //{ additionalRowsItem: 1 }
   const [formData, setFormData] = useState({
-    party: '', salesReturnNumber: '', returnDate: '',
+    party: '', salesReturnNumber: '', returnDate: new Date().toISOString().split('T')[0],
     items: ItemRows, additionalCharge: additionalRows, note: '', terms: '',
     discountType: '', discountAmount: '', discountPercentage: '',
   })
@@ -401,17 +401,26 @@ const SalesReturn = ({ mode }) => {
 
   // *Save bill
   const saveBill = async () => {
-
-    if ([formData.party, formData.salesReturnNumber, formData.returnDate]
-      .some((field) => field === "")) {
-      return toast("Fill the blank", "error");
+    if (formData.party === "") {
+      return toast("Please select party", "error")
+    } else if (formData.salesReturnNumber === "") {
+      return toast("Please enter sales return number", "error")
+    } else if (formData.returnDate === "") {
+      return toast("Please select return date", "error")
     }
 
+
     for (let row of ItemRows) {
-      if ([row.itemName, row.qun, row.unit, row.price, row.tax]
-        .some((field) => field === "")) {
-        return toast("Fill the blank in item", "error");
+      if (row.itemName === "") {
+        return toast("Please select item", "error")
+      } else if (row.qun === "") {
+        return toast("Please enter quantity", "error")
+      } else if (row.unit === "") {
+        return toast("Please select unit", "error")
+      } else if (row.price === "") {
+        return toast("Please enter price", "error")
       }
+
     }
 
     try {
@@ -483,26 +492,26 @@ const SalesReturn = ({ mode }) => {
                 }}><MdOutlineAdd /> Add Item</button>
               </div> */}
 
-              {
-                mode === "edit" && <div className='extra__btns'>
-                  <button onClick={() => {
-                    swal({
-                      title: "Are you sure?",
-                      icon: "warning",
-                      buttons: true,
-                    })
-                      .then((cnv) => {
-                        if (cnv) {
-                          swal("Invoice successfully duplicate", {
-                            icon: "success",
-                          });
-                          navigate(`/admin/sales-return/add/${id}`)
-                        }
-                      });
-                  }}><Icons.COPY />Duplicate invoice</button>
-                  <button onClick={saveBill}><Icons.CHECK />Update</button>
-                </div>
-              }
+
+              <div className='extra__btns'>
+                {mode === "edit" && <button onClick={() => {
+                  swal({
+                    title: "Are you sure?",
+                    icon: "warning",
+                    buttons: true,
+                  })
+                    .then((cnv) => {
+                      if (cnv) {
+                        swal("Invoice successfully duplicate", {
+                          icon: "success",
+                        });
+                        navigate(`/admin/sales-return/add/${id}`)
+                      }
+                    });
+                }}><Icons.COPY />Duplicate invoice</button>}
+                <button onClick={saveBill}><Icons.CHECK />{mode ? "Update" : "Save"}</button>
+              </div>
+
             </div>
 
             <div className='flex flex-col lg:flex-row items-center justify-around gap-4'>

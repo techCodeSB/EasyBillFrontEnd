@@ -79,8 +79,12 @@ const CategoryComponent = ({ mode, save }) => {
 
 
   const savebutton = async (e) => {
-    if (form.title === "" || form.tax === "" || form.hsn === "" || form.type === "") {
-      return accountvalidation("fill the blank", "error")
+    if (form.title === "") {
+      return accountvalidation("Title is required", "error");
+    } else if (form.tax === "") {
+      return accountvalidation("Tax is required", "error");
+    } else if (form.type === "") {
+      return accountvalidation("Type is required", "error");
     }
 
     try {
@@ -107,7 +111,7 @@ const CategoryComponent = ({ mode, save }) => {
       if (save) {
         save(true); // for close sidebar in MySelect2
         return;
-      }else{
+      } else {
         return navigate("/admin/item-category")
       }
 
@@ -129,11 +133,11 @@ const CategoryComponent = ({ mode, save }) => {
         <div className='  flex justify-between  gap-5 flex-col lg:flex-row'>
           <div className='w-full'>
             <div >
-              <p className='mb-2 '>Title</p>
+              <p className='mb-2'>Title <span className='required__text'>*</span></p>
               <input type='text' onChange={(e) => setForm({ ...form, title: e.target.value })} value={form.title} />
             </div>
             <div>
-              <p className='ml-1 mb-2 mt-2'>Select Tax</p>
+              <p className='ml-1 mb-2 mt-2'>Select Tax <span className='required__text'>*</span></p>
               <SelectPicker className='w-full'
                 data={taxData}
                 onChange={(v) => setForm({ ...form, tax: v })}
@@ -147,7 +151,7 @@ const CategoryComponent = ({ mode, save }) => {
               <input type='text' onChange={(e) => setForm({ ...form, hsn: e.target.value })} value={form.hsn} />
             </div>
             <div>
-              <p className='mb-2 mt-2 ml-1'>Type</p>
+              <p className='mb-2 mt-2 ml-1'>Type <span className='required__text'>*</span></p>
               <select onChange={(e) => setForm({ ...form, type: e.target.value })} value={form.type}>
                 <option value={""}>
                   --select--

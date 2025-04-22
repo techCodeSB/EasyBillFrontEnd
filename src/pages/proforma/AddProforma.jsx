@@ -39,7 +39,7 @@ const Proforma = ({ mode }) => {
   const [ItemRows, setItemRows] = useState([itemRowSet]);
   const [additionalRows, setAdditionalRow] = useState([additionalRowSet]); //{ additionalRowsItem: 1 }
   const [formData, setFormData] = useState({
-    party: '', proformaNumber: '', estimateDate: '', validDate: '', items: ItemRows,
+    party: '', proformaNumber: '', estimateDate: new Date().toISOString().split('T')[0], validDate: '', items: ItemRows,
     additionalCharge: additionalRows, note: '', terms: '',
     discountType: '', discountAmount: '', discountPercentage: '',
   })
@@ -404,15 +404,29 @@ const Proforma = ({ mode }) => {
   // *Save bill
   const saveBill = async () => {
 
-    if ([formData.party, formData.proformaNumber, formData.estimateDate]
-      .some((field) => field === "")) {
-      return toast("Fill the blank", "error");
+    // if ([formData.party, formData.proformaNumber, formData.estimateDate]
+    //   .some((field) => field === "")) {
+    //   return toast("Fill the blank", "error");
+    // }
+
+    if (formData.party === "") {
+      return toast("Please select party", "error")
+    } else if (formData.estimateDate === "") {
+      return toast("Please enter sales return number", "error")
+    } else if (formData.proformaNumber === "") {
+      return toast("Please enter proforma number", "error")
     }
 
+
     for (let row of ItemRows) {
-      if ([row.itemName, row.qun, row.unit, row.price, row.tax]
-        .some((field) => field === "")) {
-        return toast("Fill the blank in item", "error");
+      if (row.itemName === "") {
+        return toast("Please select item", "error")
+      } else if (row.qun === "") {
+        return toast("Please enter quantity", "error")
+      } else if (row.unit === "") {
+        return toast("Please select unit", "error")
+      } else if (row.price === "") {
+        return toast("Please enter price", "error")
       }
     }
 
@@ -487,8 +501,8 @@ const Proforma = ({ mode }) => {
               </div> */}
 
               {
-                mode && <div className='extra__btns'>
-                  <button onClick={() => {
+                <div className='extra__btns'>
+                  {mode && <button onClick={() => {
                     swal({
                       title: "Are you sure?",
                       icon: "warning",
@@ -502,8 +516,8 @@ const Proforma = ({ mode }) => {
                           navigate(`/admin/proforma-invoice/add/${id}`)
                         }
                       });
-                  }}><Icons.COPY />Duplicate invoice</button>
-                  <button onClick={saveBill}><Icons.CHECK />Update</button>
+                  }}><Icons.COPY />Duplicate invoice</button>}
+                  <button onClick={saveBill}><Icons.CHECK />{mode ? "Update" : "Save"}</button>
                 </div>
               }
             </div>

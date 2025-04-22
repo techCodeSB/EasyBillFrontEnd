@@ -20,6 +20,7 @@ import { HiOutlineDocumentDuplicate } from 'react-icons/hi';
 import AddPartyModal from '../../components/AddPartyModal';
 import AddItemModal from '../../components/AddItemModal';
 import MySelect2 from '../../components/MySelect2';
+import { Icons } from '../../helper/icons';
 
 
 
@@ -44,8 +45,8 @@ const PurchaseInvoice = ({ mode }) => {
   const [ItemRows, setItemRows] = useState([itemRowSet]);
   const [additionalRows, setAdditionalRow] = useState([additionalRowSet]); //{ additionalRowsItem: 1 }
   const [formData, setFormData] = useState({
-    party: '', purchaseInvoiceNumber: '', originalInvoiceNumber: '', invoiceDate: '', validDate: '',
-    items: ItemRows, additionalCharge: additionalRows, note: '', terms: '',
+    party: '', purchaseInvoiceNumber: '', originalInvoiceNumber: '', invoiceDate: new Date().toISOString().split('T')[0],
+    validDate: '', items: ItemRows, additionalCharge: additionalRows, note: '', terms: '',
     discountType: '', discountAmount: '', discountPercentage: '', paymentStatus: '0', finalAmount: '',
   })
 
@@ -431,16 +432,25 @@ const PurchaseInvoice = ({ mode }) => {
   // *Save bill
   const saveBill = async () => {
 
-    if ([formData.party, formData.purchaseInvoiceNumber, formData.invoiceDate]
-      .some((field) => field === "")) {
-      return toast("Fill the blank", "error");
+    if (formData.party === "") {
+      return toast("Please select party", "error")
+    } else if (formData.purchaseInvoiceNumber === "") {
+      return toast("Please enter purchase invoice number", "error")
+    } else if (formData.invoiceDate === "") {
+      return toast("Please select invoice date", "error")
     }
 
     for (let row of ItemRows) {
-      if ([row.itemName, row.qun, row.unit, row.price, row.tax]
-        .some((field) => field === "")) {
-        return toast("Fill the blank in item", "error");
+      if (row.itemName === "") {
+        return toast("Please select item", "error")
+      } else if (row.qun === "") {
+        return toast("Please enter quantity", "error")
+      } else if (row.unit === "") {
+        return toast("Please select unit", "error")
+      } else if (row.price === "") {
+        return toast("Please enter price", "error")
       }
+
     }
 
     try {
@@ -503,26 +513,26 @@ const PurchaseInvoice = ({ mode }) => {
           <div className='content__body__main bg-white' id='addQuotationTable'>
 
             <div className='top__btn__grp'>
-              {
-                mode === "edit" && <div className='extra__btns'>
-                  <button onClick={() => {
-                    swal({
-                      title: "Are you sure?",
-                      icon: "warning",
-                      buttons: true,
-                    })
-                      .then((cnv) => {
-                        if (cnv) {
-                          swal("Invoice successfully duplicate", {
-                            icon: "success",
-                          });
-                          navigate(`/admin/purchase-invoice/add/${id}`)
-                        }
-                      });
-                  }}><HiOutlineDocumentDuplicate />Duplicate invoice</button>
-                  <button onClick={saveBill}><FaRegCheckCircle />Update</button>
-                </div>
-              }
+
+              <div className='extra__btns'>
+                {mode === "edit" && <button onClick={() => {
+                  swal({
+                    title: "Are you sure?",
+                    icon: "warning",
+                    buttons: true,
+                  })
+                    .then((cnv) => {
+                      if (cnv) {
+                        swal("Invoice successfully duplicate", {
+                          icon: "success",
+                        });
+                        navigate(`/admin/purchase-invoice/add/${id}`)
+                      }
+                    });
+                }}><Icons.COPY />Duplicate invoice</button>}
+                <button onClick={saveBill}><Icons.CHECK />{mode ? "Update" : "Save"}</button>
+              </div>
+
             </div>
 
             <div className='flex flex-col lg:flex-row items-center justify-around gap-4'>

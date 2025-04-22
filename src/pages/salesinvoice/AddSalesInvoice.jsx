@@ -39,7 +39,7 @@ const SalesInvoice = ({ mode }) => {
   const [ItemRows, setItemRows] = useState([itemRowSet]);
   const [additionalRows, setAdditionalRow] = useState([additionalRowSet]); //{ additionalRowsItem: 1 }
   const [formData, setFormData] = useState({
-    party: '', salesInvoiceNumber: '', invoiceDate: '', DueDate: '',
+    party: '', salesInvoiceNumber: '', invoiceDate: new Date().toISOString().split('T')[0], DueDate: '',
     items: ItemRows, additionalCharge: additionalRows, note: '', terms: '',
     discountType: '', discountAmount: '', discountPercentage: '', paymentStatus: '0',
     paymentAccount: '', finalAmount: '', paymentAmount: '',
@@ -439,16 +439,31 @@ const SalesInvoice = ({ mode }) => {
   // *Save bill
   const saveBill = async () => {
 
-    console.log("---Save bill---", formData)
-    if ([formData.party, formData.salesInvoiceNumber, formData.invoiceDate]
-      .some((field) => field === "")) {
-      return toast("Fill the blank", "error");
+    // if ([formData.party, formData.salesInvoiceNumber, formData.invoiceDate]
+    //   .some((field) => field === "")) {
+    //   return toast("Fill the blank", "error");
+    // }
+
+    if (formData.party === "") {
+      return toast("Please select party", "error");
+    } else if (formData.salesInvoiceNumber === "") {
+      return toast("Please enter invoice number", "error");
+    } else if (formData.invoiceDate === "") {
+      return toast("Please select invoice date", "error");
     }
 
+
+
+
     for (let row of ItemRows) {
-      if ([row.itemName, row.qun, row.unit, row.price, row.tax]
-        .some((field) => field === "")) {
-        return toast("Fill the blank in item", "error");
+      if (row.itemName === "") {
+        return toast("Please select item", "error");
+      } else if (row.qun === "") {
+        return toast("Please enter quantity", "error");
+      } else if (row.unit === "") {
+        return toast("Please select unit", "error");
+      } else if (row.price === "") {
+        return toast("Please enter price", "error");
       }
     }
 
@@ -529,26 +544,24 @@ const SalesInvoice = ({ mode }) => {
           <div className='content__body__main bg-white' id='addQuotationTable'>
 
             <div className='top__btn__grp'>
-              {
-                mode === "edit" && <div className='extra__btns'>
-                  <button onClick={() => {
-                    swal({
-                      title: "Are you sure?",
-                      icon: "warning",
-                      buttons: true,
-                    })
-                      .then((cnv) => {
-                        if (cnv) {
-                          swal("Invoice successfully duplicate", {
-                            icon: "success",
-                          });
-                          navigate(`/admin/sales-invoice/add/${id}`)
-                        }
-                      });
-                  }}><Icons.COPY />Duplicate invoice</button>
-                  <button onClick={saveBill}><Icons.CHECK />Update</button>
-                </div>
-              }
+              <div className='extra__btns'>
+                {mode === "edit" && <button onClick={() => {
+                  swal({
+                    title: "Are you sure?",
+                    icon: "warning",
+                    buttons: true,
+                  })
+                    .then((cnv) => {
+                      if (cnv) {
+                        swal("Invoice successfully duplicate", {
+                          icon: "success",
+                        });
+                        navigate(`/admin/sales-invoice/add/${id}`)
+                      }
+                    });
+                }}><Icons.COPY />Duplicate invoice</button>}
+                <button onClick={saveBill}><Icons.CHECK />{mode ? "Update" : "Save"}</button>
+              </div>
             </div>
 
             <div className='flex flex-col lg:flex-row items-center justify-around gap-4'>

@@ -88,7 +88,7 @@ const UnitAdd = ({ mode }) => {
                         <div className=' flex-col lg:flex-row'>
                             <div className='w-full'>
                                 <div className='p-2'>
-                                    <p className='pb-1'>Title</p>
+                                    <p className='pb-1'>Title <span className='required__text'>*</span></p>
                                     <input type='text' onChange={(e) => setForm({ ...form, title: e.target.value })} value={form.title} />
                                 </div>
                             </div>

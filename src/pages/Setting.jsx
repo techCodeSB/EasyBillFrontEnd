@@ -15,6 +15,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import AddPartyModal from '../components/AddPartyModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggle } from '../store/partyModalSlice';
+import { Icons } from '../helper/icons';
 
 
 
@@ -37,6 +38,7 @@ const Setting = () => {
     salesReminder: '', purchaseReminder: '', quotationInitial: '', creditNoteInitial: '',
     deliverChalanInitial: '', salesReturnInitial: '', quotationCount: '', creditNoteCount: '',
     salesReturnCount: '', deliveryChalanCount: '', logoFileName: '', signatureFileName: "",
+    city: '', pin: '',
   })
 
   const [partyCategory, setPartyCategory] = useState([]);
@@ -478,11 +480,11 @@ const Setting = () => {
               <button
                 onClick={saveSiteData}
                 className='bg-green-500 hover:bg-green-400 text-md text-white rounded w-[60px] flex items-center justify-center gap-1 py-2'>
-                <FaRegCheckCircle />
+                <Icons.CHECK />
                 Save
               </button>
               <button className='bg-blue-800 hover:bg-blue-700 text-md text-white rounded w-[60px] flex items-center justify-center gap-1 py-2'>
-                <BiReset />
+                <Icons.RESET />
                 Reset
               </button>
             </div>
@@ -565,15 +567,33 @@ const Setting = () => {
                       onChange={(e) => setCompanyData({ ...companyData, address: e.target.value })}
                     ></textarea>
                   </div>
-                  <div>
-                    <p>Select Country</p>
-                    <SelectPicker className='w-full' data={countryList}
-                      value={companyData.country} onChange={(v) => setCompanyData({ ...companyData, country: v })} />
+                  <div className='flex flex-col lg:flex-row gap-2 lg:gap-5'>
+                    <div className='w-full'>
+                      <p>Select Country</p>
+                      <SelectPicker className='w-full' data={countryList}
+                        value={companyData.country} onChange={(v) => setCompanyData({ ...companyData, country: v })} />
+                    </div>
+                    <div className='w-full'>
+                      <p>Select State</p>
+                      <SelectPicker className='w-full' data={statesAndUTs}
+                        value={companyData.state} onChange={(v) => setCompanyData({ ...companyData, state: v })} />
+                    </div>
                   </div>
-                  <div>
-                    <p>Select State</p>
-                    <SelectPicker className='w-full' data={statesAndUTs}
-                      value={companyData.state} onChange={(v) => setCompanyData({ ...companyData, state: v })} />
+                  <div className='flex flex-col lg:flex-row gap-2 lg:gap-5'>
+                    <div className='w-full'>
+                      <p>City</p>
+                      <input className='w-full'
+                        value={companyData.city}
+                        onChange={(e) => setCompanyData({ ...companyData, city: e.target.value })}
+                      />
+                    </div>
+                    <div className='w-full'>
+                      <p>PIN</p>
+                      <input className='w-full'
+                        value={companyData.pin}
+                        onChange={(e) => setCompanyData({ ...companyData, pin: e.target.value })}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -683,11 +703,11 @@ const Setting = () => {
                   onClick={updateCompany}
                   className='bg-green-500 hover:bg-green-400 text-md text-white rounded w-[80px] flex items-center justify-center gap-1 py-2
                   '>
-                  <FaRegCheckCircle />
+                  <Icons.CHECK />
                   Update
                 </button>
                 <button className='bg-blue-800 hover:bg-blue-700 text-md text-white rounded w-[70px] flex items-center justify-center gap-1 py-2'>
-                  <BiReset />
+                  <Icons.RESET />
                   Reset
                 </button>
               </div>
@@ -735,12 +755,12 @@ const Setting = () => {
                                 dispatch(toggle(true))
                                 setPartyCategoryId(data._id)
                               }}>
-                              <MdEditSquare />
+                              <Icons.EDIT />
                             </button>
 
-                            <button className='bg-red-500 grid place-items-center text-white px-2 py-1 rounded w-full text-[16px]'
+                            <button className='bg-red-500 grid place-items-center text-white px-1 py-1 rounded w-full text-[16px]'
                               onClick={() => removePartyCategory(data._id)}>
-                              <RiDeleteBin6Line />
+                              <Icons.DELETE />
                             </button>
                           </div>
                         </td>

@@ -308,8 +308,8 @@ const SalesInvoice = () => {
                 </button>
                 <button
                   onClick={() => {
-                    setFilterToggle(!filterToggle)
-                    setSummaryToggle(false)
+                    setFilterToggle(!filterToggle);
+                    setSummaryToggle(false);
                   }}
                   className={`${filterToggle ? 'bg-gray-200' : 'bg-gray-100'} border`}>
                   <Icons.FILTER className='text-xl' />
@@ -443,6 +443,20 @@ const SalesInvoice = () => {
 
           {
             !loading ? billData.length > 0 ? <div className='content__body__main'>
+              <div className='flex flex-col md:flex-row justify-between items-center mb-5 gap-8'>
+                <div className='party__data'>
+                  <h6><Icons.USERS /> Total Sale</h6>
+                  <p>{totalData}</p>
+                </div>
+                <div className='party__data'>
+                  <h6><Icons.TREDING_UP />Payment In</h6>
+                  <p><Icons.RUPES />212</p>
+                </div>
+                <div className='party__data'>
+                  <h6><Icons.TREDING_DOWN />Due Payment</h6>
+                  <p><Icons.RUPES /> 20.0 </p>
+                </div>
+              </div>
               {/* Table start */}
               <div className='overflow-x-auto list__table'>
                 <table className='min-w-full bg-white' id='listQuotation' ref={tableRef}>
@@ -478,7 +492,7 @@ const SalesInvoice = () => {
                           <td className='px-4 border-b' align='center'>{new Date(data.invoiceDate).toLocaleDateString()}</td>
                           <td className='px-4 border-b' align='center'>{data.salesInvoiceNumber}</td>
                           <td className='px-4 border-b' align='center'>{data.party.name}</td>
-                          <td className='px-4 border-b' align='center'>{new Date(data.DueDate).toLocaleDateString()}</td>
+                          <td className='px-4 border-b' align='center'>{data.DueDate ? new Date(data.DueDate).toLocaleDateString() : "--"}</td>
                           <td className='px-4 border-b max-w-[20px]' align='center'>
                             <span className={`${data.paymentStatus === "1" ? 'bg-green-500' : 'bg-red-500'} px-2 text-white rounded-lg text-[11px] font-bold`}>
                               {data.paymentStatus === "1" ? "Paid" : "Not Paid"}

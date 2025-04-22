@@ -388,7 +388,7 @@ const Quotation = () => {
                     trigger={'click'}
                     onClose={() => setAdvanceFilterMore(false)}
                     speaker={<Popover>
-                      <div className='advance__filter'>
+                      <div className='advance__filter max-h-[200px] overflow-y-auto'>
                         <p onClick={() => advaneFilter('today')}>Today</p>
                         <p onClick={() => advaneFilter('yesterday')}>Yesterday</p>
                         <p onClick={() => advaneFilter('thisweek')}>This Week</p>
@@ -492,13 +492,12 @@ const Quotation = () => {
                           <td className='px-4 border-b' align='center'>{data.party.name}</td>
                           <td className='px-4 border-b' align='center'>{data.validDate ? new Date(data.validDate).toLocaleDateString() : '--'}</td>
                           <td className='px-4 border-b max-w-[20px]' align='center'>
-                            <span className={`${data.validDate ? 'bg-green-500' : ''} px-2 text-white rounded-lg text-[12px] font-bold`}>
-                              {
-                                data.validDate ?
-                                  new Date(Date.parse(new Date().toLocaleDateString())).toISOString() > new Date(Date.parse(data.validDate)).toISOString() ? "Expired" : "Valid"
-                                  : "--"
-                              }
-                            </span>
+                            {
+                              data.validDate ? <span className={`${data.validDate ? 'bg-green-500' : ''} px-2 text-white rounded-lg text-[12px] font-bold`}>
+                                {new Date(Date.parse(new Date().toLocaleDateString())).toISOString() > new Date(Date.parse(data.validDate)).toISOString() ? "Expired" : "Valid"}
+                              </span>
+                                : "--"
+                            }
                           </td>
 
                           <td className='px-4 text-center'>

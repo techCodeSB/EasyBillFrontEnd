@@ -20,6 +20,7 @@ import { HiOutlineDocumentDuplicate } from 'react-icons/hi';
 import AddPartyModal from '../../components/AddPartyModal';
 import AddItemModal from '../../components/AddItemModal';
 import MySelect2 from '../../components/MySelect2';
+import { Icons } from '../../helper/icons';
 
 
 
@@ -45,7 +46,7 @@ const PO = ({ mode }) => {
   const [ItemRows, setItemRows] = useState([itemRowSet]);
   const [additionalRows, setAdditionalRow] = useState([additionalRowSet]); //{ additionalRowsItem: 1 }
   const [formData, setFormData] = useState({
-    party: '', poNumber: '', poDate: '', validDate: '', items: ItemRows,
+    party: '', poNumber: '', poDate: new Date().toISOString().split('T')[0], validDate: '', items: ItemRows,
     additionalCharge: additionalRows, note: '', terms: '',
     discountType: '', discountAmount: '', discountPercentage: '',
   })
@@ -410,15 +411,23 @@ const PO = ({ mode }) => {
   // *Save bill
   const saveBill = async () => {
 
-    if ([formData.party, formData.poNumber, formData.poDate]
-      .some((field) => field === "")) {
-      return toast("Fill the blank", "error");
+    if (formData.party === "") {
+      return toast("Please select party", "error")
+    } else if (formData.poNumber === "") {
+      return toast("Please enter purchase order number", "error")
+    } else if (formData.poDate === "") {
+      return toast("Please select purchase order date", "error")
     }
 
     for (let row of ItemRows) {
-      if ([row.itemName, row.qun, row.unit, row.price, row.tax]
-        .some((field) => field === "")) {
-        return toast("Fill the blank in item", "error");
+      if (row.itemName === "") {
+        return toast("Please select item", "error")
+      } else if (row.qun === "") {
+        return toast("Please enter quantity", "error")
+      } else if (row.unit === "") {
+        return toast("Please select unit", "error")
+      } else if (row.price === "") {
+        return toast("Please enter price", "error")
       }
     }
 
@@ -492,26 +501,25 @@ const PO = ({ mode }) => {
                 }}><MdOutlineAdd /> Add Item</button>
               </div> */}
 
-              {
-                mode && <div className='extra__btns'>
-                  <button onClick={() => {
-                    swal({
-                      title: "Are you sure?",
-                      icon: "warning",
-                      buttons: true,
-                    })
-                      .then((cnv) => {
-                        if (cnv) {
-                          swal("Quotation successfully duplicate", {
-                            icon: "success",
-                          });
-                          navigate(`/admin/purchase-order/add/${id}`)
-                        }
-                      });
-                  }}><HiOutlineDocumentDuplicate />Duplicate invoice</button>
-                  <button onClick={saveBill}><FaRegCheckCircle />Update</button>
-                </div>
-              }
+              <div className='extra__btns'>
+                {mode && <button onClick={() => {
+                  swal({
+                    title: "Are you sure?",
+                    icon: "warning",
+                    buttons: true,
+                  })
+                    .then((cnv) => {
+                      if (cnv) {
+                        swal("Quotation successfully duplicate", {
+                          icon: "success",
+                        });
+                        navigate(`/admin/purchase-order/add/${id}`)
+                      }
+                    });
+                }}><Icons.COPY />Duplicate invoice</button>}
+                <button onClick={saveBill}><Icons.CHECK />{mode ? "Update" : "Save"}</button>
+              </div>
+
             </div>
 
             <div className='flex flex-col lg:flex-row items-center justify-around gap-4'>
