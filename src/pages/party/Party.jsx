@@ -318,11 +318,11 @@ const Party = () => {
                   <p>{totalData}</p>
                 </div>
                 <div className='party__data'>
-                  <h6><Icons.TREDING_UP /> Total Pay</h6>
+                  <h6><Icons.TREDING_UP /> Total Amount To Pay</h6>
                   <p><Icons.RUPES />{totalPay}</p>
                 </div>
                 <div className='party__data'>
-                  <h6><Icons.TREDING_DOWN /> Total Collect</h6>
+                  <h6><Icons.TREDING_DOWN /> Total Amount To Collect</h6>
                   <p><Icons.RUPES /> {totalCollection}</p>
                 </div>
               </div>

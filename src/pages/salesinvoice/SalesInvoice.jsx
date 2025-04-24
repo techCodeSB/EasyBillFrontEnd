@@ -48,6 +48,8 @@ const SalesInvoice = () => {
   })
 
   const [ascending, setAscending] = useState(true);
+  const [totalPaymentIn, setTotalPaymentIn] = useState(0);
+  const [totalDuePayment, setTotalDuePayment] = useState(0);
 
 
 
@@ -70,6 +72,8 @@ const SalesInvoice = () => {
       const res = await req.json();
       console.log(res)
       setTotalData(res.totalData)
+      setTotalPaymentIn(res.totalPaymentAmount)
+      setTotalDuePayment(res.totalDueAmount)
       setBillData([...res.data])
       setLoading(false);
 
@@ -450,11 +454,11 @@ const SalesInvoice = () => {
                 </div>
                 <div className='party__data'>
                   <h6><Icons.TREDING_UP />Payment In</h6>
-                  <p><Icons.RUPES />212</p>
+                  <p><Icons.RUPES />{totalPaymentIn}</p>
                 </div>
                 <div className='party__data'>
                   <h6><Icons.TREDING_DOWN />Due Payment</h6>
-                  <p><Icons.RUPES /> 20.0 </p>
+                  <p><Icons.RUPES /> {totalDuePayment} </p>
                 </div>
               </div>
               {/* Table start */}
@@ -495,7 +499,7 @@ const SalesInvoice = () => {
                           <td className='px-4 border-b' align='center'>{data.DueDate ? new Date(data.DueDate).toLocaleDateString() : "--"}</td>
                           <td className='px-4 border-b max-w-[20px]' align='center'>
                             <span className={`${data.paymentStatus === "1" ? 'bg-green-500' : 'bg-red-500'} px-2 text-white rounded-lg text-[11px] font-bold`}>
-                              {data.paymentStatus === "1" ? "Paid" : "Not Paid"}
+                              {data.paymentStatus === "1" ? "Paid" : data.paymentStatus === "2" ? "Partial Paid" : "Not Paid"}
                             </span>
                           </td>
 

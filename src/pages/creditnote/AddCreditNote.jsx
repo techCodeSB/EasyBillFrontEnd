@@ -292,11 +292,11 @@ const CreditNote = ({ mode }) => {
     if (selectedItem.length >= 0) {
       let item = [...ItemRows];
       let currentUnit = [];
-      let taxId = selectedItem[0].category.tax;
+      let taxId = selectedItem[0]?.category?.tax;
       const getTax = tax.filter((t, _) => t._id === taxId)[0];
 
       item[index].itemId = selectedItem[0]._id;
-      item[index].hsn = selectedItem[0].category.hsn;
+      item[index].hsn = selectedItem[0]?.category?.hsn;
       item[index].unit = selectedItem[0].unit;
       item[index].selectedUnit = selectedItem[0].unit[0].unit
       item[index].tax = getTax.gst;

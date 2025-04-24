@@ -16,7 +16,6 @@ import { CiCalculator1 } from "react-icons/ci";
 import Calculator from './Calculator';
 import { calcToggle } from '../store/calculatorSlice';
 import Cookies from 'js-cookie';
-import { MdOutlineArrowDropDown } from "react-icons/md";
 import { Icons } from '../helper/icons'
 
 

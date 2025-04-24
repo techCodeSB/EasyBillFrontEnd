@@ -109,6 +109,9 @@ const AddItemComponent = ({ mode, save }) => {
     else if (form.salePrice === "") {
       return toast("Price can't be blank", "error")
     }
+    else if (form.category === "") {
+      return toast("Category can't be blank", "error")
+    }
 
     try {
       const url = process.env.REACT_APP_API_URL + "/item/add";
@@ -184,7 +187,7 @@ const AddItemComponent = ({ mode, save }) => {
         </div>
         <div className='w-full pt-1'>
           <div>
-            <p className='ml-1'>Select Category</p>
+            <p className='ml-1'>Select Category <span className='required__text'>*</span></p>
             {/* <SelectPicker className='w-full'
               data={category}
               onChange={(v) => categoryChange(v)}

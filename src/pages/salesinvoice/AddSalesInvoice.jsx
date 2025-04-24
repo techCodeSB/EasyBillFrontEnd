@@ -82,7 +82,6 @@ const SalesInvoice = ({ mode }) => {
         url = `${process.env.REACT_APP_API_URL}${"/proforma/get"}`
       }
 
-      console.log(url)
       const cookie = Cookies.get("token");
 
       const req = await fetch(url, {
@@ -96,9 +95,26 @@ const SalesInvoice = ({ mode }) => {
       const removeProformaNumber = { ...res.data };
       delete removeProformaNumber.proformaNumber;
 
-      setFormData({ ...removeProformaNumber, ...res.data });
-      setAdditionalRow([...res.data.additionalCharge])
-      setItemRows([...res.data.items]);
+      // setFormData({
+      //   ...removeProformaNumber, ...res.data,
+      // });
+
+      const cleanedData = {
+        ...removeProformaNumber,
+        invoiceDate: res.data.invoiceDate
+          ? new Date(res.data.invoiceDate).toISOString().split("T")[0]
+          : "",
+      };
+      
+      setFormData(prev => ({
+        ...prev,
+        ...cleanedData
+      }));
+
+      if (mode) {
+        setAdditionalRow([...res.data.additionalCharge]);
+        setItemRows([...res.data.items]);
+      }
 
       if (res.data.discountType != "no") {
         setDiscountToggler(false);
@@ -119,7 +135,8 @@ const SalesInvoice = ({ mode }) => {
   useEffect(() => {
     if ((getBillPrefix && mode === "convert") || (getBillPrefix && !mode)) {
       setFormData(prev => ({ ...prev, salesInvoiceNumber: getBillPrefix[0] + getBillPrefix[1] }));
-      console.log(formData)
+      console.log("getBillPrefix", getBillPrefix)
+
     }
     else if (getBillPrefix && mode === "edit") {
       console.log("not if")
@@ -257,7 +274,7 @@ const SalesInvoice = ({ mode }) => {
 
 
 
-  // When change discount type `before` `after` `no`;
+  // When change discount type [ `before` |  `after`  | `no` ];
   const changeDiscountType = (e) => {
 
     if (e.target.value !== "no") {
@@ -322,11 +339,11 @@ const SalesInvoice = ({ mode }) => {
     if (selectedItem.length >= 0) {
       let item = [...ItemRows];
       let currentUnit = [];
-      let taxId = selectedItem[0].category?.tax;
+      let taxId = selectedItem[0]?.category?.tax;
       const getTax = tax.filter((t, _) => t._id === taxId)[0];
 
       item[index].itemId = selectedItem[0]._id;
-      item[index].hsn = selectedItem[0].category?.hsn;
+      item[index].hsn = selectedItem[0]?.category?.hsn;
       item[index].unit = selectedItem[0].unit;
       item[index].selectedUnit = selectedItem[0].unit[0].unit
       item[index].tax = getTax?.gst;
@@ -444,11 +461,13 @@ const SalesInvoice = ({ mode }) => {
     //   return toast("Fill the blank", "error");
     // }
 
-    if (formData.party === "") {
+    console.log("invoice number", formData.salesInvoiceNumber)
+
+    if (!formData.party) {
       return toast("Please select party", "error");
-    } else if (formData.salesInvoiceNumber === "") {
+    } else if (!formData.salesInvoiceNumber) {
       return toast("Please enter invoice number", "error");
-    } else if (formData.invoiceDate === "") {
+    } else if (!formData.invoiceDate) {
       return toast("Please select invoice date", "error");
     }
 
@@ -584,7 +603,7 @@ const SalesInvoice = ({ mode }) => {
                 <p className='text-xs'>Sales Invoice Number <span className='required__text'>*</span></p>
                 <input type="text"
                   onChange={(e) => setFormData({ ...formData, salesInvoiceNumber: e.target.value })}
-                  value={formData.salesInvoiceNumber}
+                  value={formData.salesInvoiceNumber || ""}
                 />
               </div>
               <div className='flex flex-col gap-2 w-full lg:w-1/2'>
@@ -593,7 +612,7 @@ const SalesInvoice = ({ mode }) => {
                   onChange={(e) => {
                     setFormData({ ...formData, invoiceDate: e.target.value })
                   }}
-                  value={formData.invoiceDate}
+                  value={formData.invoiceDate || ""}
                 />
               </div>
               <div className='flex flex-col gap-2 w-full lg:w-1/2'>

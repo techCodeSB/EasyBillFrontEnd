@@ -54,9 +54,14 @@
   padding: 10px;
   border-radius: 5px;
   box-shadow: 0px 0px 5px lightgrey;
+  /* border:1px solid #E5E7EB; */
   font-size: 13px !important;
   background-color: white;
 }
+/* .content__body__main:hover{
+  box-shadow: 0px 0px 5px lightgrey;
+  border: none;
+} */
 
 h1,
 h2,
