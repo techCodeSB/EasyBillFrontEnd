@@ -276,8 +276,9 @@ const Item = ({ mode }) => {
                       <th className='py-2 px-4 border-b w-[50px]'>
                         <input type='checkbox' onChange={selectAll} checked={itemData.length > 0 && selected.length === itemData.length} />
                       </th>
-                      <td className='py-2 px-4 border-b '>Title</td>
+                      <td className='py-2 px-4 border-b '>Name</td>
                       <th className='py-2 px-4 border-b '>HSN</th>
+                      <th className='py-2 px-4 border-b '>Sale Price</th>
                       <th className='py-2 px-4 border-b '>STOCK</th>
                       <th className='py-2 px-4 border-b w-[100px]'>Action</th>
                     </tr>
@@ -298,6 +299,7 @@ const Item = ({ mode }) => {
                             }
                           </td>
                           <td className='px-4 border-b' align='center'>{data.category?.hsn}</td>
+                          <td className='px-4 border-b' align='center'>{data.salePrice || 0.00}</td>
                           <td className='px-4 border-b' align='center'>
                             <div className='flex items-center justify-center gap-2'>
                               {

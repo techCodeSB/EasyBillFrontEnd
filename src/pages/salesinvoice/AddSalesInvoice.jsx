@@ -95,17 +95,13 @@ const SalesInvoice = ({ mode }) => {
       const removeProformaNumber = { ...res.data };
       delete removeProformaNumber.proformaNumber;
 
-      // setFormData({
-      //   ...removeProformaNumber, ...res.data,
-      // });
-
       const cleanedData = {
         ...removeProformaNumber,
         invoiceDate: res.data.invoiceDate
           ? new Date(res.data.invoiceDate).toISOString().split("T")[0]
           : "",
       };
-      
+
       setFormData(prev => ({
         ...prev,
         ...cleanedData
@@ -943,35 +939,40 @@ const SalesInvoice = ({ mode }) => {
                     value={formData.paymentStatus}
                   >
                     <option value="0">Not Paid</option>
-                    <option value="1">Paid</option>
+                    <option value="1">Full Paid</option>
+                    <option value="2">Partial Paid</option>
                   </select>
                 </div>
-                <div className='flex items-center gap-2'>
-                  <div className='w-full'>
-                    <p>Amount:</p>
-                    <input type="text"
-                      onChange={(e) => setFormData({ ...formData, paymentAmount: e.target.value })}
-                      value={formData.paymentAmount}
-                    />
-                  </div>
+                {
+                  formData.paymentStatus === "1" || formData.paymentStatus === "2" ?
+                    <div className='flex items-center gap-2'>
+                      <div className='w-full'>
+                        <p>Amount:</p>
+                        <input type="text"
+                          onChange={(e) => setFormData({ ...formData, paymentAmount: e.target.value })}
+                          value={formData.paymentAmount}
+                        />
+                      </div>
 
-                  <div className='w-full'>
-                    <p>Select Account:</p>
-                    <select
-                      onChange={(e) => {
-                        setFormData({ ...formData, paymentAccount: e.target.value })
-                      }}
-                      value={formData.paymentAccount}
-                    >
-                      <option value="">--Select Account--</option>
-                      {
-                        account.map((a, _) => {
-                          return <option value={a._id} key={_}>{a.title}</option>
-                        })
-                      }
-                    </select>
-                  </div>
-                </div>
+                      <div className='w-full'>
+                        <p>Select Account:</p>
+                        <select
+                          onChange={(e) => {
+                            setFormData({ ...formData, paymentAccount: e.target.value })
+                          }}
+                          value={formData.paymentAccount}
+                        >
+                          <option value="">--Select Account--</option>
+                          {
+                            account.map((a, _) => {
+                              return <option value={a._id} key={_}>{a.title}</option>
+                            })
+                          }
+                        </select>
+                      </div>
+                    </div>
+                    : null
+                }
               </div>
               <div className='w-full'>
                 <div className='uppercase font-bold border border-dashed p-2 rounded'>

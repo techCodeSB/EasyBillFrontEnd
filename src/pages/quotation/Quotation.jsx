@@ -505,25 +505,47 @@ const Quotation = () => {
                               placement='leftStart'
                               trigger={"click"}
                               speaker={<Popover full>
-                                <div
-                                  className='table__list__action__icon'
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    navigate(`/admin/quotation-estimate/edit/${data._id}`)
-                                  }}
-                                >
-                                  <Icons.EDIT className='text-[16px]' />
-                                  Edit
-                                </div>
-                                <div
-                                  className='table__list__action__icon'
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    navigate(`/admin/bill/details/quotation/${data._id}`)
-                                  }}
-                                >
-                                  <Icons.INFO_DETAILS className='text-[16px]' />
-                                  Details
+                                <div className='w-[170px]'>
+                                  <div
+                                    className='table__list__action__icon'
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      navigate(`/admin/quotation-estimate/edit/${data._id}`)
+                                    }}
+                                  >
+                                    <Icons.EDIT className='text-[16px]' />
+                                    Edit
+                                  </div>
+                                  <div
+                                    className='table__list__action__icon'
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      navigate(`/admin/bill/details/quotation/${data._id}`)
+                                    }}
+                                  >
+                                    <Icons.INFO_DETAILS className='text-[16px]' />
+                                    Details
+                                  </div>
+                                  <div
+                                    className='table__list__action__icon'
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      navigate(`/admin/proforma-invoice/convert/add/${data._id}`)
+                                    }}
+                                  >
+                                    <Icons.CONVERT className='text-[14px]' />
+                                    Convert to proforma
+                                  </div>
+                                  <div
+                                    className='table__list__action__icon'
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      navigate(`/admin/bill/details/quotation/${data._id}`)
+                                    }}
+                                  >
+                                    <Icons.CONVERT className='text-[14px]' />
+                                    Convert to invoice
+                                  </div>
                                 </div>
                               </Popover>}
                             >

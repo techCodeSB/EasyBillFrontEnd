@@ -121,6 +121,7 @@ const App = () => {
         {/* Proforma route */}
         <Route path="/admin/proforma-invoice" element={<ProtectRoute><Proforma /></ProtectRoute>} />
         <Route path="/admin/proforma-invoice/add/:id?" element={<ProtectRoute><AddProforma /></ProtectRoute>} />
+        <Route path="/admin/proforma-invoice/convert/add/:id" element={<ProtectRoute><AddProforma mode={'convert'} /></ProtectRoute>} />
         <Route path="/admin/proforma-invoice/edit/:id" element={<ProtectRoute><AddProforma mode={"edit"} /></ProtectRoute>} />
 
 

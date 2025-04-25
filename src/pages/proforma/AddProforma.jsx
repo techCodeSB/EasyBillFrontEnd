@@ -70,7 +70,13 @@ const Proforma = ({ mode }) => {
 
   // Get data for update mode
   const get = async () => {
-    const url = process.env.REACT_APP_API_URL + "/proforma/get";
+    let url;
+    if (mode === "edit") {
+      url = process.env.REACT_APP_API_URL + "/proforma/get";
+    } else {
+      url = process.env.REACT_APP_API_URL + "/quotation/get";
+    }
+
     const cookie = Cookies.get("token");
 
     const req = await fetch(url, {
@@ -81,8 +87,22 @@ const Proforma = ({ mode }) => {
       body: JSON.stringify({ token: cookie, id: id })
     })
     const res = await req.json();
-    console.log(res)
-    setFormData({ ...formData, ...res.data });
+
+    const removeQuotationNumber = { ...res.data };
+    delete removeQuotationNumber.quotationNumber;
+
+    const cleanedData = {
+      ...removeQuotationNumber,
+      estimateDate: res.data.estimateDate
+        ? new Date(res.data.estimateDate).toISOString().split("T")[0]
+        : "",
+    };
+
+    setFormData(prev => ({
+      ...prev,
+      ...cleanedData
+    }));
+
     setAdditionalRow([...res.data.additionalCharge])
     setItemRows([...res.data.items]);
 
@@ -98,11 +118,13 @@ const Proforma = ({ mode }) => {
 
 
   useEffect(() => {
-    if (getBillPrefix && !mode) {
+    if ((getBillPrefix && mode === "convert") || (getBillPrefix && !mode)) {
       setFormData(prev => ({ ...prev, proformaNumber: getBillPrefix[0] + getBillPrefix[1] }));
-    } else if (getBillPrefix && mode) {
+    }
+    else if (getBillPrefix && mode === "edit") {
       get();
     }
+
   }, [getBillPrefix?.length, mode]);
 
 
@@ -439,15 +461,37 @@ const Proforma = ({ mode }) => {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(!mode ? { ...formData, token } : { ...formData, token, update: true, id: id })
+        body: JSON.stringify(!mode || mode !== "edit" ? { ...formData, token } : { ...formData, token, update: true, id: id })
       })
       const res = await req.json();
       if (req.status !== 200 || res.err) {
         return toast(res.err, 'error');
       }
 
-      if (mode) {
+      if (mode === 'edit') {
         return toast('Proforma update successfully', 'success');
+      }
+
+      // if this is converted by quotation then update the quotation status;
+      // :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+      if (mode === "convert") {
+        try {
+          const url = process.env.REACT_APP_API_URL + "/quotation/add";
+          const x = await fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ token, id, update: true, billStatus: "convert" })
+          })
+          
+          const y = await x.json();
+          console.log(y);
+
+        } catch (error) {
+          console.log(error);
+          return toast('Quotation status not change', 'error')
+        }
       }
 
       clearForm();
@@ -480,7 +524,7 @@ const Proforma = ({ mode }) => {
 
   return (
     <>
-      <Nav title={mode ? "Update Proforma" : "Add Proforma"} />
+      <Nav title={mode === "edit" ? "Update Proforma" : "Add Proforma"} />
       <main id='main'>
         <SideNav />
         <AddPartyModal open={getPartyModalState} />
@@ -502,7 +546,7 @@ const Proforma = ({ mode }) => {
 
               {
                 <div className='extra__btns'>
-                  {mode && <button onClick={() => {
+                  {mode === "edit" && <button onClick={() => {
                     swal({
                       title: "Are you sure?",
                       icon: "warning",
@@ -517,7 +561,9 @@ const Proforma = ({ mode }) => {
                         }
                       });
                   }}><Icons.COPY />Duplicate invoice</button>}
-                  <button onClick={saveBill}><Icons.CHECK />{mode ? "Update" : "Save"}</button>
+                  <button onClick={saveBill}>
+                    <Icons.CHECK />{mode === "edit" ? "Update" : "Save"}
+                  </button>
                 </div>
               }
             </div>

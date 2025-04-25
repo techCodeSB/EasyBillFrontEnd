@@ -563,13 +563,13 @@ select {
 }
 
 .table__list__action__icon {
+  width: 100%;
   display: flex;
   align-items: center;
   gap: 7px;
   cursor: pointer;
   padding: 5px;
   border-radius: 8px;
-  width: 120px;
 }
 
 .table__list__action__icon:hover {

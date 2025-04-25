@@ -2,14 +2,12 @@ import React, { useEffect, useRef, useState } from 'react'
 import Nav from '../../components/Nav'
 import SideNav from '../../components/SideNav'
 import { DatePicker, SelectPicker } from 'rsuite'
-import { Editor } from '@tinymce/tinymce-react'
-import { FaRegCheckCircle } from 'react-icons/fa'
-import { BiReset } from 'react-icons/bi'
 import useApi from '../../hooks/useApi'
 import useMyToaster from '../../hooks/useMyToaster'
 import Cookies from 'js-cookie';
 import { useNavigate, useParams } from 'react-router-dom'
 import MySelect2 from '../../components/MySelect2'
+import { Icons } from '../../helper/icons'
 
 
 
@@ -142,10 +140,10 @@ const AddPayment = ({ mode }) => {
       }
 
       clear();
-      
+
       toast('Payment add successfully', 'success');
       navigate('/admin/payment-in');
-      return 
+      return
 
 
     } catch (error) {
@@ -262,17 +260,54 @@ const AddPayment = ({ mode }) => {
               <button
                 onClick={savePayment}
                 className='bg-green-500 hover:bg-green-400 text-md text-white rounded w-[70px] flex items-center justify-center gap-1 py-2'>
-                <FaRegCheckCircle />
+                <Icons.CHECK />
                 {!mode ? "Save" : "Update"}
               </button>
               <button
                 onClick={clear}
                 className='bg-blue-800 hover:bg-blue-700 text-md text-white rounded w-[60px] flex items-center justify-center gap-1 py-2'>
-                <BiReset />
+                <Icons.RESET />
                 Reset
               </button>
             </div>
           </div>
+
+
+          {/* ::::::::::::::::::::::::::::::::::::::::::::: */}
+          {/* :::::::::::::::::: SELELMENT :::::::::::::::: */}
+          {/* ::::::::::::::::::::::::::::::::::::::::::::: */}
+
+          <div className='content__body__main mt-5'>
+            <table className='w-full border'>
+              <thead className='bg-gray-200'>
+                <tr >
+                  <td className='p-2 font-medium'>Date</td>
+                  <td className='font-medium'>Invoice Number</td>
+                  <td className='font-medium'>Invoice Amount</td>
+                  <td className='font-medium'>Invoice Amount Settled</td>
+                  <td className='font-medium'>TDS Amount</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className='border-gray-300'>
+                  <td className='p-2'>adfa</td>
+                  <td>adsfa</td>
+                  <td>adafadf</td>
+                  <td>adafadf</td>
+                  <td>0</td>
+                </tr>
+                <tr className='border-gray-300'>
+                  <td className='p-2'>adfa</td>
+                  <td>adsfa</td>
+                  <td>adafadf</td>
+                  <td>adafadf</td>
+                  <td>0</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          {/* Salement div close here */}
+
         </div>
 
       </main>
