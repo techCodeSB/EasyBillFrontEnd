@@ -82,14 +82,14 @@ const Party = () => {
           headers: {
             "Content-Type": 'application/json'
           },
-          body: JSON.stringify({token: Cookies.get("token"), totalPayment: true})
+          body: JSON.stringify({ token: Cookies.get("token"), totalPayment: true })
         });
         const res = await req.json();
-        
-        if(req.status === 200){
-          if(whichType === "paymentin"){
+
+        if (req.status === 200) {
+          if (whichType === "paymentin") {
             setTotalCollection(res.totalAmount);
-          }else{
+          } else {
             setTotalPay(res.totalAmount);
           }
         }
@@ -345,7 +345,7 @@ const Party = () => {
                   <tbody>
                     {
                       partyData.map((data, i) => {
-                        return <tr key={i}>
+                        return <tr key={i} onClick={() => navigate("/admin/party/details/" + data._id)} className='cursor-pointer hover:bg-gray-100'>
                           <td className='py-2 px-4'>
                             <input type='checkbox' checked={selected.includes(data._id)} onChange={() => handleCheckboxChange(data._id)} />
                           </td>
@@ -359,19 +359,26 @@ const Party = () => {
                           <td className='px-4 text-center'>{data.openingBalance}</td>
                           <td className='px-4 text-center'>
                             <Whisper
+                              onClick={(e) => e.stopPropagation()}
                               placement='leftStart'
                               trigger={"click"}
                               speaker={<Popover full>
                                 <div
                                   className='table__list__action__icon'
-                                  onClick={() => navigate("/admin/party/edit/" + data._id)}
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    navigate("/admin/party/edit/" + data._id)
+                                  }}
                                 >
                                   <Icons.EDIT className='text-[16px]' />
                                   Edit
                                 </div>
                                 <div
                                   className='table__list__action__icon'
-                                  onClick={() => navigate("/admin/party/ladger/" + data._id)}
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    navigate("/admin/party/ladger/" + data._id)
+                                  }}
                                 >
                                   <Icons.BOOK className='text-[16px]' />
                                   Ladger

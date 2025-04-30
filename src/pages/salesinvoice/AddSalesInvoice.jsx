@@ -6,7 +6,7 @@ import useMyToaster from '../../hooks/useMyToaster';
 import useApi from '../../hooks/useApi';
 import useBillPrefix from '../../hooks/useBillPrefix';
 import Cookies from 'js-cookie';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import swal from 'sweetalert';
 import AddPartyModal from '../../components/AddPartyModal';
@@ -44,6 +44,9 @@ const SalesInvoice = ({ mode }) => {
     discountType: '', discountAmount: '', discountPercentage: '', paymentStatus: '0',
     paymentAccount: '', finalAmount: '', paymentAmount: '',
   })
+  const location = useLocation();
+  const fromWhichBill = location.state?.fromWhichBill || null;
+
 
   const [perPrice, setPerPrice] = useState(null);
   const [perTax, setPerTax] = useState(null);
@@ -71,15 +74,18 @@ const SalesInvoice = ({ mode }) => {
 
 
 
-  // Get data for update mode
+
   const get = async () => {
     try {
       let url;
       if (mode === 'edit' || !mode) {
         url = `${process.env.REACT_APP_API_URL}${"/salesinvoice/get"}`
       }
-      else if (mode === "convert") {
+      else if (mode === "convert" && fromWhichBill === "proforma") {
         url = `${process.env.REACT_APP_API_URL}${"/proforma/get"}`
+      }
+      else if (mode === "convert" && fromWhichBill === "quotation") {
+        url = `${process.env.REACT_APP_API_URL}${"/quotation/get"}`
       }
 
       const cookie = Cookies.get("token");
@@ -457,7 +463,6 @@ const SalesInvoice = ({ mode }) => {
     //   return toast("Fill the blank", "error");
     // }
 
-    console.log("invoice number", formData.salesInvoiceNumber)
 
     if (!formData.party) {
       return toast("Please select party", "error");
@@ -506,7 +511,7 @@ const SalesInvoice = ({ mode }) => {
 
       // if this is converted by proforma then delete the proforma
       // :::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-      if (mode === "convert") {
+      if (mode === "convert" && fromWhichBill === "proforma") {
         try {
           await fetch(process.env.REACT_APP_API_URL + "/proforma/delete", {
             method: "DELETE",
@@ -518,6 +523,23 @@ const SalesInvoice = ({ mode }) => {
 
         } catch (error) {
           console.log("Proforma not deleted: " + error);
+        }
+      }
+      
+      else if (mode === "convert" && fromWhichBill === "quotation") {
+        try {
+          const url = process.env.REACT_APP_API_URL + "/quotation/add";
+          await fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ token, id, update: true, billStatus: "convert" })
+          })
+
+        } catch (error) {
+          console.log(error);
+          return toast('Quotation status not change', 'error')
         }
       }
 

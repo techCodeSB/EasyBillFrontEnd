@@ -57,6 +57,8 @@ const AddCreditNote = React.lazy(() => import("./pages/creditnote/AddCreditNote"
 const DeliveryChalan = React.lazy(() => import("./pages/deliverychalan/DeliveryChalan"));
 const AddDeliveryChalan = React.lazy(() => import("./pages/deliverychalan/AddDeliveryChalan"));
 const Ladger = React.lazy(()=>import("./pages/party/Ladger"));
+const PartyDetails = React.lazy(()=>import("./pages/party/Details"));
+const ItemDetails = React.lazy(()=>import("./pages/Items/Details"));
 
 
 
@@ -188,6 +190,7 @@ const App = () => {
         <Route path="/admin/party/add" element={<ProtectRoute><AddParty /></ProtectRoute>} />
         <Route path="/admin/party/edit/:id" element={<ProtectRoute><AddParty mode={"edit"} /></ProtectRoute>} />
         <Route path="/admin/party/ladger/:id" element={<ProtectRoute><Ladger /></ProtectRoute>} />
+        <Route path="/admin/party/details/:id" element={<ProtectRoute><PartyDetails /></ProtectRoute>} />
 
         <Route path="admin/other-transaction/add" element={<ProtectRoute><TransactionAdd /></ProtectRoute>} />
         <Route path="admin/other-transaction/edit/:id" element={<ProtectRoute><TransactionAdd mode="edit"/></ProtectRoute>} />
@@ -210,9 +213,12 @@ const App = () => {
         <Route path="/admin/item-category/edit/:id" element={<ProtectRoute>< CategoryAdd mode="edit" /></ProtectRoute>} />
         <Route path="/admin/item-category" element={<ProtectRoute><Category /></ProtectRoute>} />
 
+
         <Route path="/admin/item/add" element={<ProtectRoute><ItemAdd /></ProtectRoute>} />
         <Route path="/admin/item/edit/:id" element={<ProtectRoute>< ItemAdd mode="edit" /></ProtectRoute>} />
         <Route path="/admin/item" element={<ProtectRoute>< Item /></ProtectRoute>} />
+        <Route path="/admin/item/details/:id" element={<ProtectRoute><ItemDetails /></ProtectRoute>}/>
+
 
         <Route path="/admin/role/add" element={<ProtectRoute>< RoleAdd /></ProtectRoute>} />
         <Route path="/admin/role/edit" element={<ProtectRoute>< RoleAdd mode="edit" /></ProtectRoute>} />

@@ -126,7 +126,7 @@ const PartyComponent = ({ mode, save }) => {
 
 
   return (
-    <div className="bg-white content__body__main ">
+    <div className="content__body__main ">
       <div className='grid grid-cols-1 lg:grid-cols-2 lg:gap-4 gap-0'>
         {/* First Column */}
         <div className='flex flex-col gap-2'>

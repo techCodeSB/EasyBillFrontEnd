@@ -20,6 +20,10 @@ import { FaRegCheckCircle } from 'react-icons/fa';
 import { CgPlayListAdd } from "react-icons/cg";
 import { SiConvertio } from "react-icons/si";
 import { HiOutlineRefresh } from "react-icons/hi";
+import { LuBriefcaseBusiness } from "react-icons/lu";
+import { TbFileInvoice } from "react-icons/tb";
+
+
 
 
 
@@ -50,5 +54,7 @@ export const Icons = {
   CHECK: FaRegCheckCircle,
   ADD_LIST: CgPlayListAdd,
   CONVERT: SiConvertio,
+  BUSINESS: LuBriefcaseBusiness,
+  INVOICE: TbFileInvoice,
 };
 

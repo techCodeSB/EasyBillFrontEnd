@@ -1,7 +1,12 @@
 import Cookies from 'js-cookie';
 
 const useApi = () => {
-  const getApiData = async (model) => {
+  const getApiData = async (model, id) => {
+    let payload = { token: Cookies.get("token") };
+    if (id) {
+      payload = { ...payload, id };
+    }
+
     try {
       const url = process.env.REACT_APP_API_URL + `/${model}/get`;
       const req = await fetch(url, {
@@ -9,7 +14,7 @@ const useApi = () => {
         headers: {
           "Content-Type": 'application/json'
         },
-        body: JSON.stringify({ token: Cookies.get("token") })
+        body: JSON.stringify(payload)
       });
       const res = await req.json();
       return res;

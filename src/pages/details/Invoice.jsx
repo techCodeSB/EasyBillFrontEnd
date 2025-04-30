@@ -1,9 +1,5 @@
-import React, { use, useEffect, useState } from 'react'
-import { BiPrinter } from 'react-icons/bi'
+import React, { useEffect, useState } from 'react'
 import { FaRegFilePdf } from 'react-icons/fa'
-import { MdEditSquare } from 'react-icons/md';
-import { IoMdArrowBack } from "react-icons/io";
-import Logo from '../../assets/images/logo2.png'
 import { useNavigate, useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import Nav from '../../components/Nav';
@@ -12,7 +8,6 @@ import { toWords } from 'number-to-words';
 import { Document, Page, View, Text, Image, StyleSheet, PDFViewer, pdf } from '@react-pdf/renderer';
 import downloadPdf from '../../helper/downloadPdf';
 import useMyToaster from '../../hooks/useMyToaster';
-import { LuSend } from "react-icons/lu";
 import Loading from '../../components/Loading';
 import MailModal from '../../components/MailModal';
 import { useDispatch, useSelector } from 'react-redux';
@@ -22,8 +17,8 @@ import { MdOutlineArrowDropDown } from "react-icons/md";
 import { IoIosShareAlt } from "react-icons/io";
 import { HiOutlineMail } from "react-icons/hi";
 import { MdOutlineWhatsapp } from "react-icons/md";
-import { BiShare } from "react-icons/bi";
-
+import swal from 'sweetalert';
+import { Icons } from '../../helper/icons';
 
 
 
@@ -47,7 +42,7 @@ const Invoice = () => {
   const [pdfData, setPdfData] = useState(null);
   const [billName, setBillName] = useState('');
   const [shareDrpdwn, setShareDrpdwn] = useState(false);
-
+  const [route, setRoute] = useState('');
 
 
 
@@ -56,33 +51,43 @@ const Invoice = () => {
     if (bill === "quotation") {
       setUrlRoute("quotation");
       setBillName("Qutation");
+      setRoute("quotation-estimate");
     } else if (bill === "proforma") {
       setUrlRoute('proforma');
       setBillName("Proforma");
+      setRoute("proforma-invoice");
     } else if (bill === 'po') {
       setUrlRoute('po')
       setBillName("Purchase Order");
+      setRoute("purchase-order");
     } else if (bill === 'purchaseinvoice') {
       setUrlRoute("purchaseinvoice");
       setBillName("Purchase Invoice");
+      setRoute("purchase-invoice");
     } else if (bill === "purchasereturn") {
       setUrlRoute('purchasereturn');
       setBillName("Purchase Return");
+      setRoute("purchase-return");
     } else if (bill === 'debitnote') {
       setUrlRoute("debitnote");
       setBillName("Debitnote");
+      setRoute("debit-note");
     } else if (bill === 'salesinvoice') {
       setUrlRoute("salesinvoice");
       setBillName("Sales Invoice");
+      setRoute("sales-invoice");
     } else if (bill === 'salesreturn') {
       setUrlRoute("salesreturn");
       setBillName("Sales Return");
+      setRoute("sales-return");
     } else if (bill === 'creditnote') {
       setUrlRoute("creditnote");
       setBillName("Creditnote");
+      setRoute("credit-note");
     } else if (bill === 'deliverychalan') {
       setUrlRoute("deliverychalan");
       setBillName("Delivery Chalan");
+      setRoute("delivery-chalan");
     }
   }, [bill])
 
@@ -252,6 +257,30 @@ const Invoice = () => {
             <div className='bg-white /*w-[190mm]*/ w-[80%]  p-5'>
               {/* Action buttons */}
               <div id='invoiceBtn' className='flex gap-2 w-full justify-end mb-5'>
+
+                <button
+                  onClick={() => {
+                    swal({
+                      title: "Are you sure?",
+                      icon: "warning",
+                      buttons: true,
+                    })
+                      .then((cnv) => {
+                        if (cnv) {
+                          swal("Quotation successfully duplicate", {
+                            icon: "success",
+                          });
+                          navigate(`/admin/${route}/add/${id}`)
+                        }
+                      });
+                  }}
+                  title='Duplicate'
+                  className='bg-[#003E32] text-white rounded-[5px] flex justify-center items-center px-2 py-[5px] gap-1'
+                >
+                  <Icons.COPY />
+                  Duplicate
+                </button>
+
                 <button
                   onClick={() => {
                     downloadPdf(
@@ -262,11 +291,10 @@ const Invoice = () => {
                     );
                   }}
                   title='PDF'
-                  className='bg-blue-700 text-white rounded-[5px] flex justify-center items-center px-2 py-[5px]'>
+                  className='bg-[#003E32] text-white rounded-[5px] flex justify-center items-center px-2 py-[5px]'>
                   <FaRegFilePdf className="text-white text-[15px] mr-1" />
                   Download
                 </button>
-
 
                 <Whisper
                   trigger={'click'}
@@ -276,7 +304,7 @@ const Invoice = () => {
                   onClick={() => setShareDrpdwn(!shareDrpdwn)}
                   speaker={<Popover>
                     <div
-                      onClick={()=>{
+                      onClick={() => {
                         sendViaMail()
                         setShareDrpdwn(false)
                       }}
@@ -291,7 +319,7 @@ const Invoice = () => {
                   </Popover>}
                 >
                   <div
-                    className='flex items-center gap-3 bg-orange-600 text-white rounded-[5px] px-2 py-[5px] cursor-pointer'>
+                    className='flex items-center gap-3 bg-[#003E32] text-white rounded-[5px] px-2 py-[5px] cursor-pointer'>
                     <div className='flex items-center gap-1'>
                       <IoIosShareAlt />
                       Share

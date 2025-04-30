@@ -483,7 +483,7 @@ const Quotation = () => {
                           <td className='py-2 px-4 border-b max-w-[10px]'>
                             <input type='checkbox'
                               checked={selected.includes(data._id)}
-                              onChange={() => handleCheckboxChange(data._id)}
+                              onChange={data.billStatus === "convert" ? (e) => e.stopPropagation() : () => handleCheckboxChange(data._id)}
                               onClick={(e) => e.stopPropagation()}
                             />
                           </td>
@@ -493,13 +493,17 @@ const Quotation = () => {
                           <td className='px-4 border-b' align='center'>{data.validDate ? new Date(data.validDate).toLocaleDateString() : '--'}</td>
                           <td className='px-4 border-b max-w-[20px]' align='center'>
                             {
-                              data.validDate ? <span className={`${data.validDate ? 'bg-green-500' : ''} px-2 text-white rounded-lg text-[12px] font-bold`}>
-                                {new Date(Date.parse(new Date().toLocaleDateString())).toISOString() > new Date(Date.parse(data.validDate)).toISOString() ? "Expired" : "Valid"}
+                              // data.validDate ?
+                              //   <span className={`${data.validDate ? 'bg-green-500' : ''} px-2 text-white rounded-lg text-[12px] font-bold`}>
+                              //     {new Date(Date.parse(new Date().toLocaleDateString())).toISOString() > new Date(Date.parse(data.validDate)).toISOString() ? "Expired" : "Valid"}
+                              //   </span>
+                              //   : data.billStatus
+
+                              <span className={`bg-green-500 px-2 text-white rounded-lg text-[12px] font-bold`}>
+                                {data.billStatus}
                               </span>
-                                : "--"
                             }
                           </td>
-
                           <td className='px-4 text-center'>
                             <Whisper
                               placement='leftStart'
@@ -507,10 +511,12 @@ const Quotation = () => {
                               speaker={<Popover full>
                                 <div className='w-[170px]'>
                                   <div
-                                    className='table__list__action__icon'
+                                    className={`${data.billStatus === "convert"?'text-gray-400':''} table__list__action__icon`}
                                     onClick={(e) => {
                                       e.stopPropagation();
-                                      navigate(`/admin/quotation-estimate/edit/${data._id}`)
+                                      if (data.billStatus !== "convert") {
+                                        navigate(`/admin/quotation-estimate/edit/${data._id}`)
+                                      }
                                     }}
                                   >
                                     <Icons.EDIT className='text-[16px]' />
@@ -530,7 +536,11 @@ const Quotation = () => {
                                     className='table__list__action__icon'
                                     onClick={(e) => {
                                       e.stopPropagation();
-                                      navigate(`/admin/proforma-invoice/convert/add/${data._id}`)
+                                      navigate(`/admin/proforma-invoice/convert/add/${data._id}`, {
+                                        state: {
+                                          fromWhichBill: 'proforma'
+                                        }
+                                      })
                                     }}
                                   >
                                     <Icons.CONVERT className='text-[14px]' />
@@ -540,7 +550,11 @@ const Quotation = () => {
                                     className='table__list__action__icon'
                                     onClick={(e) => {
                                       e.stopPropagation();
-                                      navigate(`/admin/bill/details/quotation/${data._id}`)
+                                      navigate(`/admin/sales-invoice/convert/add/${data._id}`, {
+                                        state: {
+                                          fromWhichBill: 'quotation'
+                                        }
+                                      })
                                     }}
                                   >
                                     <Icons.CONVERT className='text-[14px]' />

@@ -708,3 +708,18 @@ input[type="checkbox"]:checked::before {
   background-color: rgb(247, 247, 247);
   border-right: 4px solid #003628;
 }
+
+.swal-modal {
+  width: 350px;
+}
+.swal-title {
+  font-size: 20px;
+  padding: 0px !important;
+}
+.swal-icon {
+  width: 60px;
+  height: 60px;
+}
+.swal-icon--warning__body{
+  height: 30px;
+}

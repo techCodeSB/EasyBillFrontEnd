@@ -477,7 +477,7 @@ const Proforma = ({ mode }) => {
       if (mode === "convert") {
         try {
           const url = process.env.REACT_APP_API_URL + "/quotation/add";
-          const x = await fetch(url, {
+          await fetch(url, {
             method: "POST",
             headers: {
               "Content-Type": "application/json"
@@ -485,9 +485,6 @@ const Proforma = ({ mode }) => {
             body: JSON.stringify({ token, id, update: true, billStatus: "convert" })
           })
           
-          const y = await x.json();
-          console.log(y);
-
         } catch (error) {
           console.log(error);
           return toast('Quotation status not change', 'error')

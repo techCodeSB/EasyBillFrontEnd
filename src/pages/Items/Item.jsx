@@ -287,7 +287,7 @@ const Item = ({ mode }) => {
                     {
                       itemData.map((data, i) => {
                         console.log(data);
-                        return <tr key={i}>
+                        return <tr key={i} onClick={() => navigate("/admin/item/details/" + data._id)} className='cursor-pointer hover:bg-gray-100'>
                           <td className='py-2 px-4 border-b max-w-[10px]'>
                             <input type='checkbox' checked={selected.includes(data._id)} onChange={() => handleCheckboxChange(data._id)} />
                           </td>
