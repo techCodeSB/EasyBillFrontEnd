@@ -316,10 +316,14 @@ const Item = ({ mode }) => {
                             <Whisper
                               placement='leftStart'
                               trigger={"click"}
+                              onClick={(e) => e.stopPropagation()}
                               speaker={<Popover full>
                                 <div
                                   className='table__list__action__icon'
-                                  onClick={() => navigate("/admin/item/edit/" + data._id)}
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    navigate("/admin/item/edit/" + data._id)
+                                  }}
                                 >
                                   <Icons.EDIT className='text-[16px]' />
                                   Edit

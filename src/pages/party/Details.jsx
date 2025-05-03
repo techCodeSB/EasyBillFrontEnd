@@ -3,12 +3,13 @@ import Nav from '../../components/Nav'
 import SideNav from '../../components/SideNav'
 import { Icons } from '../../helper/icons'
 import useApi from '../../hooks/useApi'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 const Details = () => {
   const { getApiData } = useApi();
   const { id } = useParams();
   const [data, setData] = useState();
+  const navigate = useNavigate();
 
 
   useEffect(() => {
@@ -31,13 +32,19 @@ const Details = () => {
         <div className="content__body">
           <div className='flex justify-between gap-5'>
             <div className='content__body__main w-full'>
-              <p className='font-bold flex items-center gap-1'>
-                <Icons.INVOICE />
-                General Details
-              </p>
+              <div className='details__header'>
+                <p className='font-bold flex items-center gap-1'>
+                  <Icons.INVOICE />
+                  General Details
+                </p>
+
+                <Icons.PENCIL
+                  className='pencil'
+                  onClick={() => navigate(`/admin/party/edit/${id}`)} />
+              </div>
               <hr />
 
-              <div className='flex  gap-2'>
+              <div className='flex  gap-2 pl-4'>
                 <div className='w-full flex flex-col justify-between gap-5 text-xs'>
                   <div>
                     <p className='text-gray-400'>Party Name</p>
@@ -70,31 +77,38 @@ const Details = () => {
             </div>
             {/* Party details close here ::::::::::::::::: */}
 
-            <div className='content__body__main w-full'>
-              <p className='font-bold flex items-center gap-1'>
-                <Icons.BUSINESS />
-                Buisness Details
-              </p>
+            <div className='content__body__main w-full '>
+              <div className='details__header'>
+                <p className='font-bold flex items-center gap-1'>
+                  <Icons.BUSINESS />
+                  Buisness Details
+                </p>
+                <Icons.PENCIL
+                  className='pencil'
+                  onClick={() => navigate(`/admin/party/edit/${id}`)} />
+              </div>
               <hr />
 
-              <div className='flex justify-between gap-2'>
-                <div className='w-full'>
-                  <p className='text-gray-400'>GSTIN</p>
-                  <p>{data?.gst || "--"}</p>
+              <div className='pl-4'>
+                <div className='flex justify-between gap-2'>
+                  <div className='w-full'>
+                    <p className='text-gray-400'>GSTIN</p>
+                    <p>{data?.gst || "--"}</p>
+                  </div>
+                  <div className='w-full'>
+                    <p className='text-gray-400'>PAN Number</p>
+                    <p>{data?.pan || "--"}</p>
+                  </div>
                 </div>
-                <div className='w-full'>
-                  <p className='text-gray-400'>PAN Number</p>
-                  <p>{data?.pan || "--"}</p>
-                </div>
-              </div>
 
-              <div className='my-5'>
-                <p className='text-gray-400'>Billing Address</p>
-                <p>{data?.billingAddress}</p>
-              </div>
-              <div>
-                <p className='text-gray-400'>Shipping Address</p>
-                <p>{data?.shippingAddress}</p>
+                <div className='my-5'>
+                  <p className='text-gray-400'>Billing Address</p>
+                  <p>{data?.billingAddress}</p>
+                </div>
+                <div>
+                  <p className='text-gray-400'>Shipping Address</p>
+                  <p>{data?.shippingAddress}</p>
+                </div>
               </div>
             </div>
             {/* Business details close here :::::::::::::: */}

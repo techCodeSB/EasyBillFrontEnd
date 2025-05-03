@@ -286,7 +286,7 @@ const Category = () => {
                   <tbody>
                     {
                       categoryData.map((data, i) => {
-                        return <tr key={i}>
+                        return <tr key={i} onClick={() => navigate(`/admin/item-category/details/${data._id}`)} className='cursor-pointer hover:bg-gray-100'>
                           <td className='py-2 px-4 border-b max-w-[10px]'>
                             <input type='checkbox' checked={selected.includes(data._id)} onChange={() => handleCheckboxChange(data._id)} />
                           </td>
@@ -296,10 +296,14 @@ const Category = () => {
                             <Whisper
                               placement='leftStart'
                               trigger={"click"}
+                              onClick={(e) => e.stopPropagation()}
                               speaker={<Popover full>
                                 <div
                                   className='table__list__action__icon'
-                                  onClick={() => navigate(`/admin/item-category/edit/${data._id}`)}
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    navigate(`/admin/item-category/edit/${data._id}`)
+                                  }}
                                 >
                                   <Icons.EDIT className='text-[16px]' />
                                   Edit

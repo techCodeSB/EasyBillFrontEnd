@@ -29,7 +29,10 @@ const AddPayment = ({ mode }) => {
   const [account, setAccount] = useState([]);
   // Store invoice number
   const [invoice, setInvoice] = useState([]);
+  // invoice data
+  const [invoiceData, setInvoiceData] = useState([]);
   const navigate = useNavigate();
+  let checkedInv = [];
 
 
 
@@ -53,6 +56,9 @@ const AddPayment = ({ mode }) => {
           value: inv.salesInvoiceNumber, label: inv.salesInvoiceNumber,
           due: inv.dueAmount
         }));
+
+        console.log(res.data)
+        setInvoiceData([...res.data]);
         setInvoice([...inv])
 
       } catch (error) {
@@ -69,19 +75,8 @@ const AddPayment = ({ mode }) => {
   useEffect(() => {
     if (mode) {
       const get = async () => {
-        const url = process.env.REACT_APP_API_URL + "/paymentin/get";
-        const cookie = Cookies.get("token");
-
-        const req = await fetch(url, {
-          method: "POST",
-          headers: {
-            "Content-Type": 'application/json'
-          },
-          body: JSON.stringify({ token: cookie, id: id })
-        })
-        const res = await req.json();
+        const res = await getApiData("paymentin", id);
         setFormData({ ...formData, ...res.data });
-
       }
 
       get();
@@ -158,6 +153,26 @@ const AddPayment = ({ mode }) => {
       party: "", paymentInNumber: "", paymentInDate: "", paymentMode: "", account: "",
       amount: "", details: "", invoiceId: ''
     })
+  }
+
+
+  const handleSatelment = (e, inv) => {
+    const { checked } = e.target;
+    if (!checked) {
+      let newData = checkedInv.filter((d) => d._id !== inv._id);
+      checkedInv = [...newData];
+
+      return;
+
+    }
+
+    if((checkedInv.length > 1) && (formData.amount > checkedInv[0].dueAmount)) {
+      return toast("Invalid amount", 'error');
+    }
+    
+    checkedInv.push(inv);
+
+
   }
 
 
@@ -256,57 +271,65 @@ const AddPayment = ({ mode }) => {
                 </div>
               </div>
             </div>
-            <div className='w-full flex justify-center gap-3 mt-3'>
-              <button
-                onClick={savePayment}
-                className='bg-green-500 hover:bg-green-400 text-md text-white rounded w-[70px] flex items-center justify-center gap-1 py-2'>
-                <Icons.CHECK />
-                {!mode ? "Save" : "Update"}
-              </button>
-              <button
-                onClick={clear}
-                className='bg-blue-800 hover:bg-blue-700 text-md text-white rounded w-[60px] flex items-center justify-center gap-1 py-2'>
-                <Icons.RESET />
-                Reset
-              </button>
-            </div>
+
           </div>
 
 
           {/* ::::::::::::::::::::::::::::::::::::::::::::: */}
-          {/* :::::::::::::::::: SELELMENT :::::::::::::::: */}
+          {/* :::::::::::::::::: SETELMENT :::::::::::::::: */}
           {/* ::::::::::::::::::::::::::::::::::::::::::::: */}
 
           <div className='content__body__main mt-5'>
             <table className='w-full border'>
               <thead className='bg-gray-200'>
                 <tr >
+                  <td></td>
                   <td className='p-2 font-medium'>Date</td>
                   <td className='font-medium'>Invoice Number</td>
-                  <td className='font-medium'>Invoice Amount</td>
-                  <td className='font-medium'>Invoice Amount Settled</td>
+                  <td className='font-medium'>Due Amount</td>
+                  {/* <td className='font-medium'>Invoice Amount Settled</td> */}
                   <td className='font-medium'>TDS Amount</td>
                 </tr>
               </thead>
               <tbody>
-                <tr className='border-gray-300'>
-                  <td className='p-2'>adfa</td>
-                  <td>adsfa</td>
-                  <td>adafadf</td>
-                  <td>adafadf</td>
-                  <td>0</td>
-                </tr>
-                <tr className='border-gray-300'>
-                  <td className='p-2'>adfa</td>
-                  <td>adsfa</td>
-                  <td>adafadf</td>
-                  <td>adafadf</td>
-                  <td>0</td>
-                </tr>
+                {
+                  invoiceData?.map((inv, i) => {
+                    return (
+                      <tr key={i} className='border-gray-300'>
+                        <td className='p-2 max-w-2'>
+                          <input
+                            type="checkbox"
+                            onChange={(e) => handleSatelment(e, inv)}
+                          />
+                        </td>
+                        <td>{new Date(inv.invoiceDate).toLocaleDateString()}</td>
+                        <td>{inv.salesInvoiceNumber}</td>
+                        {/* <td>{inv.amount || 0}</td> */}
+                        <td>{inv.dueAmount || 0}</td>
+                        <td>{inv.tdsAmount || 0}</td>
+                      </tr>
+                    )
+                  })
+                }
               </tbody>
             </table>
           </div>
           {/* Salement div close here */}
+
+          <div className='w-full flex justify-end gap-3 mt-3'>
+            <button
+              onClick={savePayment}
+              className='bg-green-500 hover:bg-green-400 save__and__reset__btns'>
+              <Icons.CHECK />
+              {!mode ? "Save" : "Update"}
+            </button>
+            <button
+              onClick={clear}
+              className='bg-blue-800 hover:bg-blue-700 save__and__reset__btns'>
+              <Icons.RESET />
+              Reset
+            </button>
+          </div>
 
         </div>
 

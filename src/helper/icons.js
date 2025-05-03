@@ -22,10 +22,7 @@ import { SiConvertio } from "react-icons/si";
 import { HiOutlineRefresh } from "react-icons/hi";
 import { LuBriefcaseBusiness } from "react-icons/lu";
 import { TbFileInvoice } from "react-icons/tb";
-
-
-
-
+import { GoPencil } from "react-icons/go";
 
 
 export const Icons = {
@@ -56,5 +53,6 @@ export const Icons = {
   CONVERT: SiConvertio,
   BUSINESS: LuBriefcaseBusiness,
   INVOICE: TbFileInvoice,
+  PENCIL: GoPencil,
 };
 

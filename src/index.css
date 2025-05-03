@@ -723,3 +723,30 @@ input[type="checkbox"]:checked::before {
 .swal-icon--warning__body{
   height: 30px;
 }
+
+
+.details__header{
+  @apply flex justify-between items-center;
+}
+.details__header p{
+  @apply font-bold flex items-center gap-1;
+}
+.pencil{
+  width: 25px;
+  height: 25px;
+  color: #003E32;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 100%;
+}
+.pencil:hover{
+  background-color: #F6F7FB;
+  border: 1px solid #e9e9ec;
+}
+.pencil:active{
+  border:none;
+}
+
+.save__and__reset__btns{
+  @apply text-[13px] text-white rounded w-[70px] flex items-center justify-center gap-1 py-[5px];
+}

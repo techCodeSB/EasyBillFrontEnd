@@ -59,6 +59,7 @@ const AddDeliveryChalan = React.lazy(() => import("./pages/deliverychalan/AddDel
 const Ladger = React.lazy(()=>import("./pages/party/Ladger"));
 const PartyDetails = React.lazy(()=>import("./pages/party/Details"));
 const ItemDetails = React.lazy(()=>import("./pages/Items/Details"));
+const CategoryDetails = React.lazy(()=>import("./pages/Item/Details"));
 
 
 
@@ -212,6 +213,7 @@ const App = () => {
         <Route path="/admin/item-category/add" element={<ProtectRoute>< CategoryAdd /></ProtectRoute>} />
         <Route path="/admin/item-category/edit/:id" element={<ProtectRoute>< CategoryAdd mode="edit" /></ProtectRoute>} />
         <Route path="/admin/item-category" element={<ProtectRoute><Category /></ProtectRoute>} />
+        <Route path="/admin/item-category/details/:id" element={<ProtectRoute><CategoryDetails /></ProtectRoute>} />
 
 
         <Route path="/admin/item/add" element={<ProtectRoute><ItemAdd /></ProtectRoute>} />
