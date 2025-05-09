@@ -1,28 +1,34 @@
-import React, { useEffect, useState } from 'react'
-import Nav from '../../components/Nav'
-import SideNav from '../../components/SideNav'
-import { Icons } from '../../helper/icons'
-import useApi from '../../hooks/useApi'
-import { useNavigate, useParams } from 'react-router-dom'
+import React, { useEffect } from 'react';
+import Nav from '../../components/Nav';
+import SideNav from '../../components/SideNav';
+import { Icons } from '../../helper/icons';
+import Profile from './Profile';
+import Logs from './Logs';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 const Details = () => {
-  const { getApiData } = useApi();
   const { id } = useParams();
-  const [data, setData] = useState();
+  const location = useLocation();
   const navigate = useNavigate();
+  const query = new URLSearchParams(location.search);
+  const tab = query.get("tab") || "profile";
 
+  // Update URL when tab button is clicked
+  const handleTabClick = (tabName) => {
+    navigate(`?tab=${tabName.toLowerCase()}`);
+  };
 
-  useEffect(() => {
-    const get = async () => {
-      const res = await getApiData("party", id);
-      setData(res.data);
+  const renderTabContent = () => {
+    if (tab === "profile") {
+      return <Profile />;
+    } else if (tab === "ledger") { 
+      return <div>Ledger Content</div>;
+    } else if (tab === "logs") {
+      return <Logs partyId={id} />;
+    } else {
+      return <div>Unknown tab</div>;
     }
-    get()
-  }, [])
-
-
-
-
+  };
 
   return (
     <>
@@ -30,93 +36,32 @@ const Details = () => {
       <main id='main'>
         <SideNav />
         <div className="content__body">
-          <div className='flex justify-between gap-5'>
-            <div className='content__body__main w-full'>
-              <div className='details__header'>
-                <p className='font-bold flex items-center gap-1'>
-                  <Icons.INVOICE />
-                  General Details
-                </p>
-
-                <Icons.PENCIL
-                  className='pencil'
-                  onClick={() => navigate(`/admin/party/edit/${id}`)} />
-              </div>
-              <hr />
-
-              <div className='flex  gap-2 pl-4'>
-                <div className='w-full flex flex-col justify-between gap-5 text-xs'>
-                  <div>
-                    <p className='text-gray-400'>Party Name</p>
-                    <p>{data?.name}</p>
-                  </div>
-                  <div>
-                    <p className='text-gray-400'>Mobile Number</p>
-                    <p>{data?.contactNumber}</p>
-                  </div>
-                  <div>
-                    <p className='text-gray-400'>Email</p>
-                    <p>{data?.email || "--"}</p>
-                  </div>
-                  <div>
-                    <p className='text-gray-400'>Opening Balance</p>
-                    <p className='flex items-center gap-1'><Icons.RUPES /> {data?.openingBalance || 0.00}</p>
-                  </div>
-                </div>
-                <div className='w-full flex flex-col justify-start gap-5 text-xs'>
-                  <div>
-                    <p className='text-gray-400'>Party Type</p>
-                    <p>{data?.type}</p>
-                  </div>
-                  <div>
-                    <p className='text-gray-400'>Party Category</p>
-                    <p>{data?.partyCategory?.name || "--"}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* Party details close here ::::::::::::::::: */}
-
-            <div className='content__body__main w-full '>
-              <div className='details__header'>
-                <p className='font-bold flex items-center gap-1'>
-                  <Icons.BUSINESS />
-                  Buisness Details
-                </p>
-                <Icons.PENCIL
-                  className='pencil'
-                  onClick={() => navigate(`/admin/party/edit/${id}`)} />
-              </div>
-              <hr />
-
-              <div className='pl-4'>
-                <div className='flex justify-between gap-2'>
-                  <div className='w-full'>
-                    <p className='text-gray-400'>GSTIN</p>
-                    <p>{data?.gst || "--"}</p>
-                  </div>
-                  <div className='w-full'>
-                    <p className='text-gray-400'>PAN Number</p>
-                    <p>{data?.pan || "--"}</p>
-                  </div>
-                </div>
-
-                <div className='my-5'>
-                  <p className='text-gray-400'>Billing Address</p>
-                  <p>{data?.billingAddress}</p>
-                </div>
-                <div>
-                  <p className='text-gray-400'>Shipping Address</p>
-                  <p>{data?.shippingAddress}</p>
-                </div>
-              </div>
-            </div>
-            {/* Business details close here :::::::::::::: */}
+          <div className='party__details__header'>
+            <button
+              className={tab === "profile" ? "active" : ""}
+              onClick={() => handleTabClick("profile")}
+            >
+              <Icons.USER /> Profile
+            </button>
+            <button
+              className={tab === "ledger" ? "active" : ""}
+              onClick={() => handleTabClick("ledger")}
+            >
+              <Icons.BOOK /> Ledger
+            </button>
+            <button
+              className={tab === "logs" ? "active" : ""}
+              onClick={() => handleTabClick("logs")}
+            >
+              <Icons.FILE /> Logs
+            </button>
           </div>
+
+          {renderTabContent()}
         </div>
-      </main >
+      </main>
     </>
-  )
-}
+  );
+};
 
 export default Details;

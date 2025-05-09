@@ -70,7 +70,7 @@ const Party = () => {
       }
     }
     getParty();
-  }, [tableStatusData, dataLimit, activePage])
+  }, [tableStatusData, dataLimit, activePage]);
 
 
   useEffect(() => {
@@ -398,29 +398,26 @@ const Party = () => {
                 <div className='paginate__parent'>
                   <p>Showing {partyData.length} of {totalData} entries</p>
                   {/* ----- Paginatin ----- */}
-                  <div className='flex justify-end gap-2'>
+                  <div className='flex justify-end'>
                     {
-                      activePage > 1 ? <div
-                        onClick={() => setActivePage(activePage - 1)}
-                        className='border bg-[#003E32] text-white w-[20px] h-[20px] grid place-items-center rounded cursor-pointer'>
+                      activePage > 1 ? 
+                      <div onClick={() => setActivePage(activePage - 1)} className='paginate__button__back'>
                         <Icons.PREV_PAGE_ARROW />
                       </div> : null
                     }
                     {
                       Array.from({ length: Math.ceil((totalData / dataLimit)) }).map((_, i) => {
                         return <div
-                          onClick={() => setActivePage(i + 1)}
-                          className='border-[#003E32] border w-[20px] h-[20px] text-center rounded cursor-pointer'
-                          style={activePage === i + 1 ? { border: "1px solid #003E32" } : {}}
+                          onClick={() => setActivePage(i + 1)} className='paginate__button__number'
+                          style={activePage === i + 1 ? { background: "blue", color: "white" } : {}}
                         >
                           {i + 1}
                         </div>
                       })
                     }
                     {
-                      (totalData / dataLimit) > activePage ? <div
-                        onClick={() => setActivePage(activePage + 1)}
-                        className='border bg-[#003E32] text-white w-[20px] h-[20px] flex items-center justify-center rounded cursor-pointer'>
+                      (totalData / dataLimit) > activePage ? 
+                      <div onClick={() => setActivePage(activePage + 1)} className='paginate__button__next'>
                         <Icons.NEXT_PAGE_ARROW />
                       </div> : null
                     }

@@ -508,6 +508,27 @@ select {
   @apply flex justify-between items-center mt-2;
 }
 
+.paginate__button__back{
+  @apply border border-blue-700 w-[20px] h-[20px] grid place-items-center cursor-pointer
+}
+
+.paginate__button__number{
+  @apply w-[20px] h-[20px] text-center cursor-pointer
+}
+
+.paginate__button__number:first-child{
+  border: 1px solid blue;
+}
+.paginate__button__number{
+  border:1px solid blue ;
+  border-left: none;
+}
+
+.paginate__button__next{
+  @apply border border-blue-700 border-l-0 w-[20px] h-[20px] flex items-center justify-center cursor-pointer;
+}  
+
+
 .list__table {
   border-radius: 5px;
   padding-bottom: 3px;
@@ -749,4 +770,27 @@ input[type="checkbox"]:checked::before {
 
 .save__and__reset__btns{
   @apply text-[13px] text-white rounded w-[70px] flex items-center justify-center gap-1 py-[5px];
+}
+
+
+/* Add this to your CSS file */
+.table__responsive {
+  overflow-x: auto;
+}
+
+.table__responsive table {
+  min-width: 600px; /* Adjust as needed */
+  border-collapse: collapse;
+}
+
+.party__details__header{
+  @apply flex items-center gap-4 mb-5 border-b border-gray-200;
+}
+
+.party__details__header button{
+  @apply text-[13px] w-[70px] flex items-center justify-center gap-1 py-[5px];
+}
+
+.party__details__header .active{
+  @apply text-blue-600 font-semibold border-b-2 border-blue-600;
 }

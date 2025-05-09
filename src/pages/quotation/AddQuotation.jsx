@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { SelectPicker, DatePicker, Button } from 'rsuite';
+import { SelectPicker, Button } from 'rsuite';
 import Nav from '../../components/Nav';
 import SideNav from '../../components/SideNav';
 import { RiDeleteBin6Line } from "react-icons/ri";
@@ -14,10 +14,6 @@ import Cookies from 'js-cookie';
 import { useNavigate, useParams } from 'react-router-dom';
 import AddPartyModal from '../../components/AddPartyModal';
 import { useDispatch, useSelector } from 'react-redux';
-import { toggle } from '../../store/partyModalSlice';
-import { toggle as itemToggle } from '../../store/itemModalSlice'
-import { MdOutlineAdd } from "react-icons/md";
-import { HiOutlineDocumentDuplicate } from "react-icons/hi";
 import AddItemModal from '../../components/AddItemModal';
 import swal from 'sweetalert';
 import { IoSettingsOutline } from 'react-icons/io5';
@@ -48,9 +44,9 @@ const Quotation = ({ mode }) => {
   const [ItemRows, setItemRows] = useState([itemRowSet]);
   const [additionalRows, setAdditionalRow] = useState([additionalRowSet]); //{ additionalRowsItem: 1 }
   const [formData, setFormData] = useState({
-    party: '', quotationNumber: '', estimateDate: new Date().toISOString().split('T')[0], validDate: '', items: ItemRows,
-    additionalCharge: additionalRows, note: '', terms: '',
-    discountType: '', discountAmount: '', discountPercentage: '',
+    party: '', quotationNumber: '', estimateDate: new Date().toISOString().split('T')[0], validDate: '',
+    items: ItemRows, additionalCharge: additionalRows, note: '', terms: '',
+    discountType: '', discountAmount: '', discountPercentage: '', finalAmount: ''
   })
 
   const [perPrice, setPerPrice] = useState(null);
@@ -134,7 +130,6 @@ const Quotation = ({ mode }) => {
         body: JSON.stringify({ token: cookie, id: id })
       })
       const res = await req.json();
-      console.log('run add')
       setFormData({ ...formData, ...res.data });
       setAdditionalRow([...res.data.additionalCharge])
       setItemRows([...res.data.items]);
@@ -418,7 +413,13 @@ const Quotation = ({ mode }) => {
 
   }
 
-
+  useEffect(() => {
+    const finalAmount = calculateFinalAmount();
+    setFormData((prevData) => ({
+      ...prevData,
+      finalAmount
+    }));
+  }, [ItemRows, additionalRows]);
 
 
 
@@ -444,6 +445,7 @@ const Quotation = ({ mode }) => {
         }
         else if (which === "amount") {
           total = (parseFloat(total) + parseFloat(calculatePerAmount(index))).toFixed(2);
+          // setFormData({...formData, finalAmount: total});
         }
       })
 
@@ -469,11 +471,6 @@ const Quotation = ({ mode }) => {
   // *Save bill
   const saveBill = async () => {
 
-    // if ([formData.party, formData.estimateDate]
-    //   .some((field) => field === "")) {
-    //   return toast("Fill the blank", "error");
-    // }
-
     if (formData.party === "") {
       return toast("Please select party", "error")
     } else if (formData.estimateDate === "") {
@@ -481,11 +478,6 @@ const Quotation = ({ mode }) => {
     }
 
     for (let row of ItemRows) {
-      // if ([row.itemName, row.qun, row.unit, row.price, row.tax]
-      //   .some((field) => field === "")) {
-      //   return toast("Fill the blank in item", "error");
-      // }
-
       if (row.itemName === "") {
         return toast("Please select item", "error")
       } else if (row.qun === "") {

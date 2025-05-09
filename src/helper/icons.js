@@ -23,6 +23,10 @@ import { HiOutlineRefresh } from "react-icons/hi";
 import { LuBriefcaseBusiness } from "react-icons/lu";
 import { TbFileInvoice } from "react-icons/tb";
 import { GoPencil } from "react-icons/go";
+import { FaRegFile } from "react-icons/fa";
+import { FaRegUser } from "react-icons/fa";
+
+
 
 
 export const Icons = {
@@ -54,5 +58,7 @@ export const Icons = {
   BUSINESS: LuBriefcaseBusiness,
   INVOICE: TbFileInvoice,
   PENCIL: GoPencil,
+  FILE: FaRegFile,
+  USER: FaRegUser,
 };
 

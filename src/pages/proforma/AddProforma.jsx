@@ -41,7 +41,7 @@ const Proforma = ({ mode }) => {
   const [formData, setFormData] = useState({
     party: '', proformaNumber: '', estimateDate: new Date().toISOString().split('T')[0], validDate: '', items: ItemRows,
     additionalCharge: additionalRows, note: '', terms: '',
-    discountType: '', discountAmount: '', discountPercentage: '',
+    discountType: '', discountAmount: '', discountPercentage: '', finalAmount: ''
   })
 
   const [perPrice, setPerPrice] = useState(null);
@@ -379,6 +379,14 @@ const Proforma = ({ mode }) => {
 
   }
 
+  useEffect(() => {
+    const finalAmount = calculateFinalAmount();
+    setFormData((prevData) => ({
+      ...prevData,
+      finalAmount
+    }));
+  }, [ItemRows, additionalRows]);
+
 
 
   // Return Sub-Total
@@ -484,7 +492,7 @@ const Proforma = ({ mode }) => {
             },
             body: JSON.stringify({ token, id, update: true, billStatus: "convert" })
           })
-          
+
         } catch (error) {
           console.log(error);
           return toast('Quotation status not change', 'error')

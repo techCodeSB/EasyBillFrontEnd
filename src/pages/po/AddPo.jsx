@@ -16,7 +16,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toggle } from '../../store/partyModalSlice';
 import { toggle as itemToggle } from '../../store/itemModalSlice';
 import swal from 'sweetalert';
-import { HiOutlineDocumentDuplicate } from 'react-icons/hi';
 import AddPartyModal from '../../components/AddPartyModal';
 import AddItemModal from '../../components/AddItemModal';
 import MySelect2 from '../../components/MySelect2';
@@ -48,7 +47,7 @@ const PO = ({ mode }) => {
   const [formData, setFormData] = useState({
     party: '', poNumber: '', poDate: new Date().toISOString().split('T')[0], validDate: '', items: ItemRows,
     additionalCharge: additionalRows, note: '', terms: '',
-    discountType: '', discountAmount: '', discountPercentage: '',
+    discountType: '', discountAmount: '', discountPercentage: '', finalAmount: ''
   })
 
   const [perPrice, setPerPrice] = useState(null);
@@ -363,6 +362,14 @@ const PO = ({ mode }) => {
     return !isNaN(totalParticular) ? (parseFloat(totalParticular) + parseFloat(total)).toFixed(2) : total;
 
   }
+
+  useEffect(() => {
+    const finalAmount = calculateFinalAmount();
+    setFormData((prevData) => ({
+      ...prevData,
+      finalAmount
+    }));
+  }, [ItemRows, additionalRows]);
 
 
 

@@ -47,7 +47,7 @@ const PurchaseInvoice = ({ mode }) => {
   const [formData, setFormData] = useState({
     party: '', purchaseReturnNumber: '', returnDate: new Date().toISOString().split('T')[0],
     items: ItemRows, additionalCharge: additionalRows, note: '', terms: '',
-    discountType: '', discountAmount: '', discountPercentage: '',
+    discountType: '', discountAmount: '', discountPercentage: '', finalAmount: ''
   })
 
   const [perPrice, setPerPrice] = useState(null);
@@ -364,6 +364,14 @@ const PurchaseInvoice = ({ mode }) => {
     return !isNaN(totalParticular) ? (parseFloat(totalParticular) + parseFloat(total)).toFixed(2) : total;
 
   }
+
+  useEffect(() => {
+    const finalAmount = calculateFinalAmount();
+    setFormData((prevData) => ({
+      ...prevData,
+      finalAmount
+    }));
+  }, [ItemRows, additionalRows]);
 
 
 

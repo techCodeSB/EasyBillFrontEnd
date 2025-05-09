@@ -13,8 +13,8 @@ import { Icons } from '../../helper/icons'
 
 // --- PAYMENT IN ---
 const AddPayment = ({ mode }) => {
+  const navigate = useNavigate();
   const { getApiData } = useApi();
-  const editorRef = useRef(null);
   const toast = useMyToaster();
   const { id } = useParams();
   const [formData, setFormData] = useState({
@@ -31,8 +31,23 @@ const AddPayment = ({ mode }) => {
   const [invoice, setInvoice] = useState([]);
   // invoice data
   const [invoiceData, setInvoiceData] = useState([]);
-  const navigate = useNavigate();
-  let checkedInv = [];
+  let [checkedInv, setCheckedInv] = useState([]);
+  let [tempAmount, setTempAmount] = useState(0);
+
+
+
+  useEffect(() => {
+    if (formData.amount) {
+      let totalSelected = 0;
+      for (const item of checkedInv) {
+        totalSelected += parseInt(item.dueAmount, 10);
+      }
+      const remaining = parseInt(formData.amount, 10) - totalSelected;
+
+      setTempAmount(remaining);
+      console.log("Updated tempAmount to", remaining);
+    }
+  }, [formData.amount, checkedInv]);
 
 
 
@@ -104,10 +119,16 @@ const AddPayment = ({ mode }) => {
 
 
   const savePayment = async () => {
-    if ([formData.party, formData.paymentInNumber,
-    formData.paymentInDate, formData.paymentMode, formData.account, formData.amount]
-      .some((field) => field === "")) {
-      return toast("Fill the blank", "error");
+    if (formData.party === "") {
+      return toast("Please select a party", "error");
+    } else if (formData.paymentInNumber === "") {
+      return toast("Please enter a payment number", "error");
+    } else if (formData.paymentInDate === "") {
+      return toast("Please select a payment date", "error");
+    } else if (formData.paymentMode === "") {
+      return toast("Please select a payment mode", "error");
+    } else if (formData.account === "") {
+      return toast("Please select an account", "error");
     }
 
     if (parseFloat(formData.amount) > parseFloat(dueAmount)) {
@@ -156,24 +177,38 @@ const AddPayment = ({ mode }) => {
   }
 
 
-  const handleSatelment = (e, inv) => {
+  // On check satelment;
+  const handleSettlement = (e, inv) => {
     const { checked } = e.target;
-    if (!checked) {
-      let newData = checkedInv.filter((d) => d._id !== inv._id);
-      checkedInv = [...newData];
+    const due = parseInt(inv.dueAmount);
 
-      return;
+    if (checked) {
+      if (tempAmount <= 0) {
+        toast("No amount left to allocate", "error");
+        e.preventDefault();
+        e.target.checked = false;
+        return;
+      }
 
+      const alloc = Math.min(tempAmount, due);
+
+      const updatedCheckedInv = [...checkedInv, { ...inv, allocated: alloc }];
+      setCheckedInv(updatedCheckedInv);
+      setTempAmount(tempAmount - alloc);
     }
+    else {
+      const existing = checkedInv.find((d) => d._id === inv._id);
+      const updatedCheckedInv = checkedInv.filter((d) => d._id !== inv._id);
 
-    if((checkedInv.length > 1) && (formData.amount > checkedInv[0].dueAmount)) {
-      return toast("Invalid amount", 'error');
+      if (existing) {
+        setTempAmount(tempAmount + existing.allocated);
+      }
+
+      setCheckedInv(updatedCheckedInv);
     }
-    
-    checkedInv.push(inv);
+  };
 
 
-  }
 
 
   return (
@@ -188,11 +223,6 @@ const AddPayment = ({ mode }) => {
               <div className='flex flex-col gap-2'>
                 <div>
                   <p className='mb-1'>Select Party</p>
-                  {/* <SelectPicker className='w-full'
-                    onChange={(data) => setFormData({ ...formData, party: data })}
-                    data={party}
-                    value={formData.party}
-                  /> */}
                   <MySelect2
                     model={"party"}
                     onType={(v) => {
@@ -220,14 +250,6 @@ const AddPayment = ({ mode }) => {
                     className='w-full'
                   />
                 </div>
-                <div>
-                  <p className='mb-1'>Due Amount</p>
-                  <input type='text'
-                    value={dueAmount}
-                    onChange={null}
-                    disabled
-                  />
-                </div>
               </div>
 
               {/* Second Column */}
@@ -252,26 +274,17 @@ const AddPayment = ({ mode }) => {
                   />
                 </div>
                 <div>
-                  <p className='mb-1'>Select Invoice</p>
-                  <SelectPicker className='w-full'
-                    onChange={(data) => {
-                      const getDue = invoice.filter((inv, _) => inv.value === data)
-                      setDueAmount(getDue[0]?.due)
-                      setFormData({ ...formData, invoiceId: data })
-                    }}
-                    data={invoice}
-                  />
-                </div>
-                <div>
                   <p className='mb-1'>Amount</p>
                   <input type='text'
                     value={formData.amount}
-                    onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+                    onChange={
+                      checkedInv.length > 0 ? null :
+                        (e) => setFormData({ ...formData, amount: e.target.value })
+                    }
                   />
                 </div>
               </div>
             </div>
-
           </div>
 
 
@@ -299,7 +312,7 @@ const AddPayment = ({ mode }) => {
                         <td className='p-2 max-w-2'>
                           <input
                             type="checkbox"
-                            onChange={(e) => handleSatelment(e, inv)}
+                            onChange={(e) => handleSettlement(e, inv)}
                           />
                         </td>
                         <td>{new Date(inv.invoiceDate).toLocaleDateString()}</td>
