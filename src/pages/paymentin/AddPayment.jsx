@@ -131,21 +131,26 @@ const AddPayment = ({ mode }) => {
       return toast("Please select an account", "error");
     }
 
-    if (parseFloat(formData.amount) > parseFloat(dueAmount)) {
-      return toast("Invalid amount", 'error');
+    if (checkedInv.length <= 0) {
+      return toast("Select invoice", 'error');
     }
+
 
     try {
       const url = process.env.REACT_APP_API_URL + "/paymentin/add";
       const token = Cookies.get("token");
+      console.log(checkedInv);
 
       const req = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(!mode ? { ...formData, token, dueAmount } : { ...formData, token, update: true, id: id, dueAmount })
-      })
+        body: JSON.stringify(
+          !mode ? { ...formData, token, checkedInv }
+            : { ...formData, token, update: true, id: id, checkedInv }
+        )
+      });
       const res = await req.json();
       if (req.status !== 200 || res.err) {
         return toast(res.err, 'error');
@@ -299,14 +304,14 @@ const AddPayment = ({ mode }) => {
                   <td></td>
                   <td className='p-2 font-medium'>Date</td>
                   <td className='font-medium'>Invoice Number</td>
-                  <td className='font-medium'>Due Amount</td>
+                  <td className='font-medium'>Invoice Amount</td>
                   {/* <td className='font-medium'>Invoice Amount Settled</td> */}
                   <td className='font-medium'>TDS Amount</td>
                 </tr>
               </thead>
               <tbody>
                 {
-                  invoiceData?.map((inv, i) => {
+                  invoiceData.length > 0 ? invoiceData.map((inv, i) => {
                     return (
                       <tr key={i} className='border-gray-300'>
                         <td className='p-2 max-w-2'>
@@ -322,7 +327,9 @@ const AddPayment = ({ mode }) => {
                         <td>{inv.tdsAmount || 0}</td>
                       </tr>
                     )
-                  })
+                  }) : <tr className='text-center'>
+                    <td colSpan={5} className='py-5 text-gray-500 font-bold'>No Invoice found</td>
+                  </tr>
                 }
               </tbody>
             </table>

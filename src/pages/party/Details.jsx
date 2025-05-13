@@ -4,6 +4,7 @@ import SideNav from '../../components/SideNav';
 import { Icons } from '../../helper/icons';
 import Profile from './Profile';
 import Logs from './Logs';
+import Ladger from './Ladger';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 const Details = () => {
@@ -21,12 +22,10 @@ const Details = () => {
   const renderTabContent = () => {
     if (tab === "profile") {
       return <Profile />;
-    } else if (tab === "ledger") { 
-      return <div>Ledger Content</div>;
+    } else if (tab === "ledger") {
+      return <Ladger partyId={id} />;
     } else if (tab === "logs") {
       return <Logs partyId={id} />;
-    } else {
-      return <div>Unknown tab</div>;
     }
   };
 
