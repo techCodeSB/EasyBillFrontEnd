@@ -99,7 +99,10 @@ const Logs = ({ partyId }) => {
                   <td className='p-2'>{new Date(l.createdAt).toLocaleDateString()}</td>
                   <td>{l.type}</td>
                   <td>{
-                    l.invoiceId.quotationNumber || l.invoiceId.salesInvoiceNumber
+                    l.invoiceId.quotationNumber || l.invoiceId.salesInvoiceNumber ||
+                    l.invoiceId.proformaNumber || l.invoiceId.purchaseInvoiceNumber
+                    || l.invoiceId.purchaseReturnNumber || l.invoiceId.poNumber ||
+                    l.invoiceId.paymentInNumber
                   }</td>
                   <td>
                     <div className='flex items-center'>

@@ -14,6 +14,7 @@ import { Tooltip } from 'react-tooltip';
 import AddNew from '../../components/AddNew';
 import { getAdvanceFilterData } from '../../helper/advanceFilter';
 import { Icons } from '../../helper/icons';
+import Pagination from '../../components/Pagination';
 
 
 
@@ -511,7 +512,7 @@ const Quotation = () => {
                               speaker={<Popover full>
                                 <div className='w-[170px]'>
                                   <div
-                                    className={`${data.billStatus === "convert"?'text-gray-400':''} table__list__action__icon`}
+                                    className={`${data.billStatus === "convert" ? 'text-gray-400' : ''} table__list__action__icon`}
                                     onClick={(e) => {
                                       e.stopPropagation();
                                       if (data.billStatus !== "convert") {
@@ -576,33 +577,12 @@ const Quotation = () => {
                 <div className='paginate__parent'>
                   <p>Showing {billData.length} of {totalData} entries</p>
                   {/* ----- Paginatin ----- */}
-                  <div className='flex justify-end gap-2'>
-                    {
-                      activePage > 1 ? <div
-                        onClick={() => setActivePage(activePage - 1)}
-                        className='border bg-blue-600 text-white w-[20px] h-[20px] grid place-items-center rounded cursor-pointer'>
-                        <GrFormPrevious />
-                      </div> : null
-                    }
-                    {
-                      Array.from({ length: Math.ceil((totalData / dataLimit)) }).map((_, i) => {
-                        return <div
-                          onClick={() => setActivePage(i + 1)}
-                          className='border-blue-400 border w-[20px] h-[20px] text-center rounded cursor-pointer'
-                          style={activePage === i + 1 ? { border: "1px solid blue" } : {}}
-                        >
-                          {i + 1}
-                        </div>
-                      })
-                    }
-                    {
-                      (totalData / dataLimit) > activePage ? <div
-                        onClick={() => setActivePage(activePage + 1)}
-                        className='border bg-blue-600 text-white w-[20px] h-[20px] flex items-center justify-center rounded cursor-pointer'>
-                        <GrFormNext />
-                      </div> : null
-                    }
-                  </div>
+                  <Pagination
+                    activePage={activePage}
+                    totalData={totalData}
+                    dataLimit={dataLimit}
+                    setActivePage={setActivePage}
+                  />
                 </div>
                 {/* pagination end */}
               </div>

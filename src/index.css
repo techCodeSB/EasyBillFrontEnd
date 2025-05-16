@@ -430,11 +430,11 @@ select {
 }
 
 .add_new_compnent {
-  @apply mb-5 w-full bg-white rounded p-2 shadow-sm overflow-hidden transition-all
+  @apply mb-5 w-full bg-white rounded p-2 shadow-sm overflow-hidden transition-all;
 }
 
 .add_new_compnent button {
-  @apply px-3 py-1 rounded flex items-center gap-2 text-[13px]
+  @apply px-3 py-1 rounded flex items-center gap-2 text-[13px];
 }
 
 .admin__area span {
@@ -460,11 +460,11 @@ select {
 }
 
 #filterBtnGrp button {
-  @apply rounded px-2 py-1 bg-green-500 text-white
+  @apply rounded px-2 py-1 bg-green-500 text-white;
 }
 
 #filterBtnGrp button:last-child {
-  @apply bg-blue-500
+  @apply bg-blue-500;
 }
 
 #filterBtnGrp button svg {
@@ -517,11 +517,15 @@ select {
 }
 
 .paginate__button__number:first-child{
-  border: 1px solid blue;
+  border: 1px solid rgb(65, 65, 238);
 }
 .paginate__button__number{
-  border:1px solid blue ;
+  border:1px solid rgb(66, 66, 241) ;
   border-left: none;
+}
+
+.active__page{
+  @apply bg-blue-700 text-white;
 }
 
 .paginate__button__next{

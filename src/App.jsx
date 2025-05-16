@@ -190,7 +190,6 @@ const App = () => {
         <Route path="/admin/party" element={<ProtectRoute><Party /></ProtectRoute>} />
         <Route path="/admin/party/add" element={<ProtectRoute><AddParty /></ProtectRoute>} />
         <Route path="/admin/party/edit/:id" element={<ProtectRoute><AddParty mode={"edit"} /></ProtectRoute>} />
-        <Route path="/admin/party/ladger/:id" element={<ProtectRoute><Ladger /></ProtectRoute>} />
         <Route path="/admin/party/details/:id" element={<ProtectRoute><PartyDetails /></ProtectRoute>} />
 
         <Route path="admin/other-transaction/add" element={<ProtectRoute><TransactionAdd /></ProtectRoute>} />

@@ -2,23 +2,18 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Nav from '../../components/Nav';
 import SideNav from '../../components/SideNav';
 // import MyBreadCrumb from '../../components/BreadCrumb';
-import { Pagination, Popover, Whisper } from 'rsuite';
+import { Popover, Whisper } from 'rsuite';
 import { BiPrinter } from "react-icons/bi";
 import { FaRegCopy, FaRegEdit } from "react-icons/fa";
-import { MdEditSquare, MdFilterList, MdOutlineArrowDropDown } from "react-icons/md";
-import { IoInformationCircle } from "react-icons/io5";
+import { MdFilterList, MdOutlineArrowDropDown } from "react-icons/md";
 import { FaRegFilePdf } from "react-icons/fa";
 import { FaRegFileExcel } from "react-icons/fa";
-import { MdAdd } from "react-icons/md";
-import { MdOutlineCancel } from "react-icons/md";
-import { MdOutlineRestorePage } from "react-icons/md";
 import { MdDeleteOutline } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import useExportTable from '../../hooks/useExportTable';
 import useMyToaster from '../../hooks/useMyToaster';
 import Cookies from 'js-cookie';
 import downloadPdf from '../../helper/downloadPdf';
-import { GrFormNext, GrFormPrevious } from 'react-icons/gr';
 import DataShimmer from '../../components/DataShimmer';
 import { Tooltip } from 'react-tooltip';
 import { IoIosAdd, IoMdInformationCircleOutline, IoMdMore } from 'react-icons/io';
@@ -27,6 +22,7 @@ import { TbZoomReset } from 'react-icons/tb';
 import { LuSearch } from 'react-icons/lu';
 import { FiMoreHorizontal } from 'react-icons/fi';
 import { RiArrowDropUpFill } from "react-icons/ri";
+import Pagination from '../../components/Pagination';
 
 
 
@@ -488,33 +484,12 @@ const DebitNote = () => {
                 <div className='paginate__parent'>
                   <p>Showing {billData.length} of {totalData} entries</p>
                   {/* ----- Paginatin ----- */}
-                  <div className='flex justify-end gap-2 pb-3'>
-                    {
-                      activePage > 1 ? <div
-                        onClick={() => setActivePage(activePage - 1)}
-                        className='border bg-blue-600 text-white w-[20px] h-[20px] grid place-items-center rounded cursor-pointer'>
-                        <GrFormPrevious />
-                      </div> : null
-                    }
-                    {
-                      Array.from({ length: Math.ceil((totalData / dataLimit)) }).map((_, i) => {
-                        return <div
-                          onClick={() => setActivePage(i + 1)}
-                          className='border-blue-400 border w-[20px] h-[20px] text-center rounded cursor-pointer'
-                          style={activePage === i + 1 ? { border: "1px solid blue" } : {}}
-                        >
-                          {i + 1}
-                        </div>
-                      })
-                    }
-                    {
-                      (totalData / dataLimit) > activePage ? <div
-                        onClick={() => setActivePage(activePage + 1)}
-                        className='border bg-blue-600 text-white w-[20px] h-[20px] flex items-center justify-center rounded cursor-pointer'>
-                        <GrFormNext />
-                      </div> : null
-                    }
-                  </div>
+                  <Pagination
+                    activePage={activePage}
+                    totalData={totalData}
+                    dataLimit={dataLimit}
+                    setActivePage={setActivePage}
+                  />
                 </div>
                 {/* pagination end */}
               </div>

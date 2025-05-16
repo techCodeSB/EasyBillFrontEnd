@@ -13,8 +13,7 @@ import { CiViewList } from 'react-icons/ci';
 import { Popover, Whisper } from 'rsuite';
 import AddNew from '../../components/AddNew';
 import { Icons } from '../../helper/icons';
-
-
+import Pagination from '../../components/Pagination';
 
 
 
@@ -544,34 +543,12 @@ const SalesInvoice = () => {
                 <div className='paginate__parent'>
                   <p>Showing {billData.length} of {totalData} entries</p>
                   {/* ----- Paginatin ----- */}
-                  <div className='flex justify-end gap-2 pb-3'>
-                    {
-                      activePage > 1 ? <div
-                        onClick={() => setActivePage(activePage - 1)}
-                        className='border bg-blue-600 text-white w-[20px] h-[20px] grid place-items-center rounded cursor-pointer'>
-                        <Icons.NEXT_PAGE_ARROW />
-                      </div> : null
-                    }
-                    {
-                      Array.from({ length: Math.ceil((totalData / dataLimit)) }).map((_, i) => {
-                        return <div
-                          key={i}
-                          onClick={() => setActivePage(i + 1)}
-                          className='border-blue-400 border w-[20px] h-[20px] text-center rounded cursor-pointer'
-                          style={activePage === i + 1 ? { border: "1px solid blue" } : {}}
-                        >
-                          {i + 1}
-                        </div>
-                      })
-                    }
-                    {
-                      (totalData / dataLimit) > activePage ? <div
-                        onClick={() => setActivePage(activePage + 1)}
-                        className='border bg-blue-600 text-white w-[20px] h-[20px] flex items-center justify-center rounded cursor-pointer'>
-                        <Icons.PREV_PAGE_ARROW />
-                      </div> : null
-                    }
-                  </div>
+                  <Pagination
+                    activePage={activePage}
+                    totalData={totalData}
+                    dataLimit={dataLimit}
+                    setActivePage={setActivePage}
+                  />
                 </div>
                 {/* pagination end */}
               </div>

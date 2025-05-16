@@ -53,10 +53,10 @@ const Ladger = ({ partyId }) => {
           <p className='text-xs text-gray-400'>Phone: {partyData?.contactNumber || "--"}</p>
         </div>
         <div className='w-[200px] h-[90px] rounded border p-2'>
-            <p className='text-xs text-gray-400 text-right border-b w-full pb-1'>Date - Date</p>
-            {/* <hr /> */}
-            <p className='text-xs text-gray-400 text-right'>Total Receivable</p>
-            <p className='font-bold text-right'>6000</p>
+          <p className='text-xs text-gray-400 text-right border-b w-full pb-1'>Date - Date</p>
+          {/* <hr /> */}
+          <p className='text-xs text-gray-400 text-right'>Total Receivable</p>
+          <p className='font-bold text-right'>6000</p>
         </div>
       </div>
 
@@ -66,11 +66,9 @@ const Ladger = ({ partyId }) => {
             <tr>
               <td className='p-2'>Date</td>
               <td>Voucher</td>
-              <td>Sr No.</td>
+              <td>Transaction No.</td>
               <td>Credit</td>
               <td>Debit</td>
-              <td>TDS deductecd by party</td>
-              <td>TDS deductecd by self</td>
               <td>Balance</td>
             </tr>
           </thead>

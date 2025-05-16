@@ -28,7 +28,6 @@ import { FaRegUser } from "react-icons/fa";
 
 
 
-
 export const Icons = {
   RESET: HiOutlineRefresh,
   SEARCH: LuSearch,

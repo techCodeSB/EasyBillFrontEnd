@@ -16,14 +16,12 @@ import { useNavigate } from 'react-router-dom';
 import useExportTable from '../../hooks/useExportTable';
 
 const Role = () => {
-
   const copyTable = useExportTable()
   const [activePage, setActivePage] = useState(1);
   const [selected, setSelected] = useState([]);
   const navigate = useNavigate();
 
   const searchTable = (e) => {
-
     const value = e.target.value.toLowerCase();
     const rows = document.querySelectorAll('.list__table tbody tr');
 
@@ -67,12 +65,6 @@ const Role = () => {
       <main id='main'>
         <SideNav />
         <div className='content__body'>
-          {/* <MyBreadCrumb title={"Quotation"} links={[
-            { name: "Quotation ", link: "/admin/quatation" },
-            { name: "Estimate", link: "/admin/quatation" },
-            { name: "All list", link: null }
-          ]} /> */}
-
           <div className='content__body__main bg-white'>
             {/* First Row */}
             <div className='flex justify-between items-center flex-col lg:flex-row gap-4'>

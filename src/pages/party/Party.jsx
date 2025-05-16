@@ -11,10 +11,7 @@ import { Tooltip } from 'react-tooltip';
 import AddNew from '../../components/AddNew';
 import { Popover, Whisper } from 'rsuite';
 import { Icons } from '../../helper/icons';
-
-
-
-
+import Pagination from '../../components/Pagination';
 
 
 
@@ -373,16 +370,6 @@ const Party = () => {
                                   <Icons.EDIT className='text-[16px]' />
                                   Edit
                                 </div>
-                                <div
-                                  className='table__list__action__icon'
-                                  onClick={(e) => {
-                                    e.stopPropagation()
-                                    navigate("/admin/party/ladger/" + data._id)
-                                  }}
-                                >
-                                  <Icons.BOOK className='text-[16px]' />
-                                  Ladger
-                                </div>
                               </Popover>}
                             >
                               <div className='table__list__action' >
@@ -398,30 +385,12 @@ const Party = () => {
                 <div className='paginate__parent'>
                   <p>Showing {partyData.length} of {totalData} entries</p>
                   {/* ----- Paginatin ----- */}
-                  <div className='flex justify-end'>
-                    {
-                      activePage > 1 ? 
-                      <div onClick={() => setActivePage(activePage - 1)} className='paginate__button__back'>
-                        <Icons.PREV_PAGE_ARROW />
-                      </div> : null
-                    }
-                    {
-                      Array.from({ length: Math.ceil((totalData / dataLimit)) }).map((_, i) => {
-                        return <div
-                          onClick={() => setActivePage(i + 1)} className='paginate__button__number'
-                          style={activePage === i + 1 ? { background: "blue", color: "white" } : {}}
-                        >
-                          {i + 1}
-                        </div>
-                      })
-                    }
-                    {
-                      (totalData / dataLimit) > activePage ? 
-                      <div onClick={() => setActivePage(activePage + 1)} className='paginate__button__next'>
-                        <Icons.NEXT_PAGE_ARROW />
-                      </div> : null
-                    }
-                  </div>
+                  <Pagination
+                    activePage={activePage}
+                    totalData={totalData}
+                    dataLimit={dataLimit}
+                    setActivePage={setActivePage}
+                  />
                   {/* pagination end */}
                 </div>
               </div>

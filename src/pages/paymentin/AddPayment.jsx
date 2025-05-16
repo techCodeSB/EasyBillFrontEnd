@@ -236,6 +236,18 @@ const AddPayment = ({ mode }) => {
                     value={formData.party}
                   />
                 </div>
+
+                <div>
+                  <p className='mb-1'>Amount</p>
+                  <input type='text'
+                    value={formData.amount}
+                    onChange={
+                      checkedInv.length > 0 ? null :
+                        (e) => setFormData({ ...formData, amount: e.target.value })
+                    }
+                  />
+                </div>
+
                 <div>
                   <p className='mb-1'>Payment in Number</p>
                   <input type='text'
@@ -245,6 +257,10 @@ const AddPayment = ({ mode }) => {
                     })}
                   />
                 </div>
+              </div>
+
+              {/* Second Column */}
+              <div className='flex flex-col gap-2'>
                 <div>
                   <p className='mb-1'>Payment in Date</p>
                   <input type="date"
@@ -255,10 +271,6 @@ const AddPayment = ({ mode }) => {
                     className='w-full'
                   />
                 </div>
-              </div>
-
-              {/* Second Column */}
-              <div className='flex flex-col gap-2'>
                 <div>
                   <p className='mb-1'>Payment Mode</p>
                   <select name="mode" id=""
@@ -276,16 +288,6 @@ const AddPayment = ({ mode }) => {
                     data={account}
                     onChange={(v) => setFormData({ ...formData, account: v })}
                     value={formData.account}
-                  />
-                </div>
-                <div>
-                  <p className='mb-1'>Amount</p>
-                  <input type='text'
-                    value={formData.amount}
-                    onChange={
-                      checkedInv.length > 0 ? null :
-                        (e) => setFormData({ ...formData, amount: e.target.value })
-                    }
                   />
                 </div>
               </div>
